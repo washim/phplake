@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="col-md-12">
+  <section class="page-content-header">
+    <h1><i class="fa fa-list"></i> My Projects</h1>
+  </section>
+</div>
+<div class="col-xs-12">
+  <div class="box box-primary">
+    <div class="box-body table-responsive">
+      <table id="datatable" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th>#Id</th>
+          <th>Project Name</th>
+          <th>Category</th>
+          <th>Environment</th>
+          <th>Created</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+        <tr>
+          <td>{{project.id}}</td>
+          <td><a href="{{path('myproject_details', {'id':project.id})}}">{{project.name}}</a></td>
+          <td>{{project.category}}</td>
+          <td>
+            {% for site in project.sites %}
+            {{site.domain}}{% if not loop.last %}<br>{% endif %}
+            {% endfor %}
+          </td>
+          <td>{{project.createdAt|date('d-m-Y')}}</td>
+          <td><a class="btn btn-xs btn-danger delete" href="{{path('myproject_delete', {'id':project.id})}}">Delete</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+          <th>#Id</th>
+          <th>Project Name</th>
+          <th>Category</th>
+          <th>Environment</th>
+          <th>Created</th>
+          <th>Action</th>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
