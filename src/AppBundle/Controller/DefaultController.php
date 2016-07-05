@@ -36,7 +36,6 @@ class DefaultController extends Controller
             $db        = implode('_', array(substr($this->getUser()->getUsername(), 0, 8), $project->getName(), 'dev'));
             $dbpass    = 'phplake786';
             $pass      = 'merriment786';
-            $ide       = 'ide-' . $this->getUser()->getUsername() . '.phplake.com';
             if ($totproj > 0 || $this->get('app.whm')->getwhmuser($this->getUser()->getUsername()) !== 206 ) {
                 if ($this->getUser()->getSubscription() == 'paid') {
                     $response = $this->get('app.whm')->updatecp(
@@ -68,7 +67,7 @@ class DefaultController extends Controller
                                     'project_name' => $domain,
                                     'project_path' => $domain
                                 ),
-                                "http://$ide/components/project/controller.php"
+                                'http://'.$this->getUser()->getIde().'/components/project/controller.php'
                             );
                             if ($addprojincodiad->status == 'success') {
                                 $this->addFlash(
@@ -282,6 +281,24 @@ class DefaultController extends Controller
                     'cpanel_jsonapi_func' => 'deletedb',
                     'db' => $site->getDb()
                 )
+            );
+            // Codiad deleting project
+            $this->get('app.phplake')->perform(
+                array(
+                    'anonymous' => 'yes',
+                    'action' => 'delete',
+                    'project_path' => $site->getDomain()
+                ),
+                'http://'.$this->getUser()->getIde().'/components/project/controller.php'
+            );
+            // Codiad Deliting project files
+            $this->get('app.phplake')->perform(
+                array(
+                    'anonymous' => 'yes',
+                    'action' => 'delete',
+                    'path' => $site->getDomain()
+                ),
+                'http://'.$this->getUser()->getIde().'/components/filemanager/controller.php'
             );
         }
         

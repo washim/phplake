@@ -261,7 +261,9 @@ class Users implements UserInterface, \Serializable
     }
     
     public function getIde() {
-        $this->ide = 'ide-' . $this->user . '.phplake.com' ;
+        $this->ide = 'ide-' . $this->username . '.phplake.com' ;
+        
+        return $this->ide;
     }
     
     public function getProjects()

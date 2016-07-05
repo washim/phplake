@@ -24,8 +24,16 @@ class AutomationController extends Controller
      */
     public function deployAction(Request $request)
     {
-        $res = $this->get('app.whm')->getwhmuser($this->getUser()->getUsername());
-        print_r($res);
+        $res = $this->get('app.phplake')->perform(
+            array(
+                'anonymous' => 'yes',
+                'action' => 'create',
+                'project_name' => 'dev-nbsols-administrator.phplake.com',
+                'project_path' => 'dev-nbsols-administrator.phplake.com'
+            ),
+            'http://'.$this->getUser()->getIde().'/components/project/controller.php'
+        );
+        dump($this->getUser()->getIde());
         return new Response();
     }
 }
