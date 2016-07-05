@@ -28,6 +28,11 @@ class Sites
     private $domain;
     
     /**
+	 * @ORM\Column(type="string", length=255)
+	 */
+    private $subdomain;
+    
+    /**
 	 * @ORM\Column(type="string", length=64)
 	 */
     private $environment;
@@ -36,6 +41,11 @@ class Sites
 	 * @ORM\Column(type="string", length=255)
 	 */
     private $db;
+    
+    /**
+	 * @ORM\Column(type="string", length=255)
+	 */
+    private $dbuser;
     
     /**
 	 * @ORM\Column(type="string", length=255)
@@ -115,6 +125,18 @@ class Sites
     public function getDomain()
     {
         return $this->domain;
+    }
+    
+    public function setSubdomain($subdomain)
+    {
+        $this->subdomain = $subdomain;
+
+        return $this;
+    }
+    
+    public function getSubdomain()
+    {
+        return $this->subdomain;
     }
 
     /**
@@ -199,6 +221,18 @@ class Sites
     public function getDb()
     {
         return $this->db;
+    }
+    
+    public function setDbuser($dbuser)
+    {
+        $this->dbuser = $dbuser;
+        
+        return $this;
+    }
+    
+    public function getDbuser()
+    {
+        return $this->dbuser;
     }
     
     public function setDbpass($dbpass)

@@ -4,6 +4,7 @@ namespace AppBundle\Utils;
 class Phplake
 {
     private $host;
+    private $msg;
     
     public function __construct()
     {
@@ -18,6 +19,28 @@ class Phplake
         }
         $query = $this->host . '?' . implode('&', $params);
         return $this->phplakerequest($query);
+    }
+    
+    public function geterror($errorno)
+    {
+        switch ($errorno) {
+            case 201:
+                $this->msg = 'Account creation failed. Please try after some time.';
+                break;
+            case 202:
+                $this->msg = 'Dev environment creation failed for project. Please try after some time.';
+                break;
+            case 203:
+                $this->msg = 'Dev environment Database creation failed for project. Please try after some time.';
+                break;
+            case 204:
+                $this->msg = 'Dev environment Database user creation failed for project. Please try after some time.';
+                break;
+            case 205:
+                $this->msg = 'Dev environment Database privileges failed for project. Please try after some time.';
+                break;
+        }
+        return $this->msg;
     }
     
     private function phplakerequest($query)

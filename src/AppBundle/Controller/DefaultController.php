@@ -37,7 +37,7 @@ class DefaultController extends Controller
             $dbpass    = 'phplake786';
             $pass      = 'merriment786';
             $ide       = 'ide-' . $this->getUser()->getUsername() . '.phplake.com';
-            if ($totproj > 0) {
+            if ($totproj > 0 || $this->get('app.whm')->getwhmuser($this->getUser()->getUsername()) !== 206 ) {
                 if ($this->getUser()->getSubscription() == 'paid') {
                     $response = $this->get('app.whm')->updatecp(
                         $this->getUser()->getUsername(),
@@ -81,8 +81,6 @@ class DefaultController extends Controller
                                     'error',
                                     $addprojincodiad->message
                                 );
-                                
-                                return $this->redirectToRoute('homepage');
                             }
                         }
                         else {
@@ -97,7 +95,7 @@ class DefaultController extends Controller
                     else {
                         $this->addFlash(
                             'error',
-                            'Project creation failed.'
+                            $this->get('app.phplake')->geterror($response)
                         );
                         
                         return $this->redirectToRoute('homepage');
@@ -184,7 +182,9 @@ class DefaultController extends Controller
             
             $em = $this->getDoctrine()->getManager();
             $site->setDomain($domain);
+            $site->setSubdomain($subdomain);
             $site->setDb($db);
+            $site->setDbuser(substr($this->getUser()->getUsername(), 0, 8) . '_phplake');
             $site->setDbpass($dbpass);
             $site->setProject($project);
             
@@ -263,6 +263,28 @@ class DefaultController extends Controller
             throw new AccessDeniedException();
         }
         
+        foreach ($project->getSites() as $site) {
+            $this->get('app.whm')->perform('cpanel',
+                array(
+                    'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+                    'cpanel_jsonapi_apiversion' => '2',
+                    'cpanel_jsonapi_module' => 'AddonDomain',
+                    'cpanel_jsonapi_func' => 'deladdondomain',
+                    'domain' => $site->getDomain(),
+                    'subdomain' => $site->getSubdomain() . '.' . $this->getUser()->getIde()
+                )
+            );
+            $this->get('app.whm')->perform('cpanel',
+                array(
+                    'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+                    'cpanel_jsonapi_apiversion' => '2',
+                    'cpanel_jsonapi_module' => 'MysqlFE',
+                    'cpanel_jsonapi_func' => 'deletedb',
+                    'db' => $site->getDb()
+                )
+            );
+        }
+        
         // Deleting the ACL
         $aclProvider = $this->get('security.acl.provider');
         $objectIdentity = ObjectIdentity::fromDomainObject($project);
@@ -274,7 +296,7 @@ class DefaultController extends Controller
 		
 		$this->addFlash(
 			'success',
-			'Projects deleted successfully.'
+			'Project deleted with all environment successfully.'
 		);
 		
         return $this->redirectToRoute('myprojects');
@@ -297,12 +319,11 @@ class DefaultController extends Controller
                 'cpanel_jsonapi_module' => 'AddonDomain',
                 'cpanel_jsonapi_func' => 'deladdondomain',
                 'domain' => $site->getDomain(),
-                'subdomain' => str_replace('phplake.com', '', $site->getDomain()) . str_replace(array('prod','stage'), 'dev', $site->getDomain())
+                'subdomain' => $site->getSubdomain()
             )
         );
-        empty($response->cpanelresult->error) ? $type = 'success' : $type = 'error';
         
-        if ($type == 'success') {
+        if (empty($response->cpanelresult->error)) {
             // Deleting the ACL
             $aclProvider = $this->get('security.acl.provider');
             $objectIdentity = ObjectIdentity::fromDomainObject($site);

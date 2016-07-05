@@ -72,6 +72,8 @@ class Users implements UserInterface, \Serializable
 	private $createdAt;
     
     private $avatar;
+    
+    private $ide;
 
     public function __construct()
     {
@@ -256,6 +258,10 @@ class Users implements UserInterface, \Serializable
     {
         $this->avatar = "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $this->email ) ) ) . "?d=" . urlencode( 'https://www.gravatar.com/avatar/00000000000000000000000000000000' ) . "&s=40";
         return $this->avatar;
+    }
+    
+    public function getIde() {
+        $this->ide = 'ide-' . $this->user . '.phplake.com' ;
     }
     
     public function getProjects()

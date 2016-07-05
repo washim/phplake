@@ -24,7 +24,7 @@ class Whm
         return $this->whmrequest($query);
     }
     
-    public function checkuser($user)
+    public function getwhmuser($user)
     {
         $cmd = 'listaccts';
         $postdata = array(
@@ -36,9 +36,12 @@ class Whm
             $params[] = $key . '=' . $value;
         }
         $query = $this->host . $cmd . '?' . implode('&', $params);
-        $response = json_decode($this->whmrequest($query));
+        $response = $this->whmrequest($query);
         if (array_key_exists('data', $response)) {
-            return '200';
+            return reset($response->data->acct);
+        }
+        else {
+            return 206;
         }
     }
     
@@ -71,31 +74,58 @@ class Whm
                         'password' => $password
                     )
                 );
-            }
-            
-            /**
-             * Set DB User to Database
-             */
-            $setdbuserprivileges = $this->perform('cpanel',
-                array(
-                    'cpanel_jsonapi_user' => $user,
-                    'cpanel_jsonapi_apiversion' => '2',
-                    'cpanel_jsonapi_module' => 'MysqlFE',
-                    'cpanel_jsonapi_func' => 'setdbuserprivileges',
-                    'db' => $db,
-                    'dbuser' => substr($user, 0, 8) . '_phplake',
-                    'privileges' => 'ALL PRIVILEGES'
-                )
-            );
-            if ($setdbuserprivileges->cpanelresult->event->result == 1) {
-                return 200;
+                
+                if ($createdbuser->cpanelresult->event->result == 1) {
+                    /**
+                     * Set DB User to Database
+                     */
+                    $setdbuserprivileges = $this->perform('cpanel',
+                        array(
+                            'cpanel_jsonapi_user' => $user,
+                            'cpanel_jsonapi_apiversion' => '2',
+                            'cpanel_jsonapi_module' => 'MysqlFE',
+                            'cpanel_jsonapi_func' => 'setdbuserprivileges',
+                            'db' => $db,
+                            'dbuser' => substr($user, 0, 8) . '_phplake',
+                            'privileges' => 'ALL PRIVILEGES'
+                        )
+                    );
+                    if ($setdbuserprivileges->cpanelresult->event->result == 1) {
+                        return 200;
+                    }
+                    else {
+                        return 205; //Writing DB user privileges
+                    }
+                }
+                else {
+                    return 204; //DB user creation failed
+                }
             }
             else {
-                return 206; //Writing DB user privileges
+                /**
+                 * Set DB User to Database without creating new user
+                 */
+                $setdbuserprivileges = $this->perform('cpanel',
+                    array(
+                        'cpanel_jsonapi_user' => $user,
+                        'cpanel_jsonapi_apiversion' => '2',
+                        'cpanel_jsonapi_module' => 'MysqlFE',
+                        'cpanel_jsonapi_func' => 'setdbuserprivileges',
+                        'db' => $db,
+                        'dbuser' => substr($user, 0, 8) . '_phplake',
+                        'privileges' => 'ALL PRIVILEGES'
+                    )
+                );
+                if ($setdbuserprivileges->cpanelresult->event->result == 1) {
+                    return 200;
+                }
+                else {
+                    return 205; //Writing DB user privileges
+                }
             }
         }
         else {
-            return 204; //Dev Environment DB creation failed
+            return 203; //Dev Environment DB creation failed
         }
     }
     
@@ -176,7 +206,7 @@ class Whm
             return $createdb;
         }
         else {
-            return 203;
+            return 202; //Dev environment Addondomain creation failed
         }
     }
     

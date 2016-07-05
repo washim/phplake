@@ -24,16 +24,7 @@ class AutomationController extends Controller
      */
     public function deployAction(Request $request)
     {
-        $res = $this->get('app.phplake')->perform(
-            array(
-                'action' => 'install',
-                'user' => 'administrator',
-                'source' => 'https://github.com/washim/Codiad/archive/ide.tar.gz',
-                'destination' => '/home/administrator/public_html',
-                'tmpfolder' => 'Codiad-ide',
-                'project' => 'dev-hadiths-administrator.phplake.com'
-            )
-        );
+        $res = $this->get('app.whm')->getwhmuser($this->getUser()->getUsername());
         print_r($res);
         return new Response();
     }
