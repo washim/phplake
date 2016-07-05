@@ -51,19 +51,48 @@ class DefaultController extends Controller
                     );
                     if ($response == 200) {
                         // Pull Dev environment source code from url
-                        $this->get('app.phplake')->perform(
+                        $devpull = $this->get('app.phplake')->perform(
                             array(
                                 'action' => 'install',
-                                'user' => $user,
-                                'source' => $source,
+                                'user' => $this->getUser()->getUsername(),
+                                'source' => $project->getTargetUrl(),
                                 'destination' => $docroot,
-                                'tmpfolder' => $category
+                                'tmpfolder' => $project->getCategory()
                             )
                         );
-                        $this->addFlash(
-                            'success',
-                            'Project created successfully with default dev environment'
-                        );
+                        if ($devpull->status == 0) {
+                            $addprojincodiad = $this->get('app.phplake')->perform(
+                                array(
+                                    'anonymous' => 'yes',
+                                    'action' => 'create',
+                                    'project_name' => $domain,
+                                    'project_path' => $domain
+                                ),
+                                "http://$ide/components/project/controller.php"
+                            );
+                            if ($addprojincodiad->status == 'success') {
+                                $this->addFlash(
+                                    'success',
+                                    'Project created successfully with default dev environment'
+                                );
+                            }
+                            else {
+                                $this->addFlash(
+                                    'error',
+                                    $addprojincodiad->message
+                                );
+                                
+                                return $this->redirectToRoute('homepage');
+                            }
+                        }
+                        else {
+                            $this->addFlash(
+                                'error',
+                                'Project creation failed.'
+                            );
+                            
+                            return $this->redirectToRoute('homepage');
+                        }
                     }
                     else {
                         $this->addFlash(
@@ -88,7 +117,7 @@ class DefaultController extends Controller
                     $this->getUser()->getUsername(),
                     $pass,
                     $this->getUser()->getEmail(),
-                    $ide,
+                    $domain,
                     $docroot,
                     $subdomain,
                     $db,
@@ -98,7 +127,7 @@ class DefaultController extends Controller
                 );
                 if ($response == 200) {
                     //Install Codiad for recently created user
-                    $this->get('app.phplake')->perform(
+                    $codiad = $this->get('app.phplake')->perform(
                         array(
                             'action' => 'install',
                             'user' => $this->getUser()->getUsername(),
@@ -108,20 +137,40 @@ class DefaultController extends Controller
                             'project' => $domain
                         )
                     );
-                    //Pull Dev environment source code from url
-                    /*$this->get('app.phplake')->perform(
-                        array(
-                            'action' => 'install',
-                            'user' => $this->getUser()->getUsername(),
-                            'source' => $project->getTargetUrl(),
-                            'destination' => $docroot,
-                            'tmpfolder' => $project->getCategory()
-                        )
-                    );*/
-                    $this->addFlash(
-                        'success',
-                        'Project created successfully with default dev environment'
-                    );
+                    if ($codiad->status == 0) {
+                        //Pull Dev environment source code from url
+                        $devpull = $this->get('app.phplake')->perform(
+                            array(
+                                'action' => 'install',
+                                'user' => $this->getUser()->getUsername(),
+                                'source' => $project->getTargetUrl(),
+                                'destination' => $docroot,
+                                'tmpfolder' => $project->getCategory()
+                            )
+                        );
+                        if ($devpull->status == 0) {
+                            $this->addFlash(
+                                'success',
+                                'Project created successfully with default dev environment'
+                            );
+                        }
+                        else {
+                            $this->addFlash(
+                                'error',
+                                'Project creation failed.'
+                            );
+                            
+                            return $this->redirectToRoute('homepage');
+                        }
+                    }
+                    else {
+                        $this->addFlash(
+                            'error',
+                            'Project creation failed.'
+                        );
+                        
+                        return $this->redirectToRoute('homepage');
+                    }
                 }
                 else {
                     $this->addFlash(

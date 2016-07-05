@@ -73,30 +73,25 @@ class Whm
                 );
             }
             
-            if ($createdbuser->cpanelresult->event->result == 1 || empty($action)) {
-                /**
-                 * Set DB User to Database
-                 */
-                $setdbuserprivileges = $this->perform('cpanel',
-                    array(
-                        'cpanel_jsonapi_user' => $user,
-                        'cpanel_jsonapi_apiversion' => '2',
-                        'cpanel_jsonapi_module' => 'MysqlFE',
-                        'cpanel_jsonapi_func' => 'setdbuserprivileges',
-                        'db' => $db,
-                        'dbuser' => substr($user, 0, 8) . '_phplake',
-                        'privileges' => 'ALL PRIVILEGES'
-                    )
-                );
-                if ($setdbuserprivileges->cpanelresult->event->result == 1) {
-                    return 200;
-                }
-                else {
-                    return 206; //Writing DB user privileges
-                }
+            /**
+             * Set DB User to Database
+             */
+            $setdbuserprivileges = $this->perform('cpanel',
+                array(
+                    'cpanel_jsonapi_user' => $user,
+                    'cpanel_jsonapi_apiversion' => '2',
+                    'cpanel_jsonapi_module' => 'MysqlFE',
+                    'cpanel_jsonapi_func' => 'setdbuserprivileges',
+                    'db' => $db,
+                    'dbuser' => substr($user, 0, 8) . '_phplake',
+                    'privileges' => 'ALL PRIVILEGES'
+                )
+            );
+            if ($setdbuserprivileges->cpanelresult->event->result == 1) {
+                return 200;
             }
             else {
-                return 205; //Assigning user to database failed
+                return 206; //Writing DB user privileges
             }
         }
         else {
@@ -178,22 +173,7 @@ class Whm
         if (empty($addaddondomain->cpanelresult->error)) {
             // Create Database for Dev environment
             $createdb = $this->createdb($user, $db, $dbpass);
-            
-            if ($createdb == 200) {
-                // Adding New project in User IDE
-                $addide = $this->get('app.phplake')->perform(
-                    array(
-                        'anonymous' => 'yes',
-                        'project_name' => $domain,
-                        'project_path' => $domain
-                    ),
-                    'http://ide-' . $user . '.phplake.com'
-                );
-                return 200;
-            }
-            else {
-                return $createdb;
-            }
+            return $createdb;
         }
         else {
             return 203;
