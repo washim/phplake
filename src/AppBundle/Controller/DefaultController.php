@@ -246,6 +246,7 @@ class DefaultController extends Controller
             ->first();
             
         return $this->render('default/myproject_details.html.twig', [
+            'project' => $project,
             'dev' => $dev,
             'stage' => $stage,
             'prod' => $prod

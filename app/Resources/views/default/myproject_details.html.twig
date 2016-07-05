@@ -1,14 +1,38 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<div class="col-md-12">
+<div class="col-md-3">
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">Project Details</h3>
+    </div>
+    <div class="box-body">
+      <strong><i class="fa fa-shield" aria-hidden="true"></i> Name</strong>
+      <p class="text-muted">{{project.name}}</p>
+      <hr>
+      <strong><i class="fa fa-adjust"></i> Category</strong>
+      <p class="text-muted">{{project.category}}</p>
+      <hr>
+      <strong><i class="fa fa-indent"></i> Online IDE</strong><small class="label pull-right bg-green">new</small>
+      <p class="text-muted"><a href="http://{{project.owner.ide}}" target="_blank">http://{{project.owner.ide}}</a></p>
+      <hr>
+      <strong><i class="fa fa-crop"></i> Environemnt</strong>
+      {% if project.sites|length > 0 %}
+      {% for site in project.sites %}<h6><a href="http://{{site.domain}}" target="_blank">http://{{site.domain}}</a></h6>{% endfor %}
+      {% else %}
+      No sites found yet
+      {% endif %}
+    </div>
+  </div>
+</div>
+<div class="col-md-9">
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
       <li class="active"><a href="#dev" data-toggle="tab" aria-expanded="true">Dev</a></li>
-      <li class=""><a href="#stage" data-toggle="tab" aria-expanded="false">Stage</a></li>
+      <li><a href="#stage" data-toggle="tab" aria-expanded="false">Stage</a></li>
       <li><a href="#prod" data-toggle="tab" aria-expanded="false">Prod</a></li>
     </ul>
     <div class="tab-content">
-      <div class="tab-pane active" id="dev">
+      <div class="tab-pane" id="dev">
         <div><b>Dev URL:</b> {{dev.domain}}</div>
         <div><strong>Database:</strong></div>
         <div><strong>Database Password:</strong></div>
