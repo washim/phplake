@@ -21,6 +21,10 @@
       {% else %}
       No sites found yet
       {% endif %}
+      <hr>
+      <strong><i class="fa fa-bell"></i> Danger Zone</strong>
+      <p class="text-muted">Be carefull. It will erase all of your environment including this project.</p>
+      <a href="{{path('myproject_delete', {'id':project.id})}}" class="btn btn-danger btn-block"><b>Delete</b></a>
     </div>
   </div>
 </div>
@@ -32,13 +36,13 @@
       <li><a href="#prod" data-toggle="tab" aria-expanded="false">Prod</a></li>
     </ul>
     <div class="tab-content">
-      <div class="tab-pane" id="dev">
+      <div class="tab-pane active" id="dev">
         <div><b>Dev URL:</b> {{dev.domain}}</div>
         <div><strong>Database:</strong></div>
         <div><strong>Database Password:</strong></div>
       </div>
       <div class="tab-pane" id="stage">
-        {% if stage.id is defined %}
+        {% if stage|length > 0 %}
         <div><b>Stage URL:</b> {{stage.domain}}</div>
         <div><strong>Database:</strong></div>
         <div><strong>Database Password:</strong></div>
@@ -56,12 +60,12 @@
         {% endif %}
       </div>
       <div class="tab-pane" id="prod">
-        {% if prod.id is defined %}
+        {% if prod|length > 0 %}
         <div><b>Production URL:</b> {{prod.domain}}</div>
         <div><strong>Database:</strong></div>
         <div><strong>Database Password:</strong></div>
         <div><a href="{{path('env_delete',{'id':prod.id})}}" class="btn btn-danger">Delete</a></div>
-        {% elseif stage.id is defined %}
+        {% elseif stage|length > 0 %}
         <div class="center" align="center">
           <img src="{{asset('asset/img/prod.png')}}"/>
           <h3>Create your Live environment and deploy to your site.</h3>

@@ -211,6 +211,32 @@ class Whm
     }
     
     /**
+     * Cpanel Delete addon domain
+     */
+    public function envdelete($user, $domain, $subdomain, $db)
+    {
+        $this->perform('cpanel',
+            array(
+                'cpanel_jsonapi_user' => $user,
+                'cpanel_jsonapi_apiversion' => '2',
+                'cpanel_jsonapi_module' => 'AddonDomain',
+                'cpanel_jsonapi_func' => 'deladdondomain',
+                'domain' => $domain,
+                'subdomain' => $subdomain
+            )
+        );
+        $this->perform('cpanel',
+            array(
+                'cpanel_jsonapi_user' => $user,
+                'cpanel_jsonapi_apiversion' => '2',
+                'cpanel_jsonapi_module' => 'MysqlFE',
+                'cpanel_jsonapi_func' => 'deletedb',
+                'db' => $db
+            )
+        );
+    }
+    
+    /**
      * WHM Common universal Curl request
      */
     private function whmrequest($query)

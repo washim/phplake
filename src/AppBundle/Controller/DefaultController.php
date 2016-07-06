@@ -50,45 +50,25 @@ class DefaultController extends Controller
                     );
                     if ($response == 200) {
                         // Pull Dev environment source code from url
-                        $devpull = $this->get('app.phplake')->perform(
-                            array(
-                                'action' => 'install',
-                                'user' => $this->getUser()->getUsername(),
-                                'source' => $project->getTargetUrl(),
-                                'destination' => $docroot,
-                                'tmpfolder' => $project->getCategory()
-                            )
+                        $buildsource = $this->get('app.phplake')->buildsourceupdate(
+                            $this->getUser()->getUsername(),
+                            $project->getTargetUrl(),
+                            $docroot,
+                            $project->getCategory(),
+                            $domain,
+                            $this->getUser()->getIde()
                         );
-                        if ($devpull->status == 0) {
-                            $addprojincodiad = $this->get('app.phplake')->perform(
-                                array(
-                                    'anonymous' => 'yes',
-                                    'action' => 'create',
-                                    'project_name' => $domain,
-                                    'project_path' => $domain
-                                ),
-                                'http://'.$this->getUser()->getIde().'/components/project/controller.php'
+                        if (!empty($buildsource->status)) {
+                            $this->addFlash(
+                                'success',
+                                'Project created successfully with default dev environment.'
                             );
-                            if ($addprojincodiad->status == 'success') {
-                                $this->addFlash(
-                                    'success',
-                                    'Project created successfully with default dev environment'
-                                );
-                            }
-                            else {
-                                $this->addFlash(
-                                    'error',
-                                    $addprojincodiad->message
-                                );
-                            }
                         }
                         else {
                             $this->addFlash(
                                 'error',
-                                'Project creation failed.'
+                                'Dev Environment source code build failed.'
                             );
-                            
-                            return $this->redirectToRoute('homepage');
                         }
                     }
                     else {
@@ -96,8 +76,6 @@ class DefaultController extends Controller
                             'error',
                             $this->get('app.phplake')->geterror($response)
                         );
-                        
-                        return $this->redirectToRoute('homepage');
                     }
                 }
                 else {
@@ -123,50 +101,24 @@ class DefaultController extends Controller
                     $project->getCategory()
                 );
                 if ($response == 200) {
-                    //Install Codiad for recently created user
-                    $codiad = $this->get('app.phplake')->perform(
-                        array(
-                            'action' => 'install',
-                            'user' => $this->getUser()->getUsername(),
-                            'source' => 'https://github.com/washim/Codiad/archive/ide.tar.gz',
-                            'destination' => '/home/' . $this->getUser()->getUsername() . '/public_html',
-                            'tmpfolder' => 'Codiad-ide',
-                            'project' => $domain
-                        )
+                    $buildsourcecreate = $this->get('app.phplake')->buildsourcecreate(
+                        $this->getUser()->getUsername(),
+                        $project->getTargetUrl(),
+                        $docroot,
+                        $project->getCategory(),
+                        $domain
                     );
-                    if ($codiad->status == 0) {
-                        //Pull Dev environment source code from url
-                        $devpull = $this->get('app.phplake')->perform(
-                            array(
-                                'action' => 'install',
-                                'user' => $this->getUser()->getUsername(),
-                                'source' => $project->getTargetUrl(),
-                                'destination' => $docroot,
-                                'tmpfolder' => $project->getCategory()
-                            )
+                    if ($buildsourcecreate->status == 0) {
+                        $this->addFlash(
+                            'success',
+                            'Project created with default dev environment.'
                         );
-                        if ($devpull->status == 0) {
-                            $this->addFlash(
-                                'success',
-                                'Project created successfully with default dev environment'
-                            );
-                        }
-                        else {
-                            $this->addFlash(
-                                'error',
-                                'Project creation failed.'
-                            );
-                            
-                            return $this->redirectToRoute('homepage');
-                        }
                     }
                     else {
                         $this->addFlash(
                             'error',
-                            'Project creation failed.'
+                            'Dev Environment source code build failed.'
                         );
-                        
-                        return $this->redirectToRoute('homepage');
                     }
                 }
                 else {
@@ -174,8 +126,6 @@ class DefaultController extends Controller
                         'error',
                         'Project creation failed.'
                     );
-                    
-                    return $this->redirectToRoute('homepage');
                 }
             }
             
@@ -264,43 +214,22 @@ class DefaultController extends Controller
         }
         
         foreach ($project->getSites() as $site) {
-            $this->get('app.whm')->perform('cpanel',
-                array(
-                    'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
-                    'cpanel_jsonapi_apiversion' => '2',
-                    'cpanel_jsonapi_module' => 'AddonDomain',
-                    'cpanel_jsonapi_func' => 'deladdondomain',
-                    'domain' => $site->getDomain(),
-                    'subdomain' => $site->getSubdomain() . '.' . $this->getUser()->getIde()
-                )
-            );
-            $this->get('app.whm')->perform('cpanel',
-                array(
-                    'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
-                    'cpanel_jsonapi_apiversion' => '2',
-                    'cpanel_jsonapi_module' => 'MysqlFE',
-                    'cpanel_jsonapi_func' => 'deletedb',
-                    'db' => $site->getDb()
-                )
+            // Env Delete
+            $this->get('app.whm')->envdelete(
+                $this->getUser()->getUsername(),
+                $site->getDomain(),
+                $site->getSubdomain() . '.' . $this->getUser()->getIde(),
+                $site->getDb()
             );
             // Codiad deleting project
-            $this->get('app.phplake')->perform(
-                array(
-                    'anonymous' => 'yes',
-                    'action' => 'delete',
-                    'project_path' => $site->getDomain()
-                ),
-                'http://'.$this->getUser()->getIde().'/components/project/controller.php'
+            $this->get('app.phplake')->envdelete(
+                $site->getDomain(),
+                $this->getUser()->getIde()
             );
-            // Codiad Deliting project files
-            $this->get('app.phplake')->perform(
-                array(
-                    'anonymous' => 'yes',
-                    'action' => 'delete',
-                    'path' => $site->getDomain()
-                ),
-                'http://'.$this->getUser()->getIde().'/components/filemanager/controller.php'
-            );
+            // Deleting the ACL
+            $aclProvider = $this->get('security.acl.provider');
+            $objectIdentity = ObjectIdentity::fromDomainObject($site);
+            $aclProvider->deleteAcl($objectIdentity);
         }
         
         // Deleting the ACL
@@ -330,38 +259,31 @@ class DefaultController extends Controller
             throw new AccessDeniedException();
         }
         
-        $response = $this->get('app.whm')->perform('cpanel',
-            array(
-                'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
-                'cpanel_jsonapi_apiversion' => '2',
-                'cpanel_jsonapi_module' => 'AddonDomain',
-                'cpanel_jsonapi_func' => 'deladdondomain',
-                'domain' => $site->getDomain(),
-                'subdomain' => $site->getSubdomain()
-            )
+        // Env Delete
+        $this->get('app.whm')->envdelete(
+            $this->getUser()->getUsername(),
+            $site->getDomain(),
+            $site->getSubdomain() . '.' . $this->getUser()->getIde(),
+            $site->getDb()
         );
+        // Codiad deleting project
+        $this->get('app.phplake')->envdelete(
+            $site->getDomain(),
+            $this->getUser()->getIde()
+        );
+        // Deleting the ACL
+        $aclProvider = $this->get('security.acl.provider');
+        $objectIdentity = ObjectIdentity::fromDomainObject($site);
+        $aclProvider->deleteAcl($objectIdentity);
         
-        if (empty($response->cpanelresult->error)) {
-            // Deleting the ACL
-            $aclProvider = $this->get('security.acl.provider');
-            $objectIdentity = ObjectIdentity::fromDomainObject($site);
-            $aclProvider->deleteAcl($objectIdentity);
-            
-            $em = $this->getDoctrine()->getManager();
-    		$em->remove($site);
-    		$em->flush();
-    		
-    		$this->addFlash(
-    			'success',
-    			'Environment deleted successfully.'
-    		);
-        }
-        else {
-            $this->addFlash(
-    			'error',
-    			$response->cpanelresult->error
-    		);
-        }
+        $em = $this->getDoctrine()->getManager();
+		$em->remove($site);
+		$em->flush();
+		
+		$this->addFlash(
+			'success',
+			'Environment deleted successfully.'
+		);
 		
         return $this->redirectToRoute('myprojects');
     }
@@ -372,60 +294,56 @@ class DefaultController extends Controller
     public function myprojectcreatestageAction(Request $request, Projects $project)
     {
         $domain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
+        $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
+        $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
+        $db        = implode('_', array(substr($this->getUser()->getUsername(), 0, 8), $project->getName(), 'stage'));
+        $dbpass    = 'phplake786';
+        $pass      = 'merriment786';
+        
         $sites = $project->getSites();
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("domain", $domain))
         ;
         $site = $sites->matching($criteria)->first();
+        
         if ($site === false) {
-
-            $response = $this->get('app.whm')->perform('cpanel',
-                array(
-                    'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
-                    'cpanel_jsonapi_apiversion' => '2',
-                    'cpanel_jsonapi_module' => 'AddonDomain',
-                    'cpanel_jsonapi_func' => 'addaddondomain',
-                    'dir' => '/home/' . $this->getUser()->getUsername() . '/public_html/' . $domain,
-                    'newdomain' => $domain,
-                    'subdomain' => 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername()
-                )
+            $response = $this->get('app.whm')->updatecp(
+                $this->getUser()->getUsername(),
+                $docroot,
+                $domain,
+                $subdomain,
+                $db,
+                $dbpass,
+                $project->getTargetUrl(),
+                $project->getCategory()
             );
-            empty($response->cpanelresult->error) ? $type = 'success' : $type = 'error';
-            
-            if ($type == 'success') {
-                $newsite = new Sites();
-                $newsite->setProject($project);
-                $newsite->setDomain($domain);
-                $newsite->setEnvironment('stage');
-                $newsite->setTargetUrl('https://ftp.drupal.org/files/projects/drupal-8.1.2.tar.gz');
-                
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($newsite);
-                $em->flush();
-                
-                // creating the ACL
-                $aclProvider = $this->get('security.acl.provider');
-                $objectIdentity = ObjectIdentity::fromDomainObject($newsite);
-                $acl = $aclProvider->createAcl($objectIdentity);
-    
-                // retrieving the security identity of the currently logged-in user
-                $tokenStorage = $this->get('security.token_storage');
-                $user = $tokenStorage->getToken()->getUser();
-                $securityIdentity = UserSecurityIdentity::fromAccount($user);
-    
-                // grant owner access
-                $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
-                $aclProvider->updateAcl($acl);
-                
-                $this->addFlash(
-                    'success',
-                    'Stage environment created successfully.'
+            if ($response == 200) {
+                // Pull Dev environment source code from url
+                $buildsource = $this->get('app.phplake')->buildsourceupdate(
+                    $this->getUser()->getUsername(),
+                    $project->getTargetUrl(),
+                    $docroot,
+                    $project->getCategory(),
+                    $domain,
+                    $this->getUser()->getIde()
                 );
+                if (!empty($buildsource->status)) {
+                    $this->addFlash(
+                        'success',
+                        'Stage environment created successfully.'
+                    );
+                }
+                else {
+                    $this->addFlash(
+                        'error',
+                        'Stage Environment source code build failed.'
+                    );
+                }
             }
             else {
                 $this->addFlash(
                     'error',
-                    $response->cpanelresult->error
+                    $this->get('app.phplake')->geterror($response)
                 );
             }
         }
@@ -434,8 +352,38 @@ class DefaultController extends Controller
                 'error',
                 'Stage environment already exist in your account.'
             );
+            
+            return $this->redirectToRoute('myproject_details', ['id' => $project->getId()]);
         }
+        
+        $site = new Sites();
+        $site->setDomain($domain);
+        $site->setSubdomain($subdomain);
+        $site->setDb($db);
+        $site->setDbuser(substr($this->getUser()->getUsername(), 0, 8) . '_phplake');
+        $site->setDbpass($dbpass);
+        $site->setEnvironment('stage');
+        $site->setProject($project);
+        $project->addSite($site);
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($project);
+        $em->flush();
+        
+        // creating the ACL
+        $aclProvider = $this->get('security.acl.provider');
+        $objectIdentity = ObjectIdentity::fromDomainObject($site);
+        $acl = $aclProvider->createAcl($objectIdentity);
 
+        // retrieving the security identity of the currently logged-in user
+        $tokenStorage = $this->get('security.token_storage');
+        $user = $tokenStorage->getToken()->getUser();
+        $securityIdentity = UserSecurityIdentity::fromAccount($user);
+
+        // grant owner access
+        $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+        $aclProvider->updateAcl($acl);
+        
         return $this->redirectToRoute('myproject_details', ['id' => $project->getId()]);
     }
     
@@ -445,59 +393,56 @@ class DefaultController extends Controller
     public function myprojectcreateprodAction(Request $request, Projects $project)
     {
         $domain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
+        $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
+        $subdomain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();
+        $db        = implode('_', array(substr($this->getUser()->getUsername(), 0, 8), $project->getName(), 'prod'));
+        $dbpass    = 'phplake786';
+        $pass      = 'merriment786';
+        
         $sites = $project->getSites();
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("domain", $domain))
         ;
         $site = $sites->matching($criteria)->first();
+        
         if ($site === false) {
-            $response = $this->get('app.whm')->perform('cpanel',
-                array(
-                    'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
-                    'cpanel_jsonapi_apiversion' => '2',
-                    'cpanel_jsonapi_module' => 'AddonDomain',
-                    'cpanel_jsonapi_func' => 'addaddondomain',
-                    'dir' => '/home/' . $this->getUser()->getUsername() . '/public_html/' . $domain,
-                    'newdomain' => $domain,
-                    'subdomain' => 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername()
-                )
+            $response = $this->get('app.whm')->updatecp(
+                $this->getUser()->getUsername(),
+                $docroot,
+                $domain,
+                $subdomain,
+                $db,
+                $dbpass,
+                $project->getTargetUrl(),
+                $project->getCategory()
             );
-            empty($response->cpanelresult->error) ? $type = 'success' : $type = 'error';
-            
-            if ($type == 'success') {
-                $newsite = new Sites();
-                $newsite->setProject($project);
-                $newsite->setDomain($domain);
-                $newsite->setEnvironment('prod');
-                $newsite->setTargetUrl('https://ftp.drupal.org/files/projects/drupal-8.1.2.tar.gz');
-                
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($newsite);
-                $em->flush();
-                
-                // creating the ACL
-                $aclProvider = $this->get('security.acl.provider');
-                $objectIdentity = ObjectIdentity::fromDomainObject($newsite);
-                $acl = $aclProvider->createAcl($objectIdentity);
-    
-                // retrieving the security identity of the currently logged-in user
-                $tokenStorage = $this->get('security.token_storage');
-                $user = $tokenStorage->getToken()->getUser();
-                $securityIdentity = UserSecurityIdentity::fromAccount($user);
-    
-                // grant owner access
-                $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
-                $aclProvider->updateAcl($acl);
-                
-                $this->addFlash(
-                    'success',
-                    'Production environment created successfully.'
+            if ($response == 200) {
+                // Pull Dev environment source code from url
+                $buildsource = $this->get('app.phplake')->buildsourceupdate(
+                    $this->getUser()->getUsername(),
+                    $project->getTargetUrl(),
+                    $docroot,
+                    $project->getCategory(),
+                    $domain,
+                    $this->getUser()->getIde()
                 );
+                if (!empty($buildsource->status)) {
+                    $this->addFlash(
+                        'success',
+                        'Production environment created successfully.'
+                    );
+                }
+                else {
+                    $this->addFlash(
+                        'error',
+                        'Production Environment source code build failed.'
+                    );
+                }
             }
             else {
                 $this->addFlash(
                     'error',
-                    $response->cpanelresult->error
+                    $this->get('app.phplake')->geterror($response)
                 );
             }
         }
@@ -506,8 +451,38 @@ class DefaultController extends Controller
                 'error',
                 'Production environment already exist in your account.'
             );
+            
+            return $this->redirectToRoute('myproject_details', ['id' => $project->getId()]);
         }
+        
+        $site = new Sites();
+        $site->setDomain($domain);
+        $site->setSubdomain($subdomain);
+        $site->setDb($db);
+        $site->setDbuser(substr($this->getUser()->getUsername(), 0, 8) . '_phplake');
+        $site->setDbpass($dbpass);
+        $site->setEnvironment('prod');
+        $site->setProject($project);
+        $project->addSite($site);
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($project);
+        $em->flush();
+        
+        // creating the ACL
+        $aclProvider = $this->get('security.acl.provider');
+        $objectIdentity = ObjectIdentity::fromDomainObject($site);
+        $acl = $aclProvider->createAcl($objectIdentity);
 
+        // retrieving the security identity of the currently logged-in user
+        $tokenStorage = $this->get('security.token_storage');
+        $user = $tokenStorage->getToken()->getUser();
+        $securityIdentity = UserSecurityIdentity::fromAccount($user);
+
+        // grant owner access
+        $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+        $aclProvider->updateAcl($acl);
+        
         return $this->redirectToRoute('myproject_details', ['id' => $project->getId()]);
     }
 }

@@ -43,6 +43,81 @@ class Phplake
         return $this->msg;
     }
     
+    public function envdelete($domain, $ide)
+    {
+        // Codiad deleting project
+        $this->perform(
+            array(
+                'anonymous' => 'yes',
+                'action' => 'delete',
+                'project_path' => $domain
+            ),
+            'http://'.$ide.'/components/project/controller.php'
+        );
+        // Codiad Deliting project files
+        $this->perform(
+            array(
+                'anonymous' => 'yes',
+                'action' => 'delete',
+                'path' => $domain
+            ),
+            'http://'.$ide.'/components/filemanager/controller.php'
+        );
+    }
+    
+    public function buildsourceupdate($user, $source, $docroot, $category, $domain, $ide)
+    {
+        $devpull = $this->perform(
+            array(
+                'action' => 'install',
+                'user' => $user,
+                'source' => $source,
+                'destination' => $docroot,
+                'tmpfolder' => $category
+            )
+        );
+        if ($devpull->status == 0) {
+            $addprojincodiad = $this->perform(
+                array(
+                    'anonymous' => 'yes',
+                    'action' => 'create',
+                    'project_name' => $domain,
+                    'project_path' => $domain
+                ),
+                'http://'.$ide.'/components/project/controller.php'
+            );
+            return $addprojincodiad;
+        }
+    }
+    
+    public function buildsourcecreate($user, $source, $docroot, $category, $domain)
+    {
+        //Install Codiad for recently created user
+        $codiad = $this->perform(
+            array(
+                'action' => 'install',
+                'user' => $user,
+                'source' => 'https://github.com/washim/Codiad/archive/ide.tar.gz',
+                'destination' => '/home/' . $user . '/public_html',
+                'tmpfolder' => 'Codiad-ide',
+                'project' => $domain
+            )
+        );
+        if ($codiad->status == 0) {
+            //Pull Dev environment source code from url
+            $devpull = $this->perform(
+                array(
+                    'action' => 'install',
+                    'user' => $user,
+                    'source' => $source,
+                    'destination' => $docroot,
+                    'tmpfolder' => $category
+                )
+            );
+            return $devpull;
+        }
+    }
+    
     private function phplakerequest($query)
     {
         $curl = curl_init();

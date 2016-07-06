@@ -25,6 +25,7 @@ class Users implements UserInterface, \Serializable
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank()
      * @Assert\Regex(pattern="/^\S{6,}$/", match=true, message="Minimum 6 characters long with no whitespace")
+     * @Assert\Length(max=8, maxMessage="Maximum {{ limit }} characters long with no whitespace")
      */
     private $username;
     

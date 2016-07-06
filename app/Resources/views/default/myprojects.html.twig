@@ -16,7 +16,6 @@
           <th>Category</th>
           <th>Environment</th>
           <th>Created</th>
-          <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -27,11 +26,10 @@
           <td>{{project.category}}</td>
           <td>
             {% for site in project.sites %}
-            {{site.domain}}{% if not loop.last %}<br>{% endif %}
+            <a href="http://{{site.domain}}" target="_blank">http://{{site.domain}}</a>{% if not loop.last %}<br>{% endif %}
             {% endfor %}
           </td>
           <td>{{project.createdAt|date('d-m-Y')}}</td>
-          <td><a class="btn btn-xs btn-danger delete" href="{{path('myproject_delete', {'id':project.id})}}">Delete</a></td>
         </tr>
         {% endfor %}
         </tbody>
@@ -42,7 +40,6 @@
           <th>Category</th>
           <th>Environment</th>
           <th>Created</th>
-          <th>Action</th>
         </tr>
         </tfoot>
       </table>
