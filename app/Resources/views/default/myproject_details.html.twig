@@ -24,7 +24,7 @@
       <hr>
       <strong><i class="fa fa-bell"></i> Danger Zone</strong>
       <p class="text-muted">Be carefull. It will erase all of your environment including this project.</p>
-      <a href="{{path('myproject_delete', {'id':project.id})}}" class="btn btn-danger btn-block"><b>Delete</b></a>
+      <a id="delproj" href="{{path('myproject_delete', {'id':project.id})}}" class="btn btn-danger btn-block"><b>Delete</b></a>
     </div>
   </div>
 </div>
@@ -54,7 +54,7 @@
           <img src="{{asset('asset/img/stage.png')}}"/>
           <h3>Validate your changes by creating your Stage environment.</h3>
           <p>Creating the Test Environment will clone the Dev environment’s code. Use the Test environment to review your changes. When you’re done, create your Live environment and deploy your changes to start the process of taking your site live.</p>
-          <a href="{{path('myproject_create_stage',{'id':dev.pid})}}" class="btn btn-warning">Create Stage Environment</a>
+          <a id="createbox" href="{{path('myproject_create_stage',{'id':dev.pid})}}" class="btn btn-warning">Create Stage Environment</a>
           <p></p>
         </div>
         {% endif %}
@@ -70,7 +70,7 @@
           <img src="{{asset('asset/img/prod.png')}}"/>
           <h3>Create your Live environment and deploy to your site.</h3>
           <p>Creating the Live environment will clone the entire Test environment and deploy it to your live site. When you're ready to take your site live, choose a paid plan then use the Domains tool in the Live environment to add your domain (www.example.com).</p>
-          <a href="{{path('myproject_create_prod',{'id':dev.pid})}}" class="btn btn-success">Create Live Environment</a>
+          <a id="createbox" href="{{path('myproject_create_prod',{'id':dev.pid})}}" class="btn btn-success">Create Live Environment</a>
           <p></p>
         </div>
         {% else %}

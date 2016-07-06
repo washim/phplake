@@ -38,19 +38,9 @@ class Sites
     private $environment;
     
     /**
-	 * @ORM\Column(type="string", length=255)
+	 * @ORM\Column(type="text")
 	 */
-    private $db;
-    
-    /**
-	 * @ORM\Column(type="string", length=255)
-	 */
-    private $dbuser;
-    
-    /**
-	 * @ORM\Column(type="string", length=255)
-	 */
-    private $dbpass;
+    private $storage;
     
     /**
 	 * @ORM\Column(type="datetime")
@@ -211,39 +201,15 @@ class Sites
         return $this->project;
     }
     
-    public function setDb($db)
+    public function setStorage($storage)
     {
-        $this->db = $db;
+        $this->storage = $storage;
         
         return $this;
     }
     
-    public function getDb()
+    public function getStorage()
     {
-        return $this->db;
-    }
-    
-    public function setDbuser($dbuser)
-    {
-        $this->dbuser = $dbuser;
-        
-        return $this;
-    }
-    
-    public function getDbuser()
-    {
-        return $this->dbuser;
-    }
-    
-    public function setDbpass($dbpass)
-    {
-        $this->dbpass = $dbpass;
-        
-        return $this;
-    }
-    
-    public function getDbpass()
-    {
-        return $this->dbpass;
+        return $this->storage;
     }
 }

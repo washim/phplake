@@ -32,6 +32,16 @@
   <script src="{{asset('asset/js/demo.js')}}"></script>
   <script src="{{asset('asset/js/custom.js')}}"></script>
   {% block javascript %}{% endblock %}
+  <script>
+  $(function() {
+    $('#createbox,#delproj').click(function(){
+      $.blockUI({
+        message: '<h4><i class="fa fa-refresh fa-spin"></i> Please wait. This might take few minutes to complete.</h4>', 
+        css: {'width': '500px'}
+      });
+    });
+  });
+  </script>
 </head>
 <body class="hold-transition sidebar-mini skin-black-light">
 <div class="wrapper">

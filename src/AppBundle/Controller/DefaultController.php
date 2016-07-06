@@ -132,9 +132,11 @@ class DefaultController extends Controller
             $em = $this->getDoctrine()->getManager();
             $site->setDomain($domain);
             $site->setSubdomain($subdomain);
-            $site->setDb($db);
-            $site->setDbuser(substr($this->getUser()->getUsername(), 0, 8) . '_phplake');
-            $site->setDbpass($dbpass);
+            $site->setStorage(serialize(array(
+                'db' => $db,
+                'dbuser' => $this->getUser()->getUsername() . '_phplake',
+                'dbpass' => $dbpass
+            )));
             $site->setProject($project);
             
             $project->addSite($site);
@@ -219,7 +221,7 @@ class DefaultController extends Controller
                 $this->getUser()->getUsername(),
                 $site->getDomain(),
                 $site->getSubdomain() . '.' . $this->getUser()->getIde(),
-                $site->getDb()
+                unserialize($site->getStorage())['db']
             );
             // Codiad deleting project
             $this->get('app.phplake')->envdelete(
@@ -264,7 +266,7 @@ class DefaultController extends Controller
             $this->getUser()->getUsername(),
             $site->getDomain(),
             $site->getSubdomain() . '.' . $this->getUser()->getIde(),
-            $site->getDb()
+            unserialize($site->getStorage())['db']
         );
         // Codiad deleting project
         $this->get('app.phplake')->envdelete(
@@ -296,7 +298,7 @@ class DefaultController extends Controller
         $domain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
         $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
-        $db        = implode('_', array(substr($this->getUser()->getUsername(), 0, 8), $project->getName(), 'stage'));
+        $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_stage';
         $dbpass    = 'phplake786';
         $pass      = 'merriment786';
         
@@ -359,9 +361,11 @@ class DefaultController extends Controller
         $site = new Sites();
         $site->setDomain($domain);
         $site->setSubdomain($subdomain);
-        $site->setDb($db);
-        $site->setDbuser(substr($this->getUser()->getUsername(), 0, 8) . '_phplake');
-        $site->setDbpass($dbpass);
+        $site->setStorage(serialize(array(
+            'db' => $db,
+            'dbuser' => $this->getUser()->getUsername() . '_phplake',
+            'dbpass' => $dbpass
+        )));
         $site->setEnvironment('stage');
         $site->setProject($project);
         $project->addSite($site);
@@ -395,7 +399,7 @@ class DefaultController extends Controller
         $domain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
         $subdomain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();
-        $db        = implode('_', array(substr($this->getUser()->getUsername(), 0, 8), $project->getName(), 'prod'));
+        $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_prod';
         $dbpass    = 'phplake786';
         $pass      = 'merriment786';
         
@@ -458,9 +462,11 @@ class DefaultController extends Controller
         $site = new Sites();
         $site->setDomain($domain);
         $site->setSubdomain($subdomain);
-        $site->setDb($db);
-        $site->setDbuser(substr($this->getUser()->getUsername(), 0, 8) . '_phplake');
-        $site->setDbpass($dbpass);
+        $site->setStorage(serialize(array(
+            'db' => $db,
+            'dbuser' => $this->getUser()->getUsername() . '_phplake',
+            'dbpass' => $dbpass
+        )));
         $site->setEnvironment('prod');
         $site->setProject($project);
         $project->addSite($site);

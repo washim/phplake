@@ -6,6 +6,7 @@ h4{font-weight:bold; font-size: 16px;}
 .pr-none{padding-right: 0px;}
 .ml-none{margin-left: 0px;}
 .pl-none{padding-left: 0px;}
+.mb-none{margin-bottom: 0px;}
 .hide {display:none;}
 #siteinstall .modal-dialog{ margin: 80px auto;}
 #siteinstall .modal-body .form-group:first-child, 

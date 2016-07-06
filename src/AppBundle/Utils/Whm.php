@@ -70,7 +70,7 @@ class Whm
                         'cpanel_jsonapi_apiversion' => '2',
                         'cpanel_jsonapi_module' => 'MysqlFE',
                         'cpanel_jsonapi_func' => 'createdbuser',
-                        'dbuser' => substr($user, 0, 8) . '_phplake',
+                        'dbuser' => $user . '_phplake',
                         'password' => $password
                     )
                 );
@@ -86,7 +86,7 @@ class Whm
                             'cpanel_jsonapi_module' => 'MysqlFE',
                             'cpanel_jsonapi_func' => 'setdbuserprivileges',
                             'db' => $db,
-                            'dbuser' => substr($user, 0, 8) . '_phplake',
+                            'dbuser' => $user . '_phplake',
                             'privileges' => 'ALL PRIVILEGES'
                         )
                     );
@@ -112,7 +112,7 @@ class Whm
                         'cpanel_jsonapi_module' => 'MysqlFE',
                         'cpanel_jsonapi_func' => 'setdbuserprivileges',
                         'db' => $db,
-                        'dbuser' => substr($user, 0, 8) . '_phplake',
+                        'dbuser' => $user . '_phplake',
                         'privileges' => 'ALL PRIVILEGES'
                     )
                 );
