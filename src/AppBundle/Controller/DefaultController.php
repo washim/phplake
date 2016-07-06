@@ -33,10 +33,10 @@ class DefaultController extends Controller
             $totproj   = count($this->getUser()->getProjects());
             $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
             $subdomain = 'dev-' . $project->getName() . '-' . $this->getUser()->getUsername();
-            $db        = implode('_', array(substr($this->getUser()->getUsername(), 0, 8), $project->getName(), 'dev'));
+            $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_dev';
             $dbpass    = 'phplake786';
             $pass      = 'merriment786';
-            if ($this->get('app.whm')->getwhmuser($this->getUser()->getUsername()) !== 206 ) {
+            if ($this->get('app.whm')->getwhmuser($this->getUser()->getUsername()) !== 206) {
                 if ($this->getUser()->getSubscription() == 'paid' || $totproj < 1) {
                     $response = $this->get('app.whm')->updatecp(
                         $this->getUser()->getUsername(),
@@ -132,11 +132,9 @@ class DefaultController extends Controller
             $em = $this->getDoctrine()->getManager();
             $site->setDomain($domain);
             $site->setSubdomain($subdomain);
-            $site->setStorage(serialize(array(
-                'db' => $db,
-                'dbuser' => $this->getUser()->getUsername() . '_phplake',
-                'dbpass' => $dbpass
-            )));
+            $site->setDb($db);
+            $site->setDbuser($this->getUser()->getUsername() . '_phplake');
+            $site->setDbpass($dbpass);
             $site->setProject($project);
             
             $project->addSite($site);
@@ -221,7 +219,7 @@ class DefaultController extends Controller
                 $this->getUser()->getUsername(),
                 $site->getDomain(),
                 $site->getSubdomain() . '.' . $this->getUser()->getIde(),
-                unserialize($site->getStorage())['db']
+                $site->getDb()
             );
             // Codiad deleting project
             $this->get('app.phplake')->envdelete(
@@ -266,7 +264,7 @@ class DefaultController extends Controller
             $this->getUser()->getUsername(),
             $site->getDomain(),
             $site->getSubdomain() . '.' . $this->getUser()->getIde(),
-            unserialize($site->getStorage())['db']
+            $site->getDb()
         );
         // Codiad deleting project
         $this->get('app.phplake')->envdelete(
@@ -361,11 +359,9 @@ class DefaultController extends Controller
         $site = new Sites();
         $site->setDomain($domain);
         $site->setSubdomain($subdomain);
-        $site->setStorage(serialize(array(
-            'db' => $db,
-            'dbuser' => $this->getUser()->getUsername() . '_phplake',
-            'dbpass' => $dbpass
-        )));
+        $site->setDb($db);
+        $site->setDbuser($this->getUser()->getUsername() . '_phplake');
+        $site->setDbpass($dbpass);
         $site->setEnvironment('stage');
         $site->setProject($project);
         $project->addSite($site);
@@ -462,11 +458,9 @@ class DefaultController extends Controller
         $site = new Sites();
         $site->setDomain($domain);
         $site->setSubdomain($subdomain);
-        $site->setStorage(serialize(array(
-            'db' => $db,
-            'dbuser' => $this->getUser()->getUsername() . '_phplake',
-            'dbpass' => $dbpass
-        )));
+        $site->setDb($db);
+        $site->setDbuser($this->getUser()->getUsername() . '_phplake');
+        $site->setDbpass($dbpass);
         $site->setEnvironment('prod');
         $site->setProject($project);
         $project->addSite($site);
