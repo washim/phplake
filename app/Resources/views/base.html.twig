@@ -34,7 +34,7 @@
   {% block javascript %}{% endblock %}
   <script>
   $(function() {
-    $('#createbox,#delproj').click(function(){
+    $('.wait').click(function(){
       $.blockUI({
         message: '<h4><i class="fa fa-refresh fa-spin"></i> Please wait. This might take few minutes to complete.</h4>', 
         css: {'width': '500px'}

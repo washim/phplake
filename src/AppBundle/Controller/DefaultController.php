@@ -36,8 +36,8 @@ class DefaultController extends Controller
             $db        = implode('_', array(substr($this->getUser()->getUsername(), 0, 8), $project->getName(), 'dev'));
             $dbpass    = 'phplake786';
             $pass      = 'merriment786';
-            if ($totproj > 0 || $this->get('app.whm')->getwhmuser($this->getUser()->getUsername()) !== 206 ) {
-                if ($this->getUser()->getSubscription() == 'paid') {
+            if ($this->get('app.whm')->getwhmuser($this->getUser()->getUsername()) !== 206 ) {
+                if ($this->getUser()->getSubscription() == 'paid' || $totproj < 1) {
                     $response = $this->get('app.whm')->updatecp(
                         $this->getUser()->getUsername(),
                         $docroot,
