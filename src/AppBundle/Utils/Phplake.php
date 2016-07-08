@@ -54,15 +54,6 @@ class Phplake
             ),
             'http://'.$ide.'/components/project/controller.php'
         );
-        // Codiad Deliting project files
-        $this->perform(
-            array(
-                'anonymous' => 'yes',
-                'action' => 'delete',
-                'path' => $domain
-            ),
-            'http://'.$ide.'/components/filemanager/controller.php'
-        );
     }
     
     public function buildsourceupdate($user, $source, $docroot, $category, $domain, $ide)

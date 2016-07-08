@@ -213,7 +213,7 @@ class Whm
     /**
      * Cpanel Delete addon domain
      */
-    public function envdelete($user, $domain, $subdomain, $db)
+    public function envdelete($user, $domain, $subdomain, $docroot, $db)
     {
         $this->perform('cpanel',
             array(
@@ -232,6 +232,17 @@ class Whm
                 'cpanel_jsonapi_module' => 'MysqlFE',
                 'cpanel_jsonapi_func' => 'deletedb',
                 'db' => $db
+            )
+        );
+        $this->perform('cpanel',
+            array(
+                'cpanel_jsonapi_user' => $user,
+                'cpanel_jsonapi_apiversion' => '2',
+                'cpanel_jsonapi_module' => 'Fileman',
+                'cpanel_jsonapi_func' => 'fileop',
+                'op' => 'unlink',
+                'sourcefiles' => $docroot,
+                'doubledecode' => 1
             )
         );
     }
