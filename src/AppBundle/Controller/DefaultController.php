@@ -132,6 +132,7 @@ class DefaultController extends Controller
             $em = $this->getDoctrine()->getManager();
             $site->setDomain($domain);
             $site->setSubdomain($subdomain);
+            $site->setDocroot($docroot);
             $site->setDb($db);
             $site->setDbuser($this->getUser()->getUsername() . '_phplake');
             $site->setDbpass($dbpass);
@@ -318,16 +319,29 @@ class DefaultController extends Controller
                 $project->getCategory()
             );
             if ($response == 200) {
-                // Pull Dev environment source code from url
-                $buildsource = $this->get('app.phplake')->buildsourceupdate(
-                    $this->getUser()->getUsername(),
-                    $project->getTargetUrl(),
-                    $docroot,
-                    $project->getCategory(),
-                    $domain,
-                    $this->getUser()->getIde()
+                $clone = $this->get('app.whm')->perform('cpanel',
+                    array(
+                        'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+                        'cpanel_jsonapi_apiversion' => '2',
+                        'cpanel_jsonapi_module' => 'Fileman',
+                        'cpanel_jsonapi_func' => 'fileop',
+                        'op' => 'copy',
+                        'sourcefiles' => str_replace('stage', 'dev', $docroot) . '/*',
+                        'destfiles' => $docroot,
+                        'doubledecode' => 1
+                    )
                 );
-                if (!empty($buildsource->status)) {
+                if ($clone->cpanelresult->event->result == 1) {
+                    // Add Stage to IDE
+                    $this->get('app.phplake')->perform(
+                        array(
+                            'anonymous' => 'yes',
+                            'action' => 'create',
+                            'project_name' => $domain,
+                            'project_path' => $domain
+                        ),
+                        'http://'.$this->getUser()->getIde().'/components/project/controller.php'
+                    );
                     $this->addFlash(
                         'success',
                         'Stage environment created successfully.'
@@ -359,6 +373,7 @@ class DefaultController extends Controller
         $site = new Sites();
         $site->setDomain($domain);
         $site->setSubdomain($subdomain);
+        $site->setDocroot($docroot);
         $site->setDb($db);
         $site->setDbuser($this->getUser()->getUsername() . '_phplake');
         $site->setDbpass($dbpass);
@@ -417,16 +432,29 @@ class DefaultController extends Controller
                 $project->getCategory()
             );
             if ($response == 200) {
-                // Pull Dev environment source code from url
-                $buildsource = $this->get('app.phplake')->buildsourceupdate(
-                    $this->getUser()->getUsername(),
-                    $project->getTargetUrl(),
-                    $docroot,
-                    $project->getCategory(),
-                    $domain,
-                    $this->getUser()->getIde()
+                $clone = $this->get('app.whm')->perform('cpanel',
+                    array(
+                        'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+                        'cpanel_jsonapi_apiversion' => '2',
+                        'cpanel_jsonapi_module' => 'Fileman',
+                        'cpanel_jsonapi_func' => 'fileop',
+                        'op' => 'copy',
+                        'sourcefiles' => str_replace('prod', 'stage', $docroot) . '/*',
+                        'destfiles' => $docroot,
+                        'doubledecode' => 1
+                    )
                 );
-                if (!empty($buildsource->status)) {
+                if ($clone->cpanelresult->event->result == 1) {
+                    // Add Stage to IDE
+                    $this->get('app.phplake')->perform(
+                        array(
+                            'anonymous' => 'yes',
+                            'action' => 'create',
+                            'project_name' => $domain,
+                            'project_path' => $domain
+                        ),
+                        'http://'.$this->getUser()->getIde().'/components/project/controller.php'
+                    );
                     $this->addFlash(
                         'success',
                         'Production environment created successfully.'
@@ -458,6 +486,7 @@ class DefaultController extends Controller
         $site = new Sites();
         $site->setDomain($domain);
         $site->setSubdomain($subdomain);
+        $site->setDocroot($docroot);
         $site->setDb($db);
         $site->setDbuser($this->getUser()->getUsername() . '_phplake');
         $site->setDbpass($dbpass);

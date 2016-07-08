@@ -39,22 +39,16 @@
       <div class="tab-pane active table-responsive no-padding" id="dev">
         <table class="table table-hover">
           <tbody><tr>
-            <th>ID</th>
-            <th>Environment</th>
             <th>Type</th>
             <th>Database</th>
             <th>Database User</th>
             <th>Database Password</th>
-            <th>Created</th>
           </tr>
           <tr>
-            <td>{{dev.id}}</td>
             <td><a href="http://{{dev.domain}}" target="_blank">http://{{dev.domain}}</a></td>
-            <td>{{dev.environment}}</td>
             <td><span class="badge bg-light-blue">{{dev.db}}</span></td>
             <td><span class="badge bg-green">{{dev.dbuser}}</span></td>
             <td><span class="badge bg-yellow">{{dev.dbpass}}</span></td>
-            <td>{{dev.createdAt|date('d-m-Y')}}</td>
           </tr>
         </tbody></table>
       </div>
@@ -62,22 +56,16 @@
         {% if stage|length > 0 %}
         <table class="table table-hover">
           <tbody><tr>
-            <th>ID</th>
-            <th>Environment</th>
             <th>Type</th>
             <th>Database</th>
             <th>Database User</th>
             <th>Database Password</th>
-            <th>Created</th>
           </tr>
           <tr>
-            <td>{{stage.id}}</td>
             <td><a href="http://{{stage.domain}}" target="_blank">http://{{stage.domain}}</a></td>
-            <td>{{stage.environment}}</td>
-            <td>{{stage.db}}</td>
-            <td>{{stage.dbuser}}</td>
-            <td>{{stage.dbpass}}</td>
-            <td>{{stage.createdAt|date('d-m-Y')}}</td>
+            <td><span class="badge bg-light-blue">{{stage.db}}</span></td>
+            <td><span class="badge bg-green">{{stage.dbuser}}</span></td>
+            <td><span class="badge bg-yellow">{{stage.dbpass}}</span></td>
           </tr>
         </tbody></table>
         {% else %}
@@ -94,22 +82,16 @@
         {% if prod|length > 0 %}
         <table class="table table-hover">
           <tbody><tr>
-            <th>ID</th>
-            <th>Environment</th>
             <th>Type</th>
             <th>Database</th>
             <th>Database User</th>
             <th>Database Password</th>
-            <th>Created</th>
           </tr>
           <tr>
-            <td>{{prod.id}}</td>
             <td><a href="http://{{prod.domain}}" target="_blank">http://{{prod.domain}}</a></td>
-            <td>{{prod.environment}}</td>
-            <td>{{prod.db}}</td>
-            <td>{{prod.dbuser}}</td>
-            <td>{{prod.dbpass}}</td>
-            <td>{{prod.createdAt|date('d-m-Y')}}</td>
+            <td><span class="badge bg-light-blue">{{prod.db}}</span></td>
+            <td><span class="badge bg-green">{{prod.dbuser}}</span></td>
+            <td><span class="badge bg-yellow">{{prod.dbpass}}</span></td>
           </tr>
         </tbody></table>
         {% elseif stage|length > 0 %}

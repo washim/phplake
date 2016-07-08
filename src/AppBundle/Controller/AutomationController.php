@@ -24,16 +24,19 @@ class AutomationController extends Controller
      */
     public function deployAction(Request $request)
     {
-        $res = $this->get('app.phplake')->perform(
+        $res = $this->get('app.whm')->perform('cpanel',
             array(
-                'anonymous' => 'yes',
-                'action' => 'create',
-                'project_name' => 'dev-nbsols-administrator.phplake.com',
-                'project_path' => 'dev-nbsols-administrator.phplake.com'
-            ),
-            'http://'.$this->getUser()->getIde().'/components/project/controller.php'
+                'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+                'cpanel_jsonapi_apiversion' => '2',
+                'cpanel_jsonapi_module' => 'Fileman',
+                'cpanel_jsonapi_func' => 'fileop',
+                'op' => 'copy',
+                'sourcefiles' => '/home/wasahmed/public_html/workspace/dev-hadiths-wasahmed.phplake.com/*',
+                'destfiles' => '/home/wasahmed/public_html/workspace/stage-hadiths-wasahmed.phplake.com',
+                'doubledecode' => 1
+            )
         );
-        dump($this->getUser()->getIde());
+        dump($res);
         return new Response();
     }
 }

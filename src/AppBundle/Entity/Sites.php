@@ -40,6 +40,11 @@ class Sites
     /**
 	 * @ORM\Column(type="string", length=255)
 	 */
+    private $docroot;
+    
+    /**
+	 * @ORM\Column(type="string", length=255)
+	 */
     private $db;
     
     /**
@@ -69,23 +74,11 @@ class Sites
 	    $this->createdAt = new \DateTime('now');
 	}
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Set pid
-     *
-     * @param integer $pid
-     *
-     * @return Sites
-     */
     public function setPid($pid)
     {
         $this->pid = $pid;
@@ -93,23 +86,11 @@ class Sites
         return $this;
     }
 
-    /**
-     * Get pid
-     *
-     * @return integer
-     */
     public function getPid()
     {
         return $this->pid;
     }
 
-    /**
-     * Set domain
-     *
-     * @param string $domain
-     *
-     * @return Sites
-     */
     public function setDomain($domain)
     {
         $this->domain = $domain;
@@ -117,11 +98,6 @@ class Sites
         return $this;
     }
 
-    /**
-     * Get domain
-     *
-     * @return string
-     */
     public function getDomain()
     {
         return $this->domain;
@@ -139,13 +115,6 @@ class Sites
         return $this->subdomain;
     }
 
-    /**
-     * Set environment
-     *
-     * @param string $environment
-     *
-     * @return Sites
-     */
     public function setEnvironment($environment)
     {
         $this->environment = $environment;
@@ -153,23 +122,11 @@ class Sites
         return $this;
     }
 
-    /**
-     * Get environment
-     *
-     * @return string
-     */
     public function getEnvironment()
     {
         return $this->environment;
     }
 
-    /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return Sites
-     */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
@@ -177,23 +134,11 @@ class Sites
         return $this;
     }
 
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    /**
-     * Set project
-     *
-     * @param \AppBundle\Entity\Projects $project
-     *
-     * @return Sites
-     */
     public function setProject(\AppBundle\Entity\Projects $project = null)
     {
         $this->project = $project;
@@ -201,11 +146,6 @@ class Sites
         return $this;
     }
 
-    /**
-     * Get project
-     *
-     * @return \AppBundle\Entity\Projects
-     */
     public function getProject()
     {
         return $this->project;
@@ -245,5 +185,17 @@ class Sites
     public function getDbpass()
     {
         return $this->dbpass;
+    }
+
+    public function setDocroot($docroot)
+    {
+        $this->docroot = $docroot;
+
+        return $this;
+    }
+
+    public function getDocroot()
+    {
+        return $this->docroot;
     }
 }
