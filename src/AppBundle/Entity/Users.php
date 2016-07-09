@@ -41,6 +41,16 @@ class Users implements UserInterface, \Serializable
     private $password;
     
     /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $cpanelpass;
+    
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $idepass;
+    
+    /**
      * @ORM\OneToMany(targetEntity="Projects", mappedBy="owner")
      */
 	private $projects;
@@ -78,11 +88,13 @@ class Users implements UserInterface, \Serializable
 
     public function __construct()
     {
-        $this->projects = new ArrayCollection();
-        $this->isActive = true;
-        $this->uroles = 'ROLE_USER';
+        $this->projects     = new ArrayCollection();
+        $this->isActive     = true;
+        $this->uroles       = 'ROLE_USER';
         $this->subscription = 'free';
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt    = new \DateTime('now');
+        $this->cpanelpass   = bin2hex(random_bytes(6));
+        $this->idepass      = bin2hex(random_bytes(6));
     }
 
     public function getUsername()
@@ -134,24 +146,12 @@ class Users implements UserInterface, \Serializable
             // $this->salt
         ) = unserialize($serialized);
     }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
+ 
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Set username
-     *
-     * @param string $username
-     *
-     * @return Users
-     */
     public function setUsername($username)
     {
         $this->username = $username;
@@ -159,13 +159,6 @@ class Users implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Users
-     */
     public function setPassword($password)
     {
         $this->password = $password;
@@ -173,13 +166,6 @@ class Users implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return Users
-     */
     public function setEmail($email)
     {
         $this->email = $email;
@@ -187,23 +173,11 @@ class Users implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * Get email
-     *
-     * @return string
-     */
     public function getEmail()
     {
         return $this->email;
     }
 
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     *
-     * @return Users
-     */
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
@@ -211,23 +185,11 @@ class Users implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * Get isActive
-     *
-     * @return boolean
-     */
     public function getIsActive()
     {
         return $this->isActive;
     }
 
-    /**
-     * Set uroles
-     *
-     * @param string $uroles
-     *
-     * @return Users
-     */
     public function setUroles($uroles)
     {
         $this->uroles = $uroles;
@@ -235,11 +197,6 @@ class Users implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * Get uroles
-     *
-     * @return string
-     */
     public function getUroles()
     {
         return $this->uroles;
@@ -283,13 +240,6 @@ class Users implements UserInterface, \Serializable
         return $this->subscription;
     }
     
-    /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return Sites
-     */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
@@ -297,13 +247,44 @@ class Users implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    public function setCpanelpass($cpanelpass)
+    {
+        $this->cpanelpass = $cpanelpass;
+
+        return $this;
+    }
+
+    public function getCpanelpass()
+    {
+        return $this->cpanelpass;
+    }
+
+    public function addProject(\AppBundle\Entity\Projects $project)
+    {
+        $this->projects[] = $project;
+
+        return $this;
+    }
+
+    public function removeProject(\AppBundle\Entity\Projects $project)
+    {
+        $this->projects->removeElement($project);
+    }
+
+    public function setIdepass($idepass)
+    {
+        $this->idepass = $idepass;
+
+        return $this;
+    }
+
+    public function getIdepass()
+    {
+        return $this->idepass;
     }
 }

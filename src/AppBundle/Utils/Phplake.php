@@ -81,13 +81,14 @@ class Phplake
         }
     }
     
-    public function buildsourcecreate($user, $source, $docroot, $category, $domain)
+    public function buildsourcecreate($user, $source, $docroot, $category, $domain, $idepass)
     {
         //Install Codiad for recently created user
         $codiad = $this->perform(
             array(
                 'action' => 'install',
                 'user' => $user,
+                'idepass' => $idepass,
                 'source' => 'https://github.com/washim/Codiad/archive/ide.tar.gz',
                 'destination' => '/home/' . $user . '/public_html',
                 'tmpfolder' => 'Codiad-ide',

@@ -34,8 +34,8 @@ class DefaultController extends Controller
             $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
             $subdomain = 'dev-' . $project->getName() . '-' . $this->getUser()->getUsername();
             $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_dev';
-            $dbpass    = 'phplake786';
-            $pass      = 'merriment786';
+            $dbpass    = bin2hex(random_bytes(6));
+            $pass      = $this->getUser()->getCpanelpass();
             if ($this->get('app.whm')->getwhmuser($this->getUser()->getUsername()) !== 206) {
                 if ($this->getUser()->getSubscription() == 'paid' || $totproj < 1) {
                     $response = $this->get('app.whm')->updatecp(
@@ -106,7 +106,8 @@ class DefaultController extends Controller
                         $project->getTargetUrl(),
                         $docroot,
                         $project->getCategory(),
-                        $domain
+                        $domain,
+                        $this->getUser()->getIdepass()
                     );
                     if ($buildsourcecreate->status == 0) {
                         $this->addFlash(
@@ -317,12 +318,12 @@ class DefaultController extends Controller
             throw new AccessDeniedException();
         }
         
-        $domain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
+        $domain    = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
         $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_stage';
-        $dbpass    = 'phplake786';
-        $pass      = 'merriment786';
+        $dbpass    = bin2hex(random_bytes(6));
+        $pass      = $this->getUser()->getCpanelpass();
         
         $sites = $project->getSites();
         $criteria = Criteria::create()
@@ -435,12 +436,12 @@ class DefaultController extends Controller
             throw new AccessDeniedException();
         }
         
-        $domain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
+        $domain    = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
         $subdomain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_prod';
-        $dbpass    = 'phplake786';
-        $pass      = 'merriment786';
+        $dbpass    = bin2hex(random_bytes(6));
+        $pass      = $this->getUser()->getCpanelpass();
         
         $sites = $project->getSites();
         $criteria = Criteria::create()
