@@ -214,7 +214,62 @@ class DefaultController extends Controller
             throw new AccessDeniedException();
         }
         
-        foreach ($project->getSites() as $site) {
+        if ($project->getId()) {
+            foreach ($project->getSites() as $site) {
+                // Env Delete
+                $this->get('app.whm')->envdelete(
+                    $this->getUser()->getUsername(),
+                    $site->getDomain(),
+                    $site->getSubdomain() . '.' . $this->getUser()->getIde(),
+                    $site->getDocroot(),
+                    $site->getDb()
+                );
+                // Codiad deleting project
+                $this->get('app.phplake')->envdelete(
+                    $site->getDomain(),
+                    $this->getUser()->getIde()
+                );
+                // Deleting the ACL
+                $aclProvider = $this->get('security.acl.provider');
+                $objectIdentity = ObjectIdentity::fromDomainObject($site);
+                $aclProvider->deleteAcl($objectIdentity);
+            }
+            
+            // Deleting the ACL
+            $aclProvider = $this->get('security.acl.provider');
+            $objectIdentity = ObjectIdentity::fromDomainObject($project);
+            $aclProvider->deleteAcl($objectIdentity);
+            
+            $em = $this->getDoctrine()->getManager();
+    		$em->remove($project);
+    		$em->flush();
+    		
+    		$this->addFlash(
+    			'success',
+    			'Project deleted with all environment successfully.'
+    		);
+        }
+        else {
+            $this->addFlash(
+    			'error',
+    			'Project which you looking for does not exist.'
+    		);
+        }
+		
+        return $this->redirectToRoute('myprojects');
+    }
+    
+    /**
+     * @Route("/env/{id}/delete", name="env_delete")
+     */
+    public function envdeleteAction(Request $request, Sites $site)
+    {
+        $authorizationChecker = $this->get('security.authorization_checker');
+        if (false === $authorizationChecker->isGranted('VIEW', $site)) {
+            throw new AccessDeniedException();
+        }
+        
+        if ($site->getId()) {
             // Env Delete
             $this->get('app.whm')->envdelete(
                 $this->getUser()->getUsername(),
@@ -232,61 +287,22 @@ class DefaultController extends Controller
             $aclProvider = $this->get('security.acl.provider');
             $objectIdentity = ObjectIdentity::fromDomainObject($site);
             $aclProvider->deleteAcl($objectIdentity);
+            
+            $em = $this->getDoctrine()->getManager();
+    		$em->remove($site);
+    		$em->flush();
+    		
+    		$this->addFlash(
+    			'success',
+    			'Environment deleted successfully.'
+    		);
         }
-        
-        // Deleting the ACL
-        $aclProvider = $this->get('security.acl.provider');
-        $objectIdentity = ObjectIdentity::fromDomainObject($project);
-        $aclProvider->deleteAcl($objectIdentity);
-        
-        $em = $this->getDoctrine()->getManager();
-		$em->remove($project);
-		$em->flush();
-		
-		$this->addFlash(
-			'success',
-			'Project deleted with all environment successfully.'
-		);
-		
-        return $this->redirectToRoute('myprojects');
-    }
-    
-    /**
-     * @Route("/env/{id}/delete", name="env_delete")
-     */
-    public function envdeleteAction(Request $request, Sites $site)
-    {
-        $authorizationChecker = $this->get('security.authorization_checker');
-        if (false === $authorizationChecker->isGranted('VIEW', $site)) {
-            throw new AccessDeniedException();
+        else {
+            $this->addFlash(
+    			'error',
+    			'Site which you trying to delete does not exist.'
+    		);
         }
-        
-        // Env Delete
-        $this->get('app.whm')->envdelete(
-            $this->getUser()->getUsername(),
-            $site->getDomain(),
-            $site->getSubdomain() . '.' . $this->getUser()->getIde(),
-            $site->getDocroot(),
-            $site->getDb()
-        );
-        // Codiad deleting project
-        $this->get('app.phplake')->envdelete(
-            $site->getDomain(),
-            $this->getUser()->getIde()
-        );
-        // Deleting the ACL
-        $aclProvider = $this->get('security.acl.provider');
-        $objectIdentity = ObjectIdentity::fromDomainObject($site);
-        $aclProvider->deleteAcl($objectIdentity);
-        
-        $em = $this->getDoctrine()->getManager();
-		$em->remove($site);
-		$em->flush();
-		
-		$this->addFlash(
-			'success',
-			'Environment deleted successfully.'
-		);
 		
         return $this->redirectToRoute('myprojects');
     }
@@ -296,6 +312,11 @@ class DefaultController extends Controller
      */
     public function myprojectcreatestageAction(Request $request, Projects $project)
     {
+        $authorizationChecker = $this->get('security.authorization_checker');
+        if (false === $authorizationChecker->isGranted('VIEW', $project)) {
+            throw new AccessDeniedException();
+        }
+        
         $domain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
         $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
@@ -409,6 +430,11 @@ class DefaultController extends Controller
      */
     public function myprojectcreateprodAction(Request $request, Projects $project)
     {
+        $authorizationChecker = $this->get('security.authorization_checker');
+        if (false === $authorizationChecker->isGranted('VIEW', $project)) {
+            throw new AccessDeniedException();
+        }
+        
         $domain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
         $subdomain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();

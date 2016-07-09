@@ -12,8 +12,11 @@
       <strong><i class="fa fa-adjust"></i> Category</strong>
       <p class="text-muted">{{project.category}}</p>
       <hr>
-      <strong><i class="fa fa-indent"></i> Online IDE</strong><small class="label pull-right bg-green">new</small>
+      <strong><i class="fa fa-indent"></i> Online IDE</strong><small class="label pull-right bg-green">Most Popular</small>
       <p class="text-muted"><a href="http://{{project.owner.ide}}" target="_blank">http://{{project.owner.ide}}</a></p>
+      <hr>
+      <strong><i class="fa fa-database"></i> phpMyAdmin Database</strong>
+      <p class="text-muted"><a href="http://dbphpmyadmin.phplake.com" target="_blank">http://dbphpmyadmin.phplake.com</a></p>
       <hr>
       <strong><i class="fa fa-crop"></i> Environemnt</strong>
       {% if project.sites|length > 0 %}
