@@ -193,7 +193,40 @@ class SecurityController extends Controller
         $form->remove('email');
         if (sha1(base64_decode($key)) == $powerkey) {
             if ($request->getMethod() == 'POST') {
-                
+                $fuser = $this->getDoctrine()
+                ->getRepository('AppBundle:Users')
+                ->findOneByEmail(base64_decode($key));
+                if (!$fuser) {
+                    $this->addFlash(
+                        'error',
+                        'Unable to change password due to invalid reset link.'
+                    );
+                }
+                else {
+                    $first = $request->request->get('users')['plainPassword']['first'];
+                    $second = $request->request->get('users')['plainPassword']['second'];
+                    if ($first !== $second) {
+                        $this->addFlash(
+                            'error',
+                            'Repeat password not matched with new password.'
+                        );
+                    }
+                    else {
+                        $password = $this->get('security.password_encoder')->encodePassword($fuser, $second);
+                        $fuser->setPassword($password);
+                        
+                        $em = $this->getDoctrine()->getManager();
+                        $em->persist($fuser);
+                        $em->flush();
+                        
+                        $this->addFlash(
+                            'success',
+                            'Password updated successfully.'
+                        );
+                        
+                        return $this->redirectToRoute('login');
+                    }
+                }
             }
         }
         else {
@@ -202,7 +235,7 @@ class SecurityController extends Controller
                 'Reset password link invalid or expired.'
             );
             
-            //return $this->redirectToRoute('forgotpass');
+            return $this->redirectToRoute('forgotpass');
         }
         
         return $this->render('resetpass.html.twig', [

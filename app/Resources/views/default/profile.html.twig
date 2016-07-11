@@ -7,7 +7,7 @@
     <div class="box-body box-profile">
       <img class="profile-user-img img-responsive img-circle" src="{{user.avatar}}" alt="User profile picture">
       <h3 class="profile-username text-center">{% if app.user.name is empty %}{{app.user.username}}{% else %}{{app.user.name}}{% endif %}</h3>
-      <p class="text-muted text-center">Software Engineer</p>
+      <p class="text-muted text-center">{{app.user.email}}</p>
       <ul class="list-group list-group-unbordered">
         <li class="list-group-item">
           <b>Subscription Type</b> <a class="pull-right"><span class="label label-primary">Free</span></a>
