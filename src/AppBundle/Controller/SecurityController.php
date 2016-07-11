@@ -156,15 +156,14 @@ class SecurityController extends Controller
             else {
                 $message = \Swift_Message::newInstance()
                     ->setSubject('Reset your Phplake password')
-                    ->setFrom('Phplake Support<support@phplake.com>')
+                    ->setFrom(['support@phplake.com' => 'Phplake Support'])
                     ->setTo($email)
                     ->setBody(
                         $this->renderView('Emails/forgot.html.twig', [
                             'name' => $fuser->getUsername(),
                             'powerkey' => sha1($email),
                             'key' => base64_encode($email)
-                        ]),
-                        'text/html'
+                        ])
                     );
                 $this->get('mailer')->send($message);
                 
