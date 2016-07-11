@@ -6,12 +6,14 @@
       <h3 class="box-title">Project Details</h3>
     </div>
     <div class="box-body">
-      <strong><i class="fa fa-shield" aria-hidden="true"></i> Name</strong>
-      <p class="text-muted">{{project.name}}</p>
-      <hr>
-      <strong><i class="fa fa-adjust"></i> Category</strong>
-      <p class="text-muted">{{project.category}}</p>
-      <hr>
+      <ul class="list-group list-group-unbordered">
+        <li class="list-group-item">
+          <b><i class="fa fa-shield" aria-hidden="true"></i> Name</b> <a class="pull-right">{{project.name}}</a>
+        </li>
+        <li class="list-group-item">
+          <b><i class="fa fa-adjust"></i> Category</b> <a class="pull-right">{{project.category}}</a>
+        </li>
+      </ul>
       <strong><i class="fa fa-indent"></i> Online IDE</strong><small class="label pull-right bg-green">Most Popular</small>
       <p class="text-muted"><a href="http://{{project.owner.ide}}" target="_blank">http://{{project.owner.ide}}</a></p>
       <strong><i class="fa fa-cube"></i> IDE Password</strong>

@@ -132,4 +132,48 @@ class SecurityController extends Controller
         
         return $this->render('default/profile.html.twig', ['user' => $this->getUser(), 'form' => $form->createView(), 'passform' => $passform->createView()]);
     }
+    
+    /**
+     * @Route("/forgotpass", name="forgotpass")
+     */
+    public function forgotpassAction(Request $request)
+    {
+        $user = new Users();
+        $form = $this->createForm(UsersType::class, $user);
+        $form->remove('username');
+        $form->remove('plainPassword');
+        if ($request->getMethod() == 'POST') {
+            $email = $request->request->get('users')['email'];
+            $fuser = $this->getDoctrine()
+                ->getRepository('AppBundle:Users')
+                ->findOneByEmail($email);
+            if (!$fuser) {
+                $this->addFlash(
+                    'error',
+                    'No account found with this email.'
+                );
+            }
+            else {
+                $powerkey = $this->get('security.password_encoder')->encodePassword($fuser, $email);
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Reset your Phplake password')
+                    ->setFrom('support@phplake-washim.c9users.io')
+                    ->setTo($email)
+                    ->setBody(
+                        $this->renderView('Emails/forgot.html.twig'),
+                        'text/html'
+                    );
+                
+                $this->addFlash(
+                    'success',
+                    'Further instruction sent to email.'
+                );
+            }
+            
+            return $this->redirectToRoute('forgotpass');
+        }
+        return $this->render('forgotpass.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
 }
