@@ -30,8 +30,12 @@ class Users implements UserInterface, \Serializable
     private $username;
     
     /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $name;
+    
+    /**
+     * @Assert\Length(min=6, max=15, minMessage="Password should by at least {{ limit }} chars long")
      */
     private $plainPassword;
 
@@ -113,6 +117,13 @@ class Users implements UserInterface, \Serializable
     {
         return $this->password;
     }
+    
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
 
     public function getRoles()
     {
@@ -155,13 +166,6 @@ class Users implements UserInterface, \Serializable
     public function setUsername($username)
     {
         $this->username = $username;
-
-        return $this;
-    }
-
-    public function setPassword($password)
-    {
-        $this->password = $password;
 
         return $this;
     }
@@ -210,6 +214,8 @@ class Users implements UserInterface, \Serializable
     public function setPlainPassword($password)
     {
         $this->plainPassword = $password;
+        
+        return $this;
     }
     
     public function getAvatar()
@@ -219,8 +225,7 @@ class Users implements UserInterface, \Serializable
     }
     
     public function getIde() {
-        $this->ide = 'ide-' . $this->username . '.phplake.com' ;
-        
+        $this->ide = 'ide-' . $this->username . '.phplake.com';
         return $this->ide;
     }
     
@@ -286,5 +291,17 @@ class Users implements UserInterface, \Serializable
     public function getIdepass()
     {
         return $this->idepass;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 }

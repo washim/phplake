@@ -2,11 +2,11 @@ h4{font-weight:bold; font-size: 16px;}
 .skin-black-light .main-header>.logo:hover {background-color: #ffffff;}
 .main-header .logo{text-align: left;}
 .main-header .logo-mini{text-align: center;}
-.mr-none{margin-right: 0px ;}
-.pr-none{padding-right: 0px;}
-.ml-none{margin-left: 0px;}
-.pl-none{padding-left: 0px;}
-.mb-none{margin-bottom: 0px;}
+.mr-none{margin-right: 0px !important;}
+.pr-none{padding-right: 0px !important;}
+.ml-none{margin-left: 0px !important;}
+.pl-none{padding-left: 0px !important;}
+.mb-none{margin-bottom: 0px !important;}
 .hide {display:none;}
 #siteinstall .modal-dialog{ margin: 80px auto;}
 #siteinstall .modal-body .form-group:first-child, 

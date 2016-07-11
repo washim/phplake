@@ -12,6 +12,8 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use AppBundle\Form\UsersType;
 use AppBundle\Entity\Users;
+use AppBundle\Form\ProfileType;
+use AppBundle\Form\ChangePasswordType;
 
 class SecurityController extends Controller
 {
@@ -79,5 +81,55 @@ class SecurityController extends Controller
     public function logoutAction(Request $request)
     {
         
+    }
+    
+    /**
+     * @Route("/myaccount", name="myaccount")
+     */
+    public function myaccountAction(Request $request)
+    {
+        $user = $this->getUser();
+        $passform = $this->createForm(ProfileType::class, $user);
+        $passform->handleRequest($request);
+        if ($passform->isSubmitted() && $passform->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            
+            $this->addFlash(
+                'success',
+                'Account metadata updated successfully.'
+            );
+            
+            return $this->redirectToRoute('myaccount');
+        }
+        
+        $form = $this->createForm(ChangePasswordType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($this->get('security.password_encoder')->isPasswordValid($user, $request->request->get('change_password')['oldPassword']) === false){
+                $this->addFlash(
+                    'error',
+                    'Current password not matched.' . $request->request->get('change_password')['oldPassword']
+                );
+                
+                return $this->redirectToRoute('myaccount');
+            }
+            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
+            $user->setPassword($password);
+            
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            
+            $this->addFlash(
+                'success',
+                'Password updated successfully.'
+            );
+            
+            return $this->redirectToRoute('myaccount');
+        }
+        
+        return $this->render('default/profile.html.twig', ['user' => $this->getUser(), 'form' => $form->createView(), 'passform' => $passform->createView()]);
     }
 }

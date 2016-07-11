@@ -17,9 +17,9 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <li class="user-menu">
-            <a href="#">
+            <a href="{{path('myaccount')}}">
               <img src="{{app.user.avatar}}" class="user-image" alt="User Image">
-              <span class="hidden-xs">{{app.user.username}}</span>
+              <span class="hidden-xs">{% if app.user.name is empty %}{{app.user.username}}{% else %}{{app.user.name}}{% endif %}</span>
             </a>
           </li>
           <li class="user-menu">

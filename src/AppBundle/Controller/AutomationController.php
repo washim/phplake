@@ -24,19 +24,16 @@ class AutomationController extends Controller
      */
     public function deployAction(Request $request)
     {
-        $res = $this->get('app.whm')->perform('cpanel',
+        $devpull = $this->get('app.phplake')->perform(
             array(
-                'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
-                'cpanel_jsonapi_apiversion' => '2',
-                'cpanel_jsonapi_module' => 'Fileman',
-                'cpanel_jsonapi_func' => 'fileop',
-                'op' => 'copy',
-                'sourcefiles' => '/home/wasahmed/public_html/workspace/dev-hadiths-wasahmed.phplake.com/*',
-                'destfiles' => '/home/wasahmed/public_html/workspace/stage-hadiths-wasahmed.phplake.com',
-                'doubledecode' => 1
+                'action' => 'install',
+                'user' => 'wasahmed',
+                'source' => 'https://ftp.drupal.org/files/projects/drupal-7.44.tar.gz',
+                'destination' => '/home/wasahmed/public_html/workspace/dev-hadiths-wasahmed.phplake.com',
+                'tmpfolder' => 'drupal-7.44'
             )
         );
-        dump($res);
+        dump($devpull);
         return new Response();
     }
 }
