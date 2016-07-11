@@ -157,7 +157,7 @@ class SecurityController extends Controller
                 $powerkey = $this->get('security.password_encoder')->encodePassword($fuser, $email);
                 $message = \Swift_Message::newInstance()
                     ->setSubject('Reset your Phplake password')
-                    ->setFrom('support@phplake-washim.c9users.io')
+                    ->setFrom('support@phplake.com')
                     ->setTo($email)
                     ->setBody(
                         $this->renderView('Emails/forgot.html.twig'),
