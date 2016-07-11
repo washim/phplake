@@ -160,20 +160,10 @@ class Whm
                     'subdomain' => $subdomain
                 )
             );
-            if ($addaddondomain->cpanelresult->event->result == 1) {
+            if (empty($addaddondomain->cpanelresult->error)) {
                 //Create Database for Dev environment
-                $createdb = $this->createdb(
-                    $user, 
-                    $db,
-                    $dbpass,
-                    'create_user'
-                );
-                if ($createdb == 200) {
-                    return 200;
-                }
-                else {
-                    return $createdb;
-                }
+                $createdb = $this->createdb($user, $db, $dbpass, 'create_user');
+                return $createdb;
             }
             else {
                 return 202; //Dev environment Addondomain creation failed
@@ -187,7 +177,7 @@ class Whm
     /**
      * Cpanel Create account
      */
-    public function updatecp($user, $docroot, $domain, $subdomain, $db, $dbpass, $source, $category)
+    public function updatecp($user, $domain, $docroot, $subdomain, $db, $dbpass, $source, $category)
     {
         $addaddondomain = $this->perform('cpanel',
             array(

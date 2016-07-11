@@ -41,8 +41,8 @@ class DefaultController extends Controller
                 if ($this->getUser()->getSubscription() == 'paid' || $totproj < 1) {
                     $response = $this->get('app.whm')->updatecp(
                         $this->getUser()->getUsername(),
-                        $docroot,
                         $domain,
+                        $docroot,
                         $subdomain,
                         $db,
                         $dbpass,
@@ -335,8 +335,8 @@ class DefaultController extends Controller
         if ($site === false) {
             $response = $this->get('app.whm')->updatecp(
                 $this->getUser()->getUsername(),
-                $docroot,
                 $domain,
+                $docroot,
                 $subdomain,
                 $db,
                 $dbpass,
@@ -453,8 +453,8 @@ class DefaultController extends Controller
         if ($site === false) {
             $response = $this->get('app.whm')->updatecp(
                 $this->getUser()->getUsername(),
-                $docroot,
                 $domain,
+                $docroot,
                 $subdomain,
                 $db,
                 $dbpass,
