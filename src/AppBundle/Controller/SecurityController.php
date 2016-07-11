@@ -163,6 +163,7 @@ class SecurityController extends Controller
                         $this->renderView('Emails/forgot.html.twig'),
                         'text/html'
                     );
+                $this->get('mailer')->send($message);
                 
                 $this->addFlash(
                     'success',
