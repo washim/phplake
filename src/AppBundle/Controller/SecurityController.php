@@ -154,13 +154,16 @@ class SecurityController extends Controller
                 );
             }
             else {
-                $powerkey = $this->get('security.password_encoder')->encodePassword($fuser, $email);
                 $message = \Swift_Message::newInstance()
                     ->setSubject('Reset your Phplake password')
-                    ->setFrom('support@phplake.com')
+                    ->setFrom('Phplake Support<support@phplake.com>')
                     ->setTo($email)
                     ->setBody(
-                        $this->renderView('Emails/forgot.html.twig'),
+                        $this->renderView('Emails/forgot.html.twig', [
+                            'name' => $fuser->getUsername(),
+                            'powerkey' => sha1($email),
+                            'key' => base64_encode($email)
+                        ]),
                         'text/html'
                     );
                 $this->get('mailer')->send($message);
@@ -173,7 +176,37 @@ class SecurityController extends Controller
             
             return $this->redirectToRoute('forgotpass');
         }
+        
         return $this->render('forgotpass.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+    
+    /**
+     * @Route("/resetpassword/{powerkey}/{key}", name="resetpassword")
+     */
+    function resetpasswordAction(Request $request, $powerkey, $key)
+    {
+        
+        $user = new Users();
+        $form = $this->createForm(UsersType::class, $user);
+        $form->remove('username');
+        $form->remove('email');
+        if (sha1(base64_decode($key)) == $powerkey) {
+            if ($request->getMethod() == 'POST') {
+                
+            }
+        }
+        else {
+            $this->addFlash(
+                'error',
+                'Reset password link invalid or expired.'
+            );
+            
+            //return $this->redirectToRoute('forgotpass');
+        }
+        
+        return $this->render('resetpass.html.twig', [
             'form' => $form->createView()
         ]);
     }

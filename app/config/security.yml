@@ -30,6 +30,7 @@ security:
     - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/forgotpass, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/resetpassword, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/, roles: ROLE_USER }
     
     acl:
