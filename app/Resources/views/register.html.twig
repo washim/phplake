@@ -37,6 +37,11 @@
         {{ form_row(form.email, {'attr':{'placeholder':'Enter your valid email address'}}) }}
         {{ form_row(form.plainPassword.first, {'attr':{'placeholder':'Enter your password'}}) }}
         {{ form_row(form.plainPassword.second, {'attr':{'placeholder':'Repeat your password again'}}) }}
+        {% block captcha_widget %}
+        {% spaceless %}
+        {{ form_row(form.captcha) }}
+        {% endspaceless %}
+        {% endblock %}
         <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
     {{ form_end(form) }}
   </div>
