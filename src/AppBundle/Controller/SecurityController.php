@@ -18,6 +18,8 @@ use AppBundle\Form\ChangePasswordType;
 use AppBundle\Form\Model\ChangePassword;
 use AppBundle\Form\ForgotPasswordType;
 use AppBundle\Form\Model\ForgotPassword;
+use AppBundle\Form\ResetPasswordType;
+use AppBundle\Form\Model\ResetPassword;
 
 class SecurityController extends Controller
 {
@@ -203,16 +205,14 @@ class SecurityController extends Controller
      */
     function resetpasswordAction(Request $request, $powerkey, $key)
     {
-        $user = new ChangePassword();
-        $form = $this->createForm(ChangePasswordType::class, $user);
-        $form->remove('oldPassword');
+        $user = new ResetPassword();
+        $form = $this->createForm(ResetPasswordType::class, $user);
         $form->handleRequest($request);
         if (sha1(base64_decode($key)) == $powerkey) {
             if ($form->isSubmitted() && $form->isValid()) {
                 $fuser = $this->getDoctrine()
                     ->getRepository('AppBundle:Users')
                     ->findOneByEmail(base64_decode($key));
-                    
                 if (!$fuser) {
                     $this->addFlash(
                         'error',
@@ -222,7 +222,6 @@ class SecurityController extends Controller
                 else {
                     $password = $this->get('security.password_encoder')->encodePassword($fuser, $user->getPlainPassword());
                     $fuser->setPassword($password);
-                    
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($fuser);
                     $em->flush();
