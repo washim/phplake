@@ -68,6 +68,24 @@ class SecurityController extends Controller
             $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
             $aclProvider->updateAcl($acl);
             
+            $message = \Swift_Message::newInstance()
+                    ->setSubject('Activate your Phplake account')
+                    ->setFrom(['support@phplake.com' => 'Phplake Support'])
+                    ->setTo($user->getEmail())
+                    ->setBody(
+                        $this->renderView('Emails/activateaccount.html.twig', [
+                            'name' => $user->getUsername(),
+                            'powerkey' => sha1($user->getEmail()),
+                            'key' => base64_encode($user->getEmail())
+                        ])
+                    );
+            $this->get('mailer')->send($message);
+            
+            $this->addFlash(
+                'success',
+                'An activation link sent to your email account.'
+            );
+            
             return $this->redirectToRoute('login');
         }
         return $this->render('register.html.twig', [
@@ -194,8 +212,9 @@ class SecurityController extends Controller
         if (sha1(base64_decode($key)) == $powerkey) {
             if ($request->getMethod() == 'POST') {
                 $fuser = $this->getDoctrine()
-                ->getRepository('AppBundle:Users')
-                ->findOneByEmail(base64_decode($key));
+                    ->getRepository('AppBundle:Users')
+                    ->findOneByEmail(base64_decode($key));
+                    
                 if (!$fuser) {
                     $this->addFlash(
                         'error',
@@ -241,5 +260,48 @@ class SecurityController extends Controller
         return $this->render('resetpass.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+    
+    /**
+     * @Route("/activateaccount/{powerkey}/{key}", name="activateaccount")
+     */
+    function activateaccountAction(Request $request, $powerkey, $key)
+    {
+        if (sha1(base64_decode($key)) == $powerkey) {
+            $fuser = $this->getDoctrine()
+                ->getRepository('AppBundle:Users')
+                ->findOneByEmail(base64_decode($key));
+            
+            if (!$fuser) {
+                $this->addFlash(
+                    'error',
+                    'Unable to activate your account due to invalid activation link.'
+                );
+            }
+            else {
+                $fuser->setIsActive(true);
+                
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($fuser);
+                $em->flush();
+                
+                $this->addFlash(
+                    'success',
+                    'Account activated successfully.'
+                );
+                
+                return $this->redirectToRoute('login');
+            }
+        }
+        else {
+            $this->addFlash(
+                'error',
+                'Reset password link invalid or expired.'
+            );
+            
+            return $this->redirectToRoute('login');
+        }
+        
+        return null;
     }
 }

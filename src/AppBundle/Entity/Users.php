@@ -93,7 +93,7 @@ class Users implements UserInterface, \Serializable
     public function __construct()
     {
         $this->projects     = new ArrayCollection();
-        $this->isActive     = true;
+        $this->isActive     = false;
         $this->uroles       = 'ROLE_USER';
         $this->subscription = 'free';
         $this->createdAt    = new \DateTime('now');

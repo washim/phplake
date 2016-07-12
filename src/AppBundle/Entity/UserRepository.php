@@ -13,6 +13,7 @@ class UserRepository extends EntityRepository implements UserLoaderInterface
             ->where('u.username = :username OR u.email = :email')
             ->setParameter('username', $username)
             ->setParameter('email', $username)
+            ->setParameter('is_active', 1)
             ->getQuery()
             ->getOneOrNullResult();
     }
