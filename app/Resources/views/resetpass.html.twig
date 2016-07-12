@@ -30,7 +30,7 @@
   <div class="register-box-body">
     {{include('flashmessage.html.twig')}}
     <div class="register-logo">
-        <a href="#"><img src="{{asset('asset/img/logo.png')}}"/></a>
+        <a href="{{path('homepage')}}"><img src="{{asset('asset/img/logo.png')}}"/></a>
     </div>
     <p class="register-box-msg">Reset your password</p>
     {{ form_start(form) }}

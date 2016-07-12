@@ -36,6 +36,7 @@ class Users implements UserInterface, \Serializable
     
     /**
      * @Assert\Length(min=6, max=15, minMessage="Password should by at least {{ limit }} chars long")
+     * @Assert\NotBlank()
      */
     private $plainPassword;
 
@@ -211,9 +212,9 @@ class Users implements UserInterface, \Serializable
         return $this->plainPassword;
     }
 
-    public function setPlainPassword($password)
+    public function setPlainPassword($plainPassword)
     {
-        $this->plainPassword = $password;
+        $this->plainPassword = $plainPassword;
         
         return $this;
     }

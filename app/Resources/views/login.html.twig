@@ -34,7 +34,7 @@
 		</div>
 		{% endif %}
     <div class="login-logo">
-        <a href="#"><img src="{{asset('asset/img/logo.png')}}"/></a>
+        <a href="{{path('homepage')}}"><img src="{{asset('asset/img/logo.png')}}"/></a>
     </div>
     <p class="login-box-msg">Sign in to start your session</p>
     <form action="{{ path('login') }}" method="post">

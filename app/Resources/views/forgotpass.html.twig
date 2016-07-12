@@ -30,11 +30,16 @@
   <div class="register-box-body">
     {{include('flashmessage.html.twig')}}
     <div class="register-logo">
-        <a href="#"><img src="{{asset('asset/img/logo.png')}}"/></a>
+        <a href="{{path('homepage')}}"><img src="{{asset('asset/img/logo.png')}}"/></a>
     </div>
     <p class="register-box-msg">Restore your password</p>
     {{ form_start(form) }}
         {{ form_row(form.email, {'attr':{'placeholder':'Enter your valid email address'}}) }}
+        {% block captcha_widget %}
+        {% spaceless %}
+        {{ form_row(form.captcha) }}
+        {% endspaceless %}
+        {% endblock %}
         <button type="submit" class="btn btn-primary btn-block btn-flat">Reset</button>
     {{ form_end(form) }}
   </div>

@@ -13,7 +13,11 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use AppBundle\Form\UsersType;
 use AppBundle\Entity\Users;
 use AppBundle\Form\ProfileType;
+use AppBundle\Form\Model\Profile;
 use AppBundle\Form\ChangePasswordType;
+use AppBundle\Form\Model\ChangePassword;
+use AppBundle\Form\ForgotPasswordType;
+use AppBundle\Form\Model\ForgotPassword;
 
 class SecurityController extends Controller
 {
@@ -107,9 +111,12 @@ class SecurityController extends Controller
     public function myaccountAction(Request $request)
     {
         $user = $this->getUser();
-        $passform = $this->createForm(ProfileType::class, $user);
+        $profile = new Profile();
+        $profile->setName($user->getName());
+        $passform = $this->createForm(ProfileType::class, $profile);
         $passform->handleRequest($request);
         if ($passform->isSubmitted() && $passform->isValid()) {
+            $user->setName($profile->getName());
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
@@ -122,18 +129,11 @@ class SecurityController extends Controller
             return $this->redirectToRoute('myaccount');
         }
         
-        $form = $this->createForm(ChangePasswordType::class, $user);
+        $fuser = new ChangePassword();
+        $form = $this->createForm(ChangePasswordType::class, $fuser);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($this->get('security.password_encoder')->isPasswordValid($user, $request->request->get('change_password')['oldPassword']) === false){
-                $this->addFlash(
-                    'error',
-                    'Current password not matched.' . $request->request->get('change_password')['oldPassword']
-                );
-                
-                return $this->redirectToRoute('myaccount');
-            }
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
+            $password = $this->get('security.password_encoder')->encodePassword($user, $fuser->getPlainPassword());
             $user->setPassword($password);
             
             $em = $this->getDoctrine()->getManager();
@@ -156,12 +156,11 @@ class SecurityController extends Controller
      */
     public function forgotpassAction(Request $request)
     {
-        $user = new Users();
-        $form = $this->createForm(UsersType::class, $user);
-        $form->remove('username');
-        $form->remove('plainPassword');
-        if ($request->getMethod() == 'POST') {
-            $email = $request->request->get('users')['email'];
+        $user = new ForgotPassword();
+        $form = $this->createForm(ForgotPasswordType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $email = $user->getEmail();
             $fuser = $this->getDoctrine()
                 ->getRepository('AppBundle:Users')
                 ->findOneByEmail($email);
@@ -204,13 +203,12 @@ class SecurityController extends Controller
      */
     function resetpasswordAction(Request $request, $powerkey, $key)
     {
-        
-        $user = new Users();
-        $form = $this->createForm(UsersType::class, $user);
-        $form->remove('username');
-        $form->remove('email');
+        $user = new ChangePassword();
+        $form = $this->createForm(ChangePasswordType::class, $user);
+        $form->remove('oldPassword');
+        $form->handleRequest($request);
         if (sha1(base64_decode($key)) == $powerkey) {
-            if ($request->getMethod() == 'POST') {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $fuser = $this->getDoctrine()
                     ->getRepository('AppBundle:Users')
                     ->findOneByEmail(base64_decode($key));
@@ -222,29 +220,19 @@ class SecurityController extends Controller
                     );
                 }
                 else {
-                    $first = $request->request->get('users')['plainPassword']['first'];
-                    $second = $request->request->get('users')['plainPassword']['second'];
-                    if ($first !== $second) {
-                        $this->addFlash(
-                            'error',
-                            'Repeat password not matched with new password.'
-                        );
-                    }
-                    else {
-                        $password = $this->get('security.password_encoder')->encodePassword($fuser, $second);
-                        $fuser->setPassword($password);
-                        
-                        $em = $this->getDoctrine()->getManager();
-                        $em->persist($fuser);
-                        $em->flush();
-                        
-                        $this->addFlash(
-                            'success',
-                            'Password updated successfully.'
-                        );
-                        
-                        return $this->redirectToRoute('login');
-                    }
+                    $password = $this->get('security.password_encoder')->encodePassword($fuser, $user->getPlainPassword());
+                    $fuser->setPassword($password);
+                    
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($fuser);
+                    $em->flush();
+                    
+                    $this->addFlash(
+                        'success',
+                        'Password updated successfully.'
+                    );
+                    
+                    return $this->redirectToRoute('login');
                 }
             }
         }
