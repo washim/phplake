@@ -1,13 +1,13 @@
 #!/bin/bash
-USER=$1
-DEST=$2
-SOURCE=$3
-FILENAME=$4
-TMPFOLDER=$5
-WORKSPACE=$6
-PROJECT=$7
-IDEPASS=$8
-ACTION=$9
+ACTION=$1
+USER=$2
+DEST=$3
+SOURCE=$4
+FILENAME=$5
+TMPFOLDER=$6
+WORKSPACE=$7
+PROJECT=$8
+IDEPASS=$9
 IDE=ide-$USER.phplake.com
 
 sudo chown -R phplake:phplake $WORKSPACE
@@ -18,10 +18,10 @@ rm $WORKSPACE/$FILENAME
 mv -if $WORKSPACE/$TMPFOLDER/* $DEST
 rm -rf $WORKSPACE/$TMPFOLDER
 sudo chown -R $USER:$USER $WORKSPACE
-if [ $ACTION == "create" ]
+if [ $ACTION == "update" ]
 then
 curl http://$IDE/components/project/controller.php?action=create&project_name=$PROJECT&project_path=$PROJECT&anonymous=yes
-elif [ $ACTION == "update" ]
+elif [ $ACTION == "create" ]
 then
 curl http://$IDE/components/install/setup.php?path=$DEST&username=$USER&password=$IDEPASS&project_name=$PROJECT&project_path=$PROJECT&timezone=Asia/Kolkata
 fi

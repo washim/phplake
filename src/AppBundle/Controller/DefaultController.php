@@ -53,6 +53,7 @@ class DefaultController extends Controller
                         $arr       = explode('/', $project->getTargetUrl());
                         $filename  = $arr[count($arr) - 1];
                         $command   = implode(' ', array(
+                            'update',
                             '/home/phplake/public_html/phplakecodebase',
                             $this->getUser()->getUsername(),
                             $docroot,
@@ -60,9 +61,7 @@ class DefaultController extends Controller
                             $filename,
                             $project->getCategory(), 
                             '/home/' . $this->getUser()->getUsername(),
-                            $domain,
-                            $this->getUser()->getIdepass(),
-                            'update'
+                            $domain
                         ));
                         exec($command . ' 2>&1', $output, $status);
                         if ($status == 0) {
@@ -108,15 +107,22 @@ class DefaultController extends Controller
                     $project->getCategory()
                 );
                 if ($response == 200) {
-                    $buildsourcecreate = $this->get('app.phplake')->buildsourcecreate(
+                    $arr       = explode('/', $project->getTargetUrl());
+                    $filename  = $arr[count($arr) - 1];
+                    $command   = implode(' ', array(
+                        'create',
+                        '/home/phplake/public_html/phplakecodebase',
                         $this->getUser()->getUsername(),
-                        $project->getTargetUrl(),
                         $docroot,
-                        $project->getCategory(),
+                        $project->getTargetUrl(),
+                        $filename,
+                        $project->getCategory(), 
+                        '/home/' . $this->getUser()->getUsername(),
                         $domain,
                         $this->getUser()->getIdepass()
-                    );
-                    if ($buildsourcecreate->status == 0) {
+                    ));
+                    exec($command . ' 2>&1', $output, $status);
+                    if ($status == 0) {
                         $this->addFlash(
                             'success',
                             'Project created with default dev environment.'
