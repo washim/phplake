@@ -53,8 +53,8 @@ class DefaultController extends Controller
                         $arr       = explode('/', $project->getTargetUrl());
                         $filename  = $arr[count($arr) - 1];
                         $command   = implode(' ', array(
-                            'update',
                             '/home/phplake/public_html/phplakecodebase',
+                            'update',
                             $this->getUser()->getUsername(),
                             $docroot,
                             $project->getTargetUrl(),
@@ -110,8 +110,8 @@ class DefaultController extends Controller
                     $arr       = explode('/', $project->getTargetUrl());
                     $filename  = $arr[count($arr) - 1];
                     $command   = implode(' ', array(
-                        'create',
                         '/home/phplake/public_html/phplakecodebase',
+                        'create',
                         $this->getUser()->getUsername(),
                         $docroot,
                         $project->getTargetUrl(),
