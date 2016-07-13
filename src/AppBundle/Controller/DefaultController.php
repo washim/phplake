@@ -59,8 +59,7 @@ class DefaultController extends Controller
                             $docroot,
                             $project->getTargetUrl(),
                             $filename,
-                            $project->getCategory(), 
-                            '/home/' . $this->getUser()->getUsername(),
+                            $project->getCategory(),
                             $domain
                         ));
                         exec($command . ' 2>&1', $output, $status);
@@ -113,11 +112,10 @@ class DefaultController extends Controller
                         '/home/phplake/public_html/phplakecodebase',
                         'create',
                         $this->getUser()->getUsername(),
-                        '/home/' . $this->getUser()->getUsername() . '/public_html',
+                        $docroot,
                         $project->getTargetUrl(),
                         $filename,
-                        $project->getCategory(), 
-                        '/home/' . $this->getUser()->getUsername(),
+                        $project->getCategory(),
                         $domain,
                         $this->getUser()->getIdepass()
                     ));

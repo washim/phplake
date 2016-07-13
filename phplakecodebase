@@ -5,11 +5,22 @@ DEST=$3
 SOURCE=$4
 FILENAME=$5
 TMPFOLDER=$6
-WORKSPACE=$7
-PROJECT=$8
-IDEPASS=$9
+PROJECT=$7
+IDEPASS=$8
+WORKSPACE=/home/$USER
 IDE=ide-$USER.phplake.com
+DOCROOT=$WORKSPACE/public_html
 
+if [ $ACTION == "create" ]
+then
+sudo chown -R phplake:phplake $WORKSPACE
+rm -rf $DOCROOT/*
+wget $SOURCE -P $WORKSPACE
+tar -zxvf $WORKSPACE/$FILENAME -C $WORKSPACE
+rm $WORKSPACE/$FILENAME
+mv -if $WORKSPACE/$TMPFOLDER/* $DOCROOT
+rm -rf $WORKSPACE/$TMPFOLDER
+fi
 sudo chown -R phplake:phplake $WORKSPACE
 rm -rf $DEST/*
 wget $SOURCE -P $WORKSPACE
@@ -18,10 +29,11 @@ rm $WORKSPACE/$FILENAME
 mv -if $WORKSPACE/$TMPFOLDER/* $DEST
 rm -rf $WORKSPACE/$TMPFOLDER
 sudo chown -R $USER:$USER $WORKSPACE
+if [ $ACTION == "create" ]
+then
+curl http://$IDE/components/install/setup.php?path=$DOCROOT&base_url=$IDE&username=$USER&password=$IDEPASS&project_name=$PROJECT&project_path=$PROJECT&timezone=Asia/Kolkata
+fi
 if [ $ACTION == "update" ]
 then
 curl http://$IDE/components/project/controller.php?action=create&project_name=$PROJECT&project_path=$PROJECT&key=phplake786
-elif [ $ACTION == "create" ]
-then
-curl http://$IDE/components/install/setup.php?path=$DEST&base_url=$IDE&username=$USER&password=$IDEPASS&project_name=$PROJECT&project_path=$PROJECT&timezone=Asia/Kolkata
 fi
