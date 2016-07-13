@@ -59,13 +59,14 @@ class DefaultController extends Controller
                             $domain,
                             $this->getUser()->getIde()
                         );
-                        if (!empty($buildsource->status)) {
+                        if ($buildsource->status == 0) {
                             $this->addFlash(
                                 'success',
                                 'Project created successfully with default dev environment.'
                             );
                         }
                         else {
+                            dump($buildsource);exit;
                             $this->addFlash(
                                 'error',
                                 'Dev Environment source code build failed.'

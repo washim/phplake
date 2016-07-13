@@ -35,7 +35,8 @@ switch($_GET['action']) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_URL, $query);
-            curl_exec($curl);
+            $output = curl_exec($curl);
+            $output = json_decode($output);
             curl_close($curl);
         }
         
