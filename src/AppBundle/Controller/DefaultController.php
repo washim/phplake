@@ -52,8 +52,8 @@ class DefaultController extends Controller
                     if ($response == 200) {
                         $arr       = explode('/', $project->getTargetUrl());
                         $filename  = $arr[count($arr) - 1];
-                        $command   = __DIR__ . '/' . implode(' ', array(
-                            'phplakecodebase',
+                        $command   = implode(' ', array(
+                            '/home/phplake/public_html/phplakecodebase',
                             $this->getUser()->getUsername(),
                             $docroot,
                             $project->getTargetUrl(),
