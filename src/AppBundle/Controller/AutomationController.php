@@ -23,7 +23,7 @@ class AutomationController extends Controller
                 $filename  = $arr[count($arr) - 1];
                 $tmpfolder = $request->query->get('tmpfolder');
                 $workspace = '/home/'.$user;
-                $command = "php /home/phplake/phplakecodebase $user $dest $source $filename $tmpfolder $workspace";
+                $command = "php ".__DIR__."/phplakecodebase $user $dest $source $filename $tmpfolder $workspace";
                 exec($command . ' 2>&1', $output, $status);
                 if ($status == 0 && !empty($request->query->get('project'))) {
                     $project = $request->query->get('project');
