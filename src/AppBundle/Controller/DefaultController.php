@@ -66,7 +66,6 @@ class DefaultController extends Controller
                             );
                         }
                         else {
-                            dump($buildsource);exit;
                             $this->addFlash(
                                 'error',
                                 'Dev Environment source code build failed.'
