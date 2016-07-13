@@ -113,7 +113,7 @@ class DefaultController extends Controller
                         '/home/phplake/public_html/phplakecodebase',
                         'create',
                         $this->getUser()->getUsername(),
-                        $docroot,
+                        '/home/' . $this->getUser()->getUsername() . '/public_html',
                         $project->getTargetUrl(),
                         $filename,
                         $project->getCategory(), 
