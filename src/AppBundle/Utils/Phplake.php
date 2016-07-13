@@ -8,7 +8,7 @@ class Phplake
     
     public function __construct()
     {
-        $this->host = 'http://api.phplake.com/api.live.php';
+        $this->host = 'http://phplake.com/api';
     }
     
     public function perform($postdata, $host = '')
