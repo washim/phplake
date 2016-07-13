@@ -8,7 +8,7 @@ WORKSPACE=$6
 PROJECT=$7
 IDEPASS=$8
 ACTION=$9
-IDE=http://ide-$USER.phplake.com
+IDE=ide-$USER.phplake.com
 
 sudo chown -R phplake:phplake $WORKSPACE
 rm -rf $DEST/*
