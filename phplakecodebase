@@ -20,8 +20,8 @@ rm -rf $WORKSPACE/$TMPFOLDER
 sudo chown -R $USER:$USER $WORKSPACE
 if [ $ACTION == "update" ]
 then
-curl http://$IDE/components/project/controller.php?action=create&project_name=$PROJECT&project_path=$PROJECT&anonymous=yes
+curl http://$IDE/components/project/controller.php?action=create&project_name=$PROJECT&project_path=$PROJECT&key=phplake786
 elif [ $ACTION == "create" ]
 then
-curl http://$IDE/components/install/setup.php?path=$DEST&username=$USER&password=$IDEPASS&project_name=$PROJECT&project_path=$PROJECT&timezone=Asia/Kolkata
+curl http://$IDE/components/install/setup.php?path=$DEST&base_url=$IDE&username=$USER&password=$IDEPASS&project_name=$PROJECT&project_path=$PROJECT&timezone=Asia/Kolkata
 fi
