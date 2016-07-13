@@ -50,16 +50,22 @@ class DefaultController extends Controller
                         $project->getCategory()
                     );
                     if ($response == 200) {
-                        // Pull Dev environment source code from url
-                        $buildsource = $this->get('app.phplake')->buildsourceupdate(
+                        $arr       = explode('/', $project->getTargetUrl());
+                        $filename  = $arr[count($arr) - 1];
+                        $command   = __DIR__ . '/' . implode(' ', array(
+                            'phplakecodebase',
                             $this->getUser()->getUsername(),
-                            $project->getTargetUrl(),
                             $docroot,
-                            $project->getCategory(),
+                            $project->getTargetUrl(),
+                            $filename,
+                            $project->getCategory(), 
+                            '/home/' . $this->getUser()->getUsername(),
                             $domain,
-                            $this->getUser()->getIde()
-                        );
-                        if ($buildsource->status == 0) {
+                            $this->getUser()->getIdepass(),
+                            'update'
+                        ));
+                        exec($command . ' 2>&1', $output, $status);
+                        if ($status == 0) {
                             $this->addFlash(
                                 'success',
                                 'Project created successfully with default dev environment.'
