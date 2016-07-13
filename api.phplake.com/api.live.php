@@ -8,23 +8,8 @@ switch($_GET['action']) {
         $filename  = $arr[count($arr) - 1];
         $tmpfolder = $_GET['tmpfolder'];
         $workspace = '/home/'.$user;
-        
-        $cmd[] = "sudo chown -R phplake:phplake $workspace";
-        $cmd[] = "rm -rf $dest/*";
-        $cmd[] = "wget $source -P $workspace";
-        $cmd[] = "tar -zxvf $workspace/$filename -C $workspace";
-        $cmd[] = "rm $workspace/$filename";
-        $cmd[] = "mv -if $workspace/$tmpfolder/* $dest";
-        $cmd[] = "rm -rf $workspace/$tmpfolder";
-        $cmd[] = "sudo chown -R $user:$user $workspace";
-        
-        foreach ($cmd as $key => $command) {
-            exec($command . ' 2>&1', $output, $status);
-            if ($status !== 0) {
-                break;
-            }
-        }
-        
+        $command = "php /home/phplake/phplakecodebase $user $dest $source $filename $tmpfolder $workspace";
+        exec($command . ' 2>&1', $output, $status);
         if (isset($_GET['project']) && $status == 0) {
             $project = $_GET['project'];
             $ide     = "http://ide-" . $user . ".phplake.com";
@@ -39,7 +24,6 @@ switch($_GET['action']) {
             $output = json_decode($output);
             curl_close($curl);
         }
-        
         $result = array(
             'status' => $status,
             'output' => $output
