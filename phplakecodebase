@@ -23,12 +23,13 @@ rm $WORKSPACE/ide.tar.gz
 mv -if $WORKSPACE/Codiad-ide/* $DOCROOT
 rm -rf $WORKSPACE/Codiad-ide
 rm -rf $DEST/*
-wget $SOURCE -P $WORKSPACE
-tar -zxvf $WORKSPACE/$FILENAME -C $WORKSPACE
-rm $WORKSPACE/$FILENAME
-mv -if $WORKSPACE/$TMPFOLDER/* $DEST
-rm -rf $WORKSPACE/$TMPFOLDER
-sudo chown -R $USER:$USER $WORKSPACE
+
+wget $SOURCE -P $WORKAREA
+tar -zxvf $WORKAREA/$FILENAME -C $WORKAREA
+rm $WORKAREA/$FILENAME
+mv -if $WORKAREA/$TMPFOLDER/* $DEST
+rm -rf $WORKAREA/$TMPFOLDER
+sudo chown -R $USER:$USER $WORKAREA
 curl http://$IDE/components/install/setup.php?path=$DOCROOT&base_url=$IDE&username=$USER&password=$IDEPASS&project_name=$PROJECT&project_path=$PROJECT&timezone=Asia/Kolkata
 fi
 
