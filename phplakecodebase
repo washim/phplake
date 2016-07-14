@@ -7,11 +7,11 @@ FILENAME=$5
 TMPFOLDER=$6
 PROJECT=$7
 IDEPASS=$8
-WORKSPACE=/home/$USER
-IDE=ide-$USER.phplake.com
-DOCROOT=$WORKSPACE/public_html
-CODIAD=https://github.com/washim/Codiad/archive/ide.tar.gz
-WORKAREA=$DOCROOT/workspace
+WORKSPACE="/home/"$USER
+IDE="ide-"$USER".phplake.com"
+DOCROOT=$WORKSPACE"/public_html"
+CODIAD="https://github.com/washim/Codiad/archive/ide.tar.gz"
+WORKAREA=$DOCROOT"/workspace"
 
 if [ $ACTION == "create" ]
 then
@@ -28,7 +28,7 @@ tar -zxvf $WORKAREA/$FILENAME -C $WORKAREA
 rm $WORKAREA/$FILENAME
 mv -if $WORKAREA/$TMPFOLDER $DEST
 sudo chown -R $USER:$USER $WORKSPACE
-curl http://$IDE/components/install/setup.php?path=$DOCROOT&base_url=$IDE&username=$USER&password=$IDEPASS&project_name=$PROJECT&project_path=$PROJECT&timezone=Asia/Kolkata
+curl "http://"$IDE"/components/install/setup.php?path="$DOCROOT"&base_url="$IDE"&username="$USER"&password="$IDEPASS"&project_name="$PROJECT"&project_path="$PROJECT"&timezone=Asia/Kolkata"
 fi
 
 if [ $ACTION == "update" ]
@@ -40,5 +40,5 @@ tar -zxvf $WORKAREA/$FILENAME -C $WORKAREA
 rm $WORKAREA/$FILENAME
 mv -if $WORKAREA/$TMPFOLDER/* $DEST
 sudo chown -R $USER:$USER $WORKAREA
-curl http://$IDE/components/project/controller.php?action=create&project_name=$PROJECT&project_path=$PROJECT&key=phplake786
+curl "http://"$IDE"/components/project/controller.php?action=create&project_name="$PROJECT"&project_path="$PROJECT"&key=phplake786"
 fi
