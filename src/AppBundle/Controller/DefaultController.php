@@ -227,7 +227,6 @@ class DefaultController extends Controller
                     $this->getUser()->getUsername(),
                     $site->getDomain(),
                     $site->getSubdomain() . '.' . $this->getUser()->getIde(),
-                    $site->getDocroot(),
                     $site->getDb()
                 );
                 // Codiad deleting project
