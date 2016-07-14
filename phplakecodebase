@@ -1,44 +1,42 @@
 #!/bin/bash
-ACTION=$1
-USER=$2
-DEST=$3
-SOURCE=$4
-FILENAME=$5
-TMPFOLDER=$6
-PROJECT=$7
-IDEPASS=$8
-WORKSPACE="/home/"$USER
-IDE="ide-"$USER".phplake.com"
-DOCROOT=$WORKSPACE"/public_html"
 CODIAD="https://github.com/washim/Codiad/archive/ide.tar.gz"
-WORKAREA=$DOCROOT"/workspace"
 
-if [ $ACTION == "create" ]
+if [ $1 == "create" ]
 then
-sudo chown -R phplake:phplake $WORKSPACE
-rm -rf $DOCROOT/*
-wget $CODIAD -P $WORKSPACE
-tar -zxvf $WORKSPACE/ide.tar.gz -C $WORKSPACE
-rm $WORKSPACE/ide.tar.gz
-mv -if $WORKSPACE/Codiad-ide/* $DOCROOT
-rm -rf $WORKSPACE/Codiad-ide
+sudo chown -R phplake:phplake "/home/"$2
+rm -rf "/home/"$2"/public_html/*"
+wget $CODIAD -P "/home/"$2
+tar -zxvf "/home/"$2"/ide.tar.gz" -C "/home/"$2
+rm "/home/"$2"/ide.tar.gz"
+mv -if "/home/"$2"/Codiad-ide/* /home/"$2"/public_html"
+rm -rf "/home/"$2"/Codiad-ide"
 
-wget $SOURCE -P $WORKAREA
-tar -zxvf $WORKAREA/$FILENAME -C $WORKAREA
-rm $WORKAREA/$FILENAME
-mv -if $WORKAREA/$TMPFOLDER $DEST
-sudo chown -R $USER:$USER $WORKSPACE
-curl "http://"$IDE"/components/install/setup.php?path="$DOCROOT"&base_url="$IDE"&username="$USER"&password="$IDEPASS"&project_name="$PROJECT"&project_path="$PROJECT"&timezone=Asia/Kolkata"
+wget $3 -P "/home/"$2"/public_html/workspace"
+tar -zxvf "/home/"$2"/public_html/workspace/"$4 -C "/home/"$2"/public_html/workspace"
+rm "/home/"$2"/public_html/workspace/"$4
+mv -if "/home/"$2"/public_html/workspace/"$5 "/home/"$2"/public_html/workspace/"$6
+sudo chown -R $2:$2 "/home/"$2
+curl "http://ide-"$2".phplake.com/components/install/setup.php?path=/home/"$2"/public_html&base_url=ide-"$2".phplake.com&username="$2"&password="$7"&project_name="$6"&project_path="$6"&timezone=Asia/Kolkata"
 fi
 
-if [ $ACTION == "update" ]
+if [ $1 == "update" ]
 then
-sudo chown -R phplake:phplake $WORKAREA
-rm -rf $DEST
-wget $SOURCE -P $WORKAREA
-tar -zxvf $WORKAREA/$FILENAME -C $WORKAREA
-rm $WORKAREA/$FILENAME
-mv -if $WORKAREA/$TMPFOLDER/* $DEST
-sudo chown -R $USER:$USER $WORKAREA
-curl "http://"$IDE"/components/project/controller.php?action=create&project_name="$PROJECT"&project_path="$PROJECT"&key=phplake786"
+sudo chown -R phplake:phplake "/home/"$2"/public_html/workspace"
+rm -rf "/home/"$2"/public_html/workspace/"$6
+wget $3 -P "/home/"$2"/public_html/workspace"
+tar -zxvf "/home/"$2"/public_html/workspace/"$4 -C "/home/"$2"/public_html/workspace"
+rm "/home/"$2"/public_html/workspace/"$4
+mv -if "/home/"$2"/public_html/workspace/"$5 "/home/"$2"/public_html/workspace/"$6
+sudo chown -R $2:$2 "/home/"$2
+curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$6"&project_path="$6"&key=phplake786"
+fi
+
+if [ $1 == "unlinkcodiad" ]
+then
+curl "http://ide-"$2".phplake.com/components/project/controller.php?action=delete&project_path="$3"&key=phplake786"
+fi
+
+if [ $1 == "linkcodiad" ]
+then
+curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$3"&project_path="$3"&key=phplake786"
 fi

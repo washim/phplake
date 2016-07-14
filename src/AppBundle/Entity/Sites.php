@@ -40,11 +40,6 @@ class Sites
     /**
 	 * @ORM\Column(type="string", length=255)
 	 */
-    private $docroot;
-    
-    /**
-	 * @ORM\Column(type="string", length=255)
-	 */
     private $db;
     
     /**
@@ -185,17 +180,5 @@ class Sites
     public function getDbpass()
     {
         return $this->dbpass;
-    }
-
-    public function setDocroot($docroot)
-    {
-        $this->docroot = $docroot;
-
-        return $this;
-    }
-
-    public function getDocroot()
-    {
-        return $this->docroot;
     }
 }

@@ -132,7 +132,7 @@ class Whm
     /**
      * Cpanel Create account
      */
-    public function createcp($user, $pass, $email, $domain, $docroot, $subdomain, $db, $dbpass, $source, $category)
+    public function createcp($user, $pass, $email, $domain, $subdomain, $db, $dbpass, $source, $category)
     {
         //Create WHM IDE User Account
         $createacct = $this->perform('createacct', 
@@ -155,7 +155,7 @@ class Whm
                     'cpanel_jsonapi_apiversion' => '2',
                     'cpanel_jsonapi_module' => 'AddonDomain',
                     'cpanel_jsonapi_func' => 'addaddondomain',
-                    'dir' => $docroot,
+                    'dir' => '/home/' . $user . '/public_html/workspace/' . $domain,
                     'newdomain' => $domain,
                     'subdomain' => $subdomain
                 )
@@ -177,7 +177,7 @@ class Whm
     /**
      * Cpanel Create account
      */
-    public function updatecp($user, $domain, $docroot, $subdomain, $db, $dbpass, $source, $category)
+    public function updatecp($user, $domain, $subdomain, $db, $dbpass, $source, $category)
     {
         $addaddondomain = $this->perform('cpanel',
             array(
@@ -185,7 +185,7 @@ class Whm
                 'cpanel_jsonapi_apiversion' => '2',
                 'cpanel_jsonapi_module' => 'AddonDomain',
                 'cpanel_jsonapi_func' => 'addaddondomain',
-                'dir' => $docroot,
+                'dir' => '/home/' . $user . '/public_html/workspace/' . $domain,
                 'newdomain' => $domain,
                 'subdomain' => $subdomain
             )
@@ -203,7 +203,7 @@ class Whm
     /**
      * Cpanel Delete addon domain
      */
-    public function envdelete($user, $domain, $subdomain, $docroot, $db)
+    public function envdelete($user, $domain, $subdomain, $db)
     {
         $this->perform('cpanel',
             array(
@@ -231,7 +231,7 @@ class Whm
                 'cpanel_jsonapi_module' => 'Fileman',
                 'cpanel_jsonapi_func' => 'fileop',
                 'op' => 'unlink',
-                'sourcefiles' => $docroot,
+                'sourcefiles' => '/home/' . $user . '/public_html/workspace/' . $domain,
                 'doubledecode' => 1
             )
         );

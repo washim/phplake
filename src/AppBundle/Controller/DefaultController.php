@@ -32,7 +32,6 @@ class DefaultController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $domain    = 'dev-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
             $totproj   = count($this->getUser()->getProjects());
-            $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
             $subdomain = 'dev-' . $project->getName() . '-' . $this->getUser()->getUsername();
             $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_dev';
             $dbpass    = bin2hex(random_bytes(6));
@@ -42,7 +41,6 @@ class DefaultController extends Controller
                     $response = $this->get('app.whm')->updatecp(
                         $this->getUser()->getUsername(),
                         $domain,
-                        $docroot,
                         $subdomain,
                         $db,
                         $dbpass,
@@ -52,18 +50,17 @@ class DefaultController extends Controller
                     if ($response == 200) {
                         $arr       = explode('/', $project->getTargetUrl());
                         $filename  = $arr[count($arr) - 1];
-                        $command   = implode(' ', array(
-                            '/home/phplake/public_html/phplakecodebase',
-                            'update',
-                            $this->getUser()->getUsername(),
-                            $docroot,
-                            $project->getTargetUrl(),
-                            $filename,
-                            $project->getCategory(),
-                            $domain
-                        ));
-                        exec($command . ' 2>&1', $output, $status);
-                        if ($status == 0) {
+                        $command   = $this->get('app.phplake')->command(
+                            array(
+                                'update',
+                                $this->getUser()->getUsername(),
+                                $project->getTargetUrl(),
+                                $filename,
+                                $project->getCategory(),
+                                $domain
+                            )
+                        );
+                        if ($command == 0) {
                             $this->addFlash(
                                 'success',
                                 'Project created successfully with default dev environment.'
@@ -98,7 +95,6 @@ class DefaultController extends Controller
                     $pass,
                     $this->getUser()->getEmail(),
                     $domain,
-                    $docroot,
                     $subdomain,
                     $db,
                     $dbpass,
@@ -108,19 +104,18 @@ class DefaultController extends Controller
                 if ($response == 200) {
                     $arr       = explode('/', $project->getTargetUrl());
                     $filename  = $arr[count($arr) - 1];
-                    $command   = implode(' ', array(
-                        '/home/phplake/public_html/phplakecodebase',
-                        'create',
-                        $this->getUser()->getUsername(),
-                        $docroot,
-                        $project->getTargetUrl(),
-                        $filename,
-                        $project->getCategory(),
-                        $domain,
-                        $this->getUser()->getIdepass()
-                    ));
-                    exec($command . ' 2>&1', $output, $status);
-                    if ($status == 0) {
+                    $command   = $this->get('app.phplake')->command(
+                        array(
+                            'create',
+                            $this->getUser()->getUsername(),
+                            $project->getTargetUrl(),
+                            $filename,
+                            $project->getCategory(),
+                            $domain,
+                            $this->getUser()->getIdepass()
+                        )
+                    );
+                    if ($command == 0) {
                         $this->addFlash(
                             'success',
                             'Project created with default dev environment.'
@@ -144,7 +139,6 @@ class DefaultController extends Controller
             $em = $this->getDoctrine()->getManager();
             $site->setDomain($domain);
             $site->setSubdomain($subdomain);
-            $site->setDocroot($docroot);
             $site->setDb($db);
             $site->setDbuser($this->getUser()->getUsername() . '_phplake');
             $site->setDbpass($dbpass);
@@ -237,10 +231,7 @@ class DefaultController extends Controller
                     $site->getDb()
                 );
                 // Codiad deleting project
-                $this->get('app.phplake')->envdelete(
-                    $site->getDomain(),
-                    $this->getUser()->getIde()
-                );
+                $this->get('app.phplake')->command(array('unlinkcodiad',$this->getUser()->getUsername(),$site->getDomain()));
                 // Deleting the ACL
                 $aclProvider = $this->get('security.acl.provider');
                 $objectIdentity = ObjectIdentity::fromDomainObject($site);
@@ -287,14 +278,10 @@ class DefaultController extends Controller
                 $this->getUser()->getUsername(),
                 $site->getDomain(),
                 $site->getSubdomain() . '.' . $this->getUser()->getIde(),
-                $site->getDocroot(),
                 $site->getDb()
             );
             // Codiad deleting project
-            $this->get('app.phplake')->envdelete(
-                $site->getDomain(),
-                $this->getUser()->getIde()
-            );
+            $this->get('app.phplake')->command(array('unlinkcodiad',$this->getUser()->getUsername(),$site->getDomain()));
             // Deleting the ACL
             $aclProvider = $this->get('security.acl.provider');
             $objectIdentity = ObjectIdentity::fromDomainObject($site);
@@ -330,7 +317,6 @@ class DefaultController extends Controller
         }
         
         $domain    = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
-        $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
         $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_stage';
         $dbpass    = bin2hex(random_bytes(6));
@@ -346,7 +332,6 @@ class DefaultController extends Controller
             $response = $this->get('app.whm')->updatecp(
                 $this->getUser()->getUsername(),
                 $domain,
-                $docroot,
                 $subdomain,
                 $db,
                 $dbpass,
@@ -361,22 +346,14 @@ class DefaultController extends Controller
                         'cpanel_jsonapi_module' => 'Fileman',
                         'cpanel_jsonapi_func' => 'fileop',
                         'op' => 'copy',
-                        'sourcefiles' => str_replace('stage', 'dev', $docroot) . '/*',
-                        'destfiles' => $docroot,
+                        'sourcefiles' => '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . str_replace('stage', 'dev', $domain) . '/*',
+                        'destfiles' => '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain,
                         'doubledecode' => 1
                     )
                 );
                 if ($clone->cpanelresult->event->result == 1) {
                     // Add Stage to IDE
-                    $this->get('app.phplake')->perform(
-                        array(
-                            'key' => 'phplake786',
-                            'action' => 'create',
-                            'project_name' => $domain,
-                            'project_path' => $domain
-                        ),
-                        'http://'.$this->getUser()->getIde().'/components/project/controller.php'
-                    );
+                    $this->get('app.phplake')->command(array('linkcodiad',$this->getUser()->getUsername(),$domain));
                     $this->addFlash(
                         'success',
                         'Stage environment created successfully.'
@@ -408,7 +385,6 @@ class DefaultController extends Controller
         $site = new Sites();
         $site->setDomain($domain);
         $site->setSubdomain($subdomain);
-        $site->setDocroot($docroot);
         $site->setDb($db);
         $site->setDbuser($this->getUser()->getUsername() . '_phplake');
         $site->setDbpass($dbpass);
@@ -448,7 +424,6 @@ class DefaultController extends Controller
         }
         
         $domain    = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
-        $docroot   = '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain;
         $subdomain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_prod';
         $dbpass    = bin2hex(random_bytes(6));
@@ -464,7 +439,6 @@ class DefaultController extends Controller
             $response = $this->get('app.whm')->updatecp(
                 $this->getUser()->getUsername(),
                 $domain,
-                $docroot,
                 $subdomain,
                 $db,
                 $dbpass,
@@ -479,22 +453,14 @@ class DefaultController extends Controller
                         'cpanel_jsonapi_module' => 'Fileman',
                         'cpanel_jsonapi_func' => 'fileop',
                         'op' => 'copy',
-                        'sourcefiles' => str_replace('prod', 'stage', $docroot) . '/*',
-                        'destfiles' => $docroot,
+                        'sourcefiles' => '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . str_replace('prod', 'stage', $domain) . '/*',
+                        'destfiles' => '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain,
                         'doubledecode' => 1
                     )
                 );
                 if ($clone->cpanelresult->event->result == 1) {
                     // Add Stage to IDE
-                    $this->get('app.phplake')->perform(
-                        array(
-                            'key' => 'phplake786',
-                            'action' => 'create',
-                            'project_name' => $domain,
-                            'project_path' => $domain
-                        ),
-                        'http://'.$this->getUser()->getIde().'/components/project/controller.php'
-                    );
+                    $this->get('app.phplake')->command(array('linkcodiad',$this->getUser()->getUsername(),$domain));
                     $this->addFlash(
                         'success',
                         'Production environment created successfully.'
@@ -526,7 +492,6 @@ class DefaultController extends Controller
         $site = new Sites();
         $site->setDomain($domain);
         $site->setSubdomain($subdomain);
-        $site->setDocroot($docroot);
         $site->setDb($db);
         $site->setDbuser($this->getUser()->getUsername() . '_phplake');
         $site->setDbpass($dbpass);

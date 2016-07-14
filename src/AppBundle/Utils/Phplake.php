@@ -56,6 +56,15 @@ class Phplake
         );
     }
     
+    public function command($args) {
+        $status = 1;
+        if (count($args) > 1) {
+            $command = '/home/phplake/public_html/phplakecodebase ' . implode(' ', $args);
+            exec($command . ' 2>&1', $output, $status);
+        }
+        return $status;
+    }
+    
     private function phplakerequest($query)
     {
         $curl = curl_init();
