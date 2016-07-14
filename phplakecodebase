@@ -6,15 +6,15 @@ then
 sudo chown -R phplake:phplake "/home/"$2
 rm -rf "/home/"$2"/public_html/*"
 wget $CODIAD -P "/home/"$2
-tar -zxvf "/home/"$2"/ide.tar.gz" -C "/home/"$2
+tar -zxf "/home/"$2"/ide.tar.gz" -C "/home/"$2
 rm "/home/"$2"/ide.tar.gz"
-mv -if "/home/"$2"/Codiad-ide/* /home/"$2"/public_html"
+mv -if /home/$2/Codiad-ide/* /home/$2/public_html
 rm -rf "/home/"$2"/Codiad-ide"
 
 wget $3 -P "/home/"$2"/public_html/workspace"
-tar -zxvf "/home/"$2"/public_html/workspace/"$4 -C "/home/"$2"/public_html/workspace"
+tar -zxf "/home/"$2"/public_html/workspace/"$4 -C "/home/"$2"/public_html/workspace"
 rm "/home/"$2"/public_html/workspace/"$4
-mv -if "/home/"$2"/public_html/workspace/"$5 "/home/"$2"/public_html/workspace/"$6
+mv "/home/"$2"/public_html/workspace/"$5 "/home/"$2"/public_html/workspace/"$6
 sudo chown -R $2:$2 "/home/"$2
 curl "http://ide-"$2".phplake.com/components/install/setup.php?path=/home/"$2"/public_html&base_url=ide-"$2".phplake.com&username="$2"&password="$7"&project_name="$6"&project_path="$6"&timezone=Asia/Kolkata"
 fi
@@ -24,9 +24,9 @@ then
 sudo chown -R phplake:phplake "/home/"$2"/public_html/workspace"
 rm -rf "/home/"$2"/public_html/workspace/"$6
 wget $3 -P "/home/"$2"/public_html/workspace"
-tar -zxvf "/home/"$2"/public_html/workspace/"$4 -C "/home/"$2"/public_html/workspace"
+tar -zxf "/home/"$2"/public_html/workspace/"$4 -C "/home/"$2"/public_html/workspace"
 rm "/home/"$2"/public_html/workspace/"$4
-mv -if "/home/"$2"/public_html/workspace/"$5 "/home/"$2"/public_html/workspace/"$6
+mv "/home/"$2"/public_html/workspace/"$5 "/home/"$2"/public_html/workspace/"$6
 sudo chown -R $2:$2 "/home/"$2
 curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$6"&project_path="$6"&key=phplake786"
 fi
