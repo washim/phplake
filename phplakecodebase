@@ -22,12 +22,11 @@ tar -zxvf $WORKSPACE/ide.tar.gz -C $WORKSPACE
 rm $WORKSPACE/ide.tar.gz
 mv -if $WORKSPACE/Codiad-ide/* $DOCROOT
 rm -rf $WORKSPACE/Codiad-ide
-rm -rf $DEST/*
+rm -rf $DEST
 wget $SOURCE -P $WORKSPACE
 tar -zxvf $WORKSPACE/$FILENAME -C $WORKSPACE
 rm $WORKSPACE/$FILENAME
-mv -if $WORKSPACE/$TMPFOLDER/* $DEST
-rm -rf $WORKSPACE/$TMPFOLDER
+mv -if $WORKSPACE/$TMPFOLDER $DEST
 sudo chown -R $USER:$USER $WORKSPACE
 curl http://$IDE/components/install/setup.php?path=$DOCROOT&base_url=$IDE&username=$USER&password=$IDEPASS&project_name=$PROJECT&project_path=$PROJECT&timezone=Asia/Kolkata
 fi
@@ -35,12 +34,11 @@ fi
 if [ $ACTION == "update" ]
 then
 sudo chown -R phplake:phplake $WORKAREA
-rm -rf $DEST/*
+rm -rf $DEST
 wget $SOURCE -P $WORKAREA
 tar -zxvf $WORKAREA/$FILENAME -C $WORKAREA
 rm $WORKAREA/$FILENAME
-mv -if $WORKAREA/$TMPFOLDER/* $DEST
-rm -rf $WORKAREA/$TMPFOLDER
+mv -if $WORKAREA/$TMPFOLDER $DEST
 sudo chown -R $USER:$USER $WORKAREA
 curl http://$IDE/components/project/controller.php?action=create&project_name=$PROJECT&project_path=$PROJECT&key=phplake786
 fi
