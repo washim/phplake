@@ -14,7 +14,7 @@ rm -rf /home/$2/Codiad-ide
 wget $3 -P /home/$2/public_html/workspace
 tar -zxf /home/$2/public_html/workspace/$4 -C /home/$2/public_html/workspace
 rm /home/$2/public_html/workspace/$4
-mv /home/$2/public_html/workspace/$5 /home/$2/public_html/workspace/$6
+mv -if /home/$2/public_html/workspace/$5 /home/$2/public_html/workspace/$6
 sudo chown -R $2:$2 /home/$2
 curl "http://ide-"$2".phplake.com/components/install/setup.php?path=/home/"$2"/public_html&base_url=ide-"$2".phplake.com&username="$2"&password="$7"&project_name="$6"&project_path="$6"&timezone=Asia/Kolkata"
 fi
@@ -26,7 +26,7 @@ rm -rf /home/$2/public_html/workspace/$6
 wget $3 -P /home/$2/public_html/workspace
 tar -zxf /home/$2/public_html/workspace/$4 -C /home/$2/public_html/workspace
 rm /home/$2/public_html/workspace/$4
-mv /home/$2/public_html/workspace/$5 /home/$2/public_html/workspace/$6
+mv -if /home/$2/public_html/workspace/$5 /home/$2/public_html/workspace/$6
 sudo chown -R $2:$2 /home/$2
 curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$6"&project_path="$6"&key=phplake786"
 fi
