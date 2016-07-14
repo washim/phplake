@@ -21,13 +21,13 @@ fi
 
 if [ $1 == "update" ]
 then
-sudo chown -R phplake:phplake /home/$2/public_html/workspace
+sudo chown -R phplake:phplake /home/$2
 rm -rf /home/$2/public_html/workspace/$6
 wget $3 -P /home/$2/public_html/workspace
 tar -zxf /home/$2/public_html/workspace/$4 -C /home/$2/public_html/workspace
 rm /home/$2/public_html/workspace/$4
 mv /home/$2/public_html/workspace/$5 /home/$2/public_html/workspace/$6
-sudo chown -R $2:$2 /home/$2/public_html/workspace
+sudo chown -R $2:$2 /home/$2
 curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$6"&project_path="$6"&key=phplake786"
 fi
 
