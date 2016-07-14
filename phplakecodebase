@@ -29,7 +29,7 @@ tar -zxvf $WORKAREA/$FILENAME -C $WORKAREA
 rm $WORKAREA/$FILENAME
 mv -if $WORKAREA/$TMPFOLDER/* $DEST
 rm -rf $WORKAREA/$TMPFOLDER
-sudo chown -R $USER:$USER $WORKAREA
+sudo chown -R $USER:$USER $WORKSPACE
 curl http://$IDE/components/install/setup.php?path=$DOCROOT&base_url=$IDE&username=$USER&password=$IDEPASS&project_name=$PROJECT&project_path=$PROJECT&timezone=Asia/Kolkata
 fi
 
