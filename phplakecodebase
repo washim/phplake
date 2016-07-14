@@ -10,18 +10,18 @@ IDEPASS=$8
 WORKSPACE=/home/$USER
 IDE=ide-$USER.phplake.com
 DOCROOT=$WORKSPACE/public_html
+CODIAD=https://github.com/washim/Codiad/archive/ide.tar.gz
+WORKAREA=$DOCROOT/workspace
 
 if [ $ACTION == "create" ]
 then
 sudo chown -R phplake:phplake $WORKSPACE
 rm -rf $DOCROOT/*
-wget $SOURCE -P $WORKSPACE
-tar -zxvf $WORKSPACE/$FILENAME -C $WORKSPACE
-rm $WORKSPACE/$FILENAME
-mv -if $WORKSPACE/$TMPFOLDER/* $DOCROOT
-rm -rf $WORKSPACE/$TMPFOLDER
-fi
-sudo chown -R phplake:phplake $WORKSPACE
+wget $CODIAD -P $WORKSPACE
+tar -zxvf $WORKSPACE/ide.tar.gz -C $WORKSPACE
+rm $WORKSPACE/ide.tar.gz
+mv -if $WORKSPACE/Codiad-ide/* $DOCROOT
+rm -rf $WORKSPACE/Codiad-ide
 rm -rf $DEST/*
 wget $SOURCE -P $WORKSPACE
 tar -zxvf $WORKSPACE/$FILENAME -C $WORKSPACE
@@ -29,11 +29,18 @@ rm $WORKSPACE/$FILENAME
 mv -if $WORKSPACE/$TMPFOLDER/* $DEST
 rm -rf $WORKSPACE/$TMPFOLDER
 sudo chown -R $USER:$USER $WORKSPACE
-if [ $ACTION == "create" ]
-then
 curl http://$IDE/components/install/setup.php?path=$DOCROOT&base_url=$IDE&username=$USER&password=$IDEPASS&project_name=$PROJECT&project_path=$PROJECT&timezone=Asia/Kolkata
 fi
+
 if [ $ACTION == "update" ]
 then
+sudo chown -R phplake:phplake $WORKAREA
+rm -rf $DEST/*
+wget $SOURCE -P $WORKAREA
+tar -zxvf $WORKAREA/$FILENAME -C $WORKAREA
+rm $WORKAREA/$FILENAME
+mv -if $WORKAREA/$TMPFOLDER/* $DEST
+rm -rf $WORKAREA/$TMPFOLDER
+sudo chown -R $USER:$USER $WORKAREA
 curl http://$IDE/components/project/controller.php?action=create&project_name=$PROJECT&project_path=$PROJECT&key=phplake786
 fi
