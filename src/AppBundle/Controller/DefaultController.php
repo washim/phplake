@@ -370,7 +370,7 @@ class DefaultController extends Controller
                     // Add Stage to IDE
                     $this->get('app.phplake')->perform(
                         array(
-                            'anonymous' => 'yes',
+                            'key' => 'phplake786',
                             'action' => 'create',
                             'project_name' => $domain,
                             'project_path' => $domain
@@ -488,7 +488,7 @@ class DefaultController extends Controller
                     // Add Stage to IDE
                     $this->get('app.phplake')->perform(
                         array(
-                            'anonymous' => 'yes',
+                            'key' => 'phplake786',
                             'action' => 'create',
                             'project_name' => $domain,
                             'project_path' => $domain
