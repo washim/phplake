@@ -1,0 +1,14 @@
+Hello {% if user.name is empty %}{{user.username}}{% else %}{{user.name}}{% endif %},
+Thank you for for choosing us. We are pleased to provide you with Online IDE details. 
+Please consider this mail as highly confidential and do not share with others to avoid code lost.
+
+Online IDE: http://ide-{{user.username}}.phplake.com
+IDE Password: {{idepass}}
+
+You may reset this password from your user account.
+
+Enjoy and start your first coding from anywhere. :)
+Looking forward to a warm and longstanding association with you.
+
+Thanks and regards,
+Phplake Support Team

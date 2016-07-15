@@ -46,16 +46,6 @@ class Users implements UserInterface, \Serializable
     private $password;
     
     /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $cpanelpass;
-    
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $idepass;
-    
-    /**
      * @ORM\OneToMany(targetEntity="Projects", mappedBy="owner")
      */
 	private $projects;
@@ -98,8 +88,6 @@ class Users implements UserInterface, \Serializable
         $this->uroles       = 'ROLE_USER';
         $this->subscription = 'free';
         $this->createdAt    = new \DateTime('now');
-        $this->cpanelpass   = bin2hex(random_bytes(6));
-        $this->idepass      = bin2hex(random_bytes(6));
     }
 
     public function getUsername()
@@ -258,18 +246,6 @@ class Users implements UserInterface, \Serializable
         return $this->createdAt;
     }
 
-    public function setCpanelpass($cpanelpass)
-    {
-        $this->cpanelpass = $cpanelpass;
-
-        return $this;
-    }
-
-    public function getCpanelpass()
-    {
-        return $this->cpanelpass;
-    }
-
     public function addProject(\AppBundle\Entity\Projects $project)
     {
         $this->projects[] = $project;
@@ -280,18 +256,6 @@ class Users implements UserInterface, \Serializable
     public function removeProject(\AppBundle\Entity\Projects $project)
     {
         $this->projects->removeElement($project);
-    }
-
-    public function setIdepass($idepass)
-    {
-        $this->idepass = $idepass;
-
-        return $this;
-    }
-
-    public function getIdepass()
-    {
-        return $this->idepass;
     }
 
     public function setName($name)

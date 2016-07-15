@@ -1,4 +1,4 @@
-Hello {{name}},
+Hello {% if user.name is empty %}{{user.username}}{% else %}{{user.name}}{% endif %},
 Activate your account by clicking following url {{url('activateaccount', {'powerkey':powerkey,'key':key})}}
 
 Thanks and Regards,

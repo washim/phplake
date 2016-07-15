@@ -1,0 +1,13 @@
+Hello {% if user.name is empty %}{{user.username}}{% else %}{{user.name}}{% endif %},
+Please consider this mail as highly confidential and do not share with others to avoid DB hack.
+
+DB Host: localhost
+DB User Name: {{user.username}}_phplake
+DB Password: {{dbpass}}
+
+Provided credential is applicable only for your Dev/Stage environment, which may not work for Production environment.
+
+You may reset DB password from project settings.
+
+Thanks and regards,
+Phplake Support Team

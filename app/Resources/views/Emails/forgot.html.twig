@@ -1,4 +1,4 @@
-Hello {{name}},
+Hello {% if user.name is empty %}{{user.username}}{% else %}{{user.name}}{% endif %},
 Reset your account by clicking following url {{url('resetpassword', {'powerkey':powerkey,'key':key})}}
 
 Thanks and Regards,

@@ -75,16 +75,16 @@ class SecurityController extends Controller
             $aclProvider->updateAcl($acl);
             
             $message = \Swift_Message::newInstance()
-                    ->setSubject('Activate your Phplake account')
-                    ->setFrom(['support@phplake.com' => 'Phplake Support'])
-                    ->setTo($user->getEmail())
-                    ->setBody(
-                        $this->renderView('Emails/activateaccount.html.twig', [
-                            'name' => $user->getUsername(),
-                            'powerkey' => sha1($user->getEmail()),
-                            'key' => base64_encode($user->getEmail())
-                        ])
-                    );
+                ->setSubject('Activate your Phplake account')
+                ->setFrom(['support@phplake.com' => 'Phplake Support'])
+                ->setTo($user->getEmail())
+                ->setBody(
+                    $this->renderView('Emails/activateaccount.html.twig', [
+                        'user' => $user,
+                        'powerkey' => sha1($user->getEmail()),
+                        'key' => base64_encode($user->getEmail())
+                    ])
+                );
             $this->get('mailer')->send($message);
             
             $this->addFlash(
@@ -179,7 +179,7 @@ class SecurityController extends Controller
                     ->setTo($email)
                     ->setBody(
                         $this->renderView('Emails/forgot.html.twig', [
-                            'name' => $fuser->getUsername(),
+                            'user' => $user,
                             'powerkey' => sha1($email),
                             'key' => base64_encode($email)
                         ])

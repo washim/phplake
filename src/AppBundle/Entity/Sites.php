@@ -48,11 +48,6 @@ class Sites
     private $dbuser;
     
     /**
-	 * @ORM\Column(type="string", length=255)
-	 */
-    private $dbpass;
-    
-    /**
 	 * @ORM\Column(type="datetime")
 	 */
 	private $createdAt;
@@ -168,17 +163,5 @@ class Sites
     public function getDbuser()
     {
         return $this->dbuser;
-    }
-    
-    public function setDbpass($dbpass)
-    {
-        $this->dbpass = $dbpass;
-        
-        return $this;
-    }
-    
-    public function getDbpass()
-    {
-        return $this->dbpass;
     }
 }

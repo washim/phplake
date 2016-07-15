@@ -35,7 +35,7 @@ class DefaultController extends Controller
             $subdomain = 'dev-' . $project->getName() . '-' . $this->getUser()->getUsername();
             $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_dev';
             $dbpass    = bin2hex(random_bytes(6));
-            $pass      = $this->getUser()->getCpanelpass();
+            $pass      = bin2hex(random_bytes(6));
             if ($this->get('app.whm')->getwhmuser($this->getUser()->getUsername()) !== 206) {
                 if ($this->getUser()->getSubscription() == 'paid' || $totproj < 1) {
                     $response = $this->get('app.whm')->updatecp(
@@ -116,6 +116,30 @@ class DefaultController extends Controller
                         )
                     );
                     if ($command == 0) {
+                        $idemail = \Swift_Message::newInstance()
+                            ->setSubject('Online IDE Phplake')
+                            ->setFrom(['support@phplake.com' => 'Phplake Support'])
+                            ->setTo($user->getEmail())
+                            ->setBody(
+                                $this->renderView('Emails/ide.html.twig', [
+                                    'user' => $user,
+                                    'idepass' => $pass
+                                ])
+                            );
+                        $this->get('mailer')->send($idemail);
+                        
+                        $dbmail = \Swift_Message::newInstance()
+                            ->setSubject('Dev/Stage DB Credential Phplake')
+                            ->setFrom(['support@phplake.com' => 'Phplake Support'])
+                            ->setTo($user->getEmail())
+                            ->setBody(
+                                $this->renderView('Emails/db.html.twig', [
+                                    'user' => $user,
+                                    'dbpass' => $dbpass
+                                ])
+                            );
+                        $this->get('mailer')->send($dbmail);
+                        
                         $this->addFlash(
                             'success',
                             'Project created with default dev environment.'
@@ -141,7 +165,6 @@ class DefaultController extends Controller
             $site->setSubdomain($subdomain);
             $site->setDb($db);
             $site->setDbuser($this->getUser()->getUsername() . '_phplake');
-            $site->setDbpass($dbpass);
             $site->setProject($project);
             
             $project->addSite($site);
@@ -319,7 +342,6 @@ class DefaultController extends Controller
         $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_stage';
         $dbpass    = bin2hex(random_bytes(6));
-        $pass      = $this->getUser()->getCpanelpass();
         
         $sites = $project->getSites();
         $criteria = Criteria::create()
@@ -386,7 +408,6 @@ class DefaultController extends Controller
         $site->setSubdomain($subdomain);
         $site->setDb($db);
         $site->setDbuser($this->getUser()->getUsername() . '_phplake');
-        $site->setDbpass($dbpass);
         $site->setEnvironment('stage');
         $site->setProject($project);
         $project->addSite($site);
@@ -426,7 +447,6 @@ class DefaultController extends Controller
         $subdomain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_prod';
         $dbpass    = bin2hex(random_bytes(6));
-        $pass      = $this->getUser()->getCpanelpass();
         
         $sites = $project->getSites();
         $criteria = Criteria::create()
@@ -493,7 +513,6 @@ class DefaultController extends Controller
         $site->setSubdomain($subdomain);
         $site->setDb($db);
         $site->setDbuser($this->getUser()->getUsername() . '_phplake');
-        $site->setDbpass($dbpass);
         $site->setEnvironment('prod');
         $site->setProject($project);
         $project->addSite($site);
