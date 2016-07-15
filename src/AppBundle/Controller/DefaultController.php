@@ -104,6 +104,7 @@ class DefaultController extends Controller
                 if ($response == 200) {
                     $arr       = explode('/', $project->getTargetUrl());
                     $filename  = $arr[count($arr) - 1];
+                    $idepass   = bin2hex(random_bytes(6));
                     $command   = $this->get('app.phplake')->command(
                         array(
                             'create',
@@ -112,7 +113,7 @@ class DefaultController extends Controller
                             $filename,
                             $project->getCategory(),
                             $domain,
-                            $this->getUser()->getIdepass()
+                            $idepass
                         )
                     );
                     if ($command == 0) {
@@ -123,7 +124,7 @@ class DefaultController extends Controller
                             ->setBody(
                                 $this->renderView('Emails/ide.html.twig', [
                                     'user' => $user,
-                                    'idepass' => $pass
+                                    'idepass' => $idepass
                                 ])
                             );
                         $this->get('mailer')->send($idemail);
