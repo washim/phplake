@@ -120,10 +120,10 @@ class DefaultController extends Controller
                         $idemail = \Swift_Message::newInstance()
                             ->setSubject('Online IDE Phplake')
                             ->setFrom(['support@phplake.com' => 'Phplake Support'])
-                            ->setTo($user->getEmail())
+                            ->setTo($this->getUser()->getEmail())
                             ->setBody(
                                 $this->renderView('Emails/ide.html.twig', [
-                                    'user' => $user,
+                                    'user' => $this->getUser(),
                                     'idepass' => $idepass
                                 ])
                             );
@@ -132,10 +132,10 @@ class DefaultController extends Controller
                         $dbmail = \Swift_Message::newInstance()
                             ->setSubject('Dev/Stage DB Credential Phplake')
                             ->setFrom(['support@phplake.com' => 'Phplake Support'])
-                            ->setTo($user->getEmail())
+                            ->setTo($this->getUser()->getEmail())
                             ->setBody(
                                 $this->renderView('Emails/db.html.twig', [
-                                    'user' => $user,
+                                    'user' => $this->getUser(),
                                     'dbpass' => $dbpass
                                 ])
                             );
