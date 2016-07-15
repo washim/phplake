@@ -113,4 +113,13 @@
     </div>
   </div>
 </div>
+<script>
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    localStorage.setItem('MyprojectSelectedTab', $(e.target).attr('href'));
+  });
+  var MyprojectSelectedTab = localStorage.getItem('MyprojectSelectedTab');
+  if (MyprojectSelectedTab) {
+    $('a[href="'+MyprojectSelectedTab+'"]').tab('show');
+  }
+</script>
 {% endblock %}

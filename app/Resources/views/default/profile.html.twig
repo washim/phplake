@@ -31,7 +31,7 @@
 <div class="col-md-9">
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
-      <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true"><i class="fa fa-lock"></i> Account Metadata</a></li>
+      <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true"><i class="fa fa-cog"></i> Account</a></li>
       <li><a href="#changepass" data-toggle="tab" aria-expanded="false"><i class="fa fa-lock"></i> Change Password</a></li>
       <li><a href="#sshkey" data-toggle="tab" aria-expanded="false"><i class="fa fa-key"></i> SSH Key</a></li>
     </ul>
@@ -60,4 +60,13 @@
     </div>
   </div>
 </div>
+<script>
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    localStorage.setItem('MyaccountSelectedTab', $(e.target).attr('href'));
+  });
+  var MyaccountSelectedTab = localStorage.getItem('MyaccountSelectedTab');
+  if (MyaccountSelectedTab) {
+    $('a[href="'+MyaccountSelectedTab+'"]').tab('show');
+  }
+</script>
 {% endblock %}

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -109,6 +110,7 @@ class SecurityController extends Controller
     
     /**
      * @Route("/myaccount", name="myaccount")
+     * @Method({"GET", "POST"})
      */
     public function myaccountAction(Request $request)
     {
@@ -147,7 +149,7 @@ class SecurityController extends Controller
                 'Password updated successfully.'
             );
             
-            return $this->redirectToRoute('myaccount');
+            //return $this->redirectToRoute('myaccount');
         }
         
         return $this->render('default/profile.html.twig', ['user' => $this->getUser(), 'form' => $form->createView(), 'passform' => $passform->createView()]);

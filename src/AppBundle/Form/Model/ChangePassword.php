@@ -11,6 +11,7 @@ class ChangePassword
      * )
      */
     protected $oldPassword;
+    protected $changetarget;
      
     /**
      * @Assert\NotBlank()
@@ -53,5 +54,17 @@ class ChangePassword
         $this->password = $password;
 
         return $this;
+    }
+    
+    public function setChangetarget($changetarget)
+    {
+        $this->changetarget = $changetarget;
+        
+        return $this;
+    }
+    
+    public function getChangetarget()
+    {
+        return $this->changetarget;
     }
 }
