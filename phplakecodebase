@@ -43,5 +43,5 @@ fi
 
 if [ $1 == "changeidepass"]
 then
-curl -d "username="$2"&password="$3"&key=phplake786" "http://ide-"$2".phplake.com/components/user/controller.php?action=password"
+curl -d "username="$2"&password="$3 "http://ide-"$2".phplake.com/components/user/controller.php?action=password&key=phplake786"
 fi
