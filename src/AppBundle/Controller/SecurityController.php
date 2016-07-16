@@ -166,6 +166,28 @@ class SecurityController extends Controller
                     return $this->redirectToRoute('myaccount');
                 }
             }
+            elseif ($fuser->getChangetarget() == 3) {
+                $changemysqluserpass = $this->get('app.phplake')->command(
+                    $this->get('kernel')->getRootDir(),
+                    array(
+                        'changemysqluserpass',
+                        $this->getUser()->getUsername(),
+                        $this->getUser()->getUsername() . '_phplake',
+                        $fuser->getPlainPassword()
+                    )
+                );
+                if ($changemysqluserpass == 0) {
+                    $flash = 'Dev/Stage DB Username password changed successfully.';
+                }
+                else {
+                    $this->addFlash(
+                        'error',
+                        $changemysqluserpass
+                    );
+                    
+                    return $this->redirectToRoute('myaccount');
+                }
+            }
             
             $this->addFlash(
                 'success',
