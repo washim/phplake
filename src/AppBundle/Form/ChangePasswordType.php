@@ -17,8 +17,9 @@ class ChangePasswordType extends AbstractType
             ->add('changetarget', ChoiceType::class, [
                 'choices' => [
                     'My Account Password' => 1,
-                    'Dev/Stage DB User Password' => 2,
-                    'Prod DB User Password' => 3
+                    'Online IDE Password' => 2,
+                    'Dev/Stage DB User Password' => 3,
+                    'Prod DB User Password' => 4
                 ],
                 'expanded' => true,
                 'multiple' => false,

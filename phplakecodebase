@@ -40,3 +40,8 @@ if [ $1 == "linkcodiad" ]
 then
 curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$3"&project_path="$3"&key=phplake786"
 fi
+
+if [ $1 == "changeidepass"]
+then
+curl -d "action=password&username="$2"&password="$3"&key=phplake786" "http://ide-"$2".phplake.com/components/user/controller.php"
+fi

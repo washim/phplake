@@ -110,7 +110,6 @@ class SecurityController extends Controller
     
     /**
      * @Route("/myaccount", name="myaccount")
-     * @Method({"GET", "POST"})
      */
     public function myaccountAction(Request $request)
     {
@@ -137,19 +136,37 @@ class SecurityController extends Controller
         $form = $this->createForm(ChangePasswordType::class, $fuser);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->get('security.password_encoder')->encodePassword($user, $fuser->getPlainPassword());
-            $user->setPassword($password);
-            
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+            if ($fuser->getChangetarget() == 1) {
+                $password = $this->get('security.password_encoder')->encodePassword($user, $fuser->getPlainPassword());
+                $user->setPassword($password);
+                
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                $flash = 'Account password changed successfully.';
+            }
+            elseif ($fuser->getChangetarget() == 2) {
+                $changeidepass = $this->get('app.phplake')->command(
+                    array(
+                        'changeidepass',
+                        $this->getUser()->getUsername(),
+                        $fuser->getPlainPassword()
+                    )
+                );
+                if ($changeidepass == 0) {
+                    $flash = 'Online IDE password changed successfully.';
+                }
+                else {
+                    $flash = $changeidepass;
+                }
+            }
             
             $this->addFlash(
                 'success',
-                'Password updated successfully.'
+                $flash
             );
             
-            //return $this->redirectToRoute('myaccount');
+            return $this->redirectToRoute('myaccount');
         }
         
         return $this->render('default/profile.html.twig', ['user' => $this->getUser(), 'form' => $form->createView(), 'passform' => $passform->createView()]);
