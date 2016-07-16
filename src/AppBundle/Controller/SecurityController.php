@@ -158,7 +158,12 @@ class SecurityController extends Controller
                     $flash = 'Online IDE password changed successfully.';
                 }
                 else {
-                    $flash = $changeidepass;
+                    $this->addFlash(
+                        'error',
+                        'Unable to change Online IDE Password'
+                    );
+                    
+                    return $this->redirectToRoute('myaccount');
                 }
             }
             
