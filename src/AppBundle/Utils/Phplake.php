@@ -56,10 +56,10 @@ class Phplake
         );
     }
     
-    public function command($args) {
+    public function command($path, $args) {
         $status = 1;
         if (count($args) > 1) {
-            $command = $this->get('kernel')->getRootDir() . '/phplakecodebase ' . implode(' ', $args);
+            $command = $path . '/phplakecodebase ' . implode(' ', $args);
             exec($command . ' 2>&1', $output, $status);
         }
         return $status;

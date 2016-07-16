@@ -52,6 +52,7 @@ class DefaultController extends Controller
                         $arr       = explode('/', $project->getTargetUrl());
                         $filename  = $arr[count($arr) - 1];
                         $command   = $this->get('app.phplake')->command(
+                            $this->get('kernel')->getRootDir(),
                             array(
                                 'update',
                                 $this->getUser()->getUsername(),
@@ -107,6 +108,7 @@ class DefaultController extends Controller
                     $filename  = $arr[count($arr) - 1];
                     $idepass   = bin2hex(random_bytes(6));
                     $command   = $this->get('app.phplake')->command(
+                        $this->get('kernel')->getRootDir(),
                         array(
                             'create',
                             $this->getUser()->getUsername(),
@@ -255,7 +257,7 @@ class DefaultController extends Controller
                     $site->getDb()
                 );
                 // Codiad deleting project
-                $this->get('app.phplake')->command(array('unlinkcodiad',$this->getUser()->getUsername(),$site->getDomain()));
+                $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), array('unlinkcodiad',$this->getUser()->getUsername(),$site->getDomain()));
                 // Deleting the ACL
                 $aclProvider = $this->get('security.acl.provider');
                 $objectIdentity = ObjectIdentity::fromDomainObject($site);
@@ -305,7 +307,7 @@ class DefaultController extends Controller
                 $site->getDb()
             );
             // Codiad deleting project
-            $this->get('app.phplake')->command(array('unlinkcodiad',$this->getUser()->getUsername(),$site->getDomain()));
+            $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), array('unlinkcodiad',$this->getUser()->getUsername(),$site->getDomain()));
             // Deleting the ACL
             $aclProvider = $this->get('security.acl.provider');
             $objectIdentity = ObjectIdentity::fromDomainObject($site);
@@ -376,7 +378,7 @@ class DefaultController extends Controller
                 );
                 if ($clone->cpanelresult->event->result == 1) {
                     // Add Stage to IDE
-                    $this->get('app.phplake')->command(array('linkcodiad',$this->getUser()->getUsername(),$domain));
+                    $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), array('linkcodiad',$this->getUser()->getUsername(),$domain));
                     $this->addFlash(
                         'success',
                         'Stage environment created successfully.'
@@ -481,7 +483,7 @@ class DefaultController extends Controller
                 );
                 if ($clone->cpanelresult->event->result == 1) {
                     // Add Stage to IDE
-                    $this->get('app.phplake')->command(array('linkcodiad',$this->getUser()->getUsername(),$domain));
+                    $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), array('linkcodiad',$this->getUser()->getUsername(),$domain));
                     $this->addFlash(
                         'success',
                         'Production environment created successfully.'

@@ -147,6 +147,7 @@ class SecurityController extends Controller
             }
             elseif ($fuser->getChangetarget() == 2) {
                 $changeidepass = $this->get('app.phplake')->command(
+                    $this->get('kernel')->getRootDir(),
                     array(
                         'changeidepass',
                         $this->getUser()->getUsername(),
