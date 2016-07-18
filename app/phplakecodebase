@@ -1,52 +1,71 @@
 #!/bin/bash
-CODIAD="https://github.com/washim/Codiad/archive/ide.tar.gz"
-
-if [ $1 == "create" ]
+if [ $1 == "create_cpanel_account" ]
 then
-sudo chown -R phplake:phplake /home/$2
-rm -rf /home/$2/public_html/*
-wget $CODIAD -P /home/$2
-tar -zxf /home/$2/ide.tar.gz -C /home/$2
-rm /home/$2/ide.tar.gz
-mv -if /home/$2/Codiad-ide/* /home/$2/public_html
-rm -rf /home/$2/Codiad-ide
-
-wget $3 -P /home/$2/public_html/workspace
-tar -zxf /home/$2/public_html/workspace/$4 -C /home/$2/public_html/workspace
-rm /home/$2/public_html/workspace/$4
-mv /home/$2/public_html/workspace/$5 /home/$2/public_html/workspace/$6
-sudo chown -R $2:$2 /home/$2
-curl "http://ide-"$2".phplake.com/components/install/setup.php?path=/home/"$2"/public_html&base_url=ide-"$2".phplake.com&username="$2"&password="$7"&project_name="$6"&project_path="$6"&timezone=Asia/Kolkata"
-fi
-
-if [ $1 == "update" ]
+    CODIAD="https://github.com/washim/Codiad/archive/ide.tar.gz"
+    ACCT=$(sudo whmapi1 createacct username=$2 domain=ide-$2.phplake.com plan=free featurelist=default password=$3 hasshell=0 contactemail=$4 owner=tmwgroups)
+    ACCTRES=$(echo "$ACCT" | grep -Po 'result: \K[0-9]+')
+    if [ $ACCTRES == "1" ]
+    then
+        echo 'success'
+        {
+        sudo cpapi2 --user=$2 AddonDomain addaddondomain newdomain=$5 subdomain=$6 dir=/home/$2/public_html/workspace/$5
+        sudo uapi --user=$2 Mysql create_user name=$2"_phplake" password=$7
+        sudo uapi --user=$2 Mysql create_database name=$8
+        sudo uapi --user=$2 Mysql set_privileges_on_database user=$2"_phplake" database=$8 privileges="ALTER,CREATE,DELETE,EXECUTE,INDEX,INSERT,LOCK TABLES,SELECT,UPDATE"
+        sudo chown -R phplake:phplake /home/$2
+        rm -rf /home/$2/public_html/*
+        wget $CODIAD -P /home/$2
+        tar -zxf /home/$2/ide.tar.gz -C /home/$2
+        rm /home/$2/ide.tar.gz
+        mv -if /home/$2/Codiad-ide/* /home/$2/public_html
+        rm -rf /home/$2/Codiad-ide
+        wget $9 -P /home/$2/public_html/workspace
+        tar -zxf /home/$2/public_html/workspace/${10} -C /home/$2/public_html/workspace
+        rm /home/$2/public_html/workspace/${10}
+        mv /home/$2/public_html/workspace/${11} /home/$2/public_html/workspace/$5
+        sudo chown -R $2:$2 /home/$2
+        curl "http://ide-"$2".phplake.com/components/install/setup.php?path=/home/"$2"/public_html&base_url=ide-"$2".phplake.com&username="$2"&password="${12}"&project_name="$5"&project_path="$5"&timezone=Asia/Kolkata"
+        } &> /dev/null
+    fi
+elif [ $1 == "update_cpanel_account" ]
 then
-sudo chown -R phplake:phplake /home/$2
-rm -rf /home/$2/public_html/workspace/$6
-wget $3 -P /home/$2/public_html/workspace
-tar -zxf /home/$2/public_html/workspace/$4 -C /home/$2/public_html/workspace
-rm /home/$2/public_html/workspace/$4
-mv /home/$2/public_html/workspace/$5 /home/$2/public_html/workspace/$6
-sudo chown -R $2:$2 /home/$2
-curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$6"&project_path="$6"&key=phplake786"
-fi
-
-if [ $1 == "unlinkcodiad" ]
+    {
+    sudo cpapi2 --user=$2 AddonDomain addaddondomain newdomain=$6 subdomain=$7 dir=/home/$2/public_html/workspace/$6
+    sudo uapi --user=$2 Mysql create_database name=$8
+    sudo uapi --user=$2 Mysql set_privileges_on_database user=$2"_phplake" database=$8 privileges="ALTER,CREATE,DELETE,EXECUTE,INDEX,INSERT,LOCK TABLES,SELECT,UPDATE"
+    } &> /dev/null
+    
+    if [ $9 == "build_from_url" ]
+    then
+        {
+        sudo chown -R phplake:phplake /home/$2
+        rm -rf /home/$2/public_html/workspace/$6
+        wget $3 -P /home/$2/public_html/workspace
+        tar -zxf /home/$2/public_html/workspace/$4 -C /home/$2/public_html/workspace
+        rm /home/$2/public_html/workspace/$4
+        mv /home/$2/public_html/workspace/$5 /home/$2/public_html/workspace/$6
+        sudo chown -R $2:$2 /home/$2
+        } &> /dev/null
+    else
+        sudo cpapi2 --user=$2 Fileman fileop op=copy sourcefiles=/home/$2/public_html/workspace/$9/* destfiles=/home/$2/public_html/workspace/$6 doubledecode=1 &> /dev/null
+    fi
+    curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$6"&project_path="$6"&key=phplake786" &> /dev/null
+    echo 'success'
+elif [ $1 == "unlinkcodiad" ]
 then
-curl "http://ide-"$2".phplake.com/components/project/controller.php?action=delete&project_path="$3"&key=phplake786"
-fi
-
-if [ $1 == "linkcodiad" ]
+    {
+    sudo cpapi2 --user=$2 AddonDomain deladdondomain domain=$3 subdomain=$4
+    sudo cpapi2 --user=$2 MysqlFE deletedb db=$5
+    sudo cpapi2 --user=$2 Fileman fileop op=unlink sourcefiles=/home/$2/public_html/workspace/$3 doubledecode=1
+    curl "http://ide-"$2".phplake.com/components/project/controller.php?action=delete&project_path="$3"&key=phplake786"
+    } &> /dev/null
+    echo 'success'
+elif [ $1 == "changeidepass" ]
 then
-curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$3"&project_path="$3"&key=phplake786"
-fi
-
-if [ $1 == "changeidepass" ]
+    curl -d "username="$2"&password="$3 "http://ide-"$2".phplake.com/components/user/controller.php?action=password&key=phplake786"
+elif [ $1 == "changemysqluserpass" ]
 then
-curl -d "username="$2"&password="$3 "http://ide-"$2".phplake.com/components/user/controller.php?action=password&key=phplake786"
-fi
-
-if [ $1 == "changemysqluserpass" ]
-then
-sudo uapi --user=$2 Mysql set_password user=$3 password=$4
+    sudo uapi --user=$2 Mysql set_password user=$3 password=$4
+else
+    echo 'success'
 fi

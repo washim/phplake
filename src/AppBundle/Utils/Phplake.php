@@ -57,12 +57,9 @@ class Phplake
     }
     
     public function command($path, $args) {
-        $status = 1;
-        if (count($args) > 1) {
-            $command = $path . '/phplakecodebase ' . implode(' ', $args);
-            exec($command . ' 2>&1', $output, $status);
-        }
-        return $status;
+        $command = $path . '/phplakecodebase ' . implode(' ', $args);
+        $response = shell_exec($command);
+        return $response;
     }
     
     private function phplakerequest($query)

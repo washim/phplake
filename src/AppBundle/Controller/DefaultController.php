@@ -24,6 +24,7 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+        dump(shell_exec("/home/phplake/public_html/app/phplakecodebase create_cpanel_account wasahmed afdd0f6d70ca washim.ahmed@gmail.com dev-nazema-wasahmed.phplake.com dev-nazema-wasahmed 5f54ddbadcbe wasahmed_nazema_dev https://ftp.drupal.org/files/projects/drupal-7.44.tar.gz drupal-7.44.tar.gz drupal-7.44 a8700dcf5abf 2>&1"));exit;
         $site = new Sites();
         $project = new Projects();
         $project->setOwner($this->getUser());
@@ -39,46 +40,30 @@ class DefaultController extends Controller
             $pass      = bin2hex(random_bytes(6));
             if ($this->get('app.whm')->getwhmuser($this->getUser()->getUsername()) !== 206) {
                 if ($this->getUser()->getSubscription() == 'paid' || $totproj < 1) {
-                    $response = $this->get('app.whm')->updatecp(
+                    $arr       = explode('/', $project->getTargetUrl());
+                    $filename  = $arr[count($arr) - 1];
+                    $args      = array(
+                        'update_cpanel_account',
                         $this->getUser()->getUsername(),
+                        $project->getTargetUrl(),
+                        $filename,
+                        $project->getCategory(),
                         $domain,
                         $subdomain,
                         $db,
-                        $dbpass,
-                        $project->getTargetUrl(),
-                        $project->getCategory()
+                        'build_from_url'
                     );
-                    if ($response == 200) {
-                        $arr       = explode('/', $project->getTargetUrl());
-                        $filename  = $arr[count($arr) - 1];
-                        $command   = $this->get('app.phplake')->command(
-                            $this->get('kernel')->getRootDir(),
-                            array(
-                                'update',
-                                $this->getUser()->getUsername(),
-                                $project->getTargetUrl(),
-                                $filename,
-                                $project->getCategory(),
-                                $domain
-                            )
+                    $response = $this->get('app.phplake')->command($this->get('kernel')->getRootDir(),$args);
+                    if ($response == 'success') {
+                        $this->addFlash(
+                            'success',
+                            'Project created successfully with default dev environment.'
                         );
-                        if ($command == 0) {
-                            $this->addFlash(
-                                'success',
-                                'Project created successfully with default dev environment.'
-                            );
-                        }
-                        else {
-                            $this->addFlash(
-                                'error',
-                                'Dev Environment source code build failed.'
-                            );
-                        }
                     }
                     else {
                         $this->addFlash(
                             'error',
-                            $this->get('app.phplake')->geterror($response)
+                            'Project creation failed.'
                         );
                     }
                 }
@@ -92,69 +77,53 @@ class DefaultController extends Controller
                 }
             }
             else {
-                $response = $this->get('app.whm')->createcp(
+                $arr       = explode('/', $project->getTargetUrl());
+                $filename  = $arr[count($arr) - 1];
+                $idepass   = bin2hex(random_bytes(6));
+                $args      = array(
+                    'create_cpanel_account',
                     $this->getUser()->getUsername(),
                     $pass,
                     $this->getUser()->getEmail(),
                     $domain,
                     $subdomain,
-                    $db,
                     $dbpass,
+                    $db,
                     $project->getTargetUrl(),
-                    $project->getCategory()
+                    $filename,
+                    $project->getCategory(),
+                    $idepass
                 );
-                if ($response == 200) {
-                    $arr       = explode('/', $project->getTargetUrl());
-                    $filename  = $arr[count($arr) - 1];
-                    $idepass   = bin2hex(random_bytes(6));
-                    $command   = $this->get('app.phplake')->command(
-                        $this->get('kernel')->getRootDir(),
-                        array(
-                            'create',
-                            $this->getUser()->getUsername(),
-                            $project->getTargetUrl(),
-                            $filename,
-                            $project->getCategory(),
-                            $domain,
-                            $idepass
-                        )
+                $response = $this->get('app.phplake')->command($this->get('kernel')->getRootDir(),$args);
+                if ($response == 'success') {
+                    $idemail = \Swift_Message::newInstance()
+                        ->setSubject('Online IDE Phplake')
+                        ->setFrom(['support@phplake.com' => 'Phplake Support'])
+                        ->setTo($this->getUser()->getEmail())
+                        ->setBody(
+                            $this->renderView('Emails/ide.html.twig', [
+                                'user' => $this->getUser(),
+                                'idepass' => $idepass
+                            ])
+                        );
+                    $this->get('mailer')->send($idemail);
+                    
+                    $dbmail = \Swift_Message::newInstance()
+                        ->setSubject('Dev/Stage DB Credential Phplake')
+                        ->setFrom(['support@phplake.com' => 'Phplake Support'])
+                        ->setTo($this->getUser()->getEmail())
+                        ->setBody(
+                            $this->renderView('Emails/db.html.twig', [
+                                'user' => $this->getUser(),
+                                'dbpass' => $dbpass
+                            ])
+                        );
+                    $this->get('mailer')->send($dbmail);
+                    
+                    $this->addFlash(
+                        'success',
+                        'Project created with default Dev environment.'
                     );
-                    if ($command == 0) {
-                        $idemail = \Swift_Message::newInstance()
-                            ->setSubject('Online IDE Phplake')
-                            ->setFrom(['support@phplake.com' => 'Phplake Support'])
-                            ->setTo($this->getUser()->getEmail())
-                            ->setBody(
-                                $this->renderView('Emails/ide.html.twig', [
-                                    'user' => $this->getUser(),
-                                    'idepass' => $idepass
-                                ])
-                            );
-                        $this->get('mailer')->send($idemail);
-                        
-                        $dbmail = \Swift_Message::newInstance()
-                            ->setSubject('Dev/Stage DB Credential Phplake')
-                            ->setFrom(['support@phplake.com' => 'Phplake Support'])
-                            ->setTo($this->getUser()->getEmail())
-                            ->setBody(
-                                $this->renderView('Emails/db.html.twig', [
-                                    'user' => $this->getUser(),
-                                    'dbpass' => $dbpass
-                                ])
-                            );
-                        $this->get('mailer')->send($dbmail);
-                        
-                        $this->addFlash(
-                            'success',
-                            'Project created with default dev environment.'
-                        );
-                    }
-                    else {
-                        $this->addFlash(
-                            'error',
-                            'Dev Environment source code build failed.'
-                        );
-                    }
                 }
                 else {
                     $this->addFlash(
@@ -249,15 +218,15 @@ class DefaultController extends Controller
         
         if ($project->getId()) {
             foreach ($project->getSites() as $site) {
-                // Env Delete
-                $this->get('app.whm')->envdelete(
+                $args = array(
+                    'unlinkcodiad',
                     $this->getUser()->getUsername(),
                     $site->getDomain(),
                     $site->getSubdomain() . '.' . $this->getUser()->getIde(),
                     $site->getDb()
                 );
-                // Codiad deleting project
-                $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), array('unlinkcodiad',$this->getUser()->getUsername(),$site->getDomain()));
+                // Env Delete with codiad
+                $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), $args);
                 // Deleting the ACL
                 $aclProvider = $this->get('security.acl.provider');
                 $objectIdentity = ObjectIdentity::fromDomainObject($site);
@@ -299,15 +268,15 @@ class DefaultController extends Controller
         }
         
         if ($site->getId()) {
-            // Env Delete
-            $this->get('app.whm')->envdelete(
+            $args = array(
+                'unlinkcodiad',
                 $this->getUser()->getUsername(),
                 $site->getDomain(),
                 $site->getSubdomain() . '.' . $this->getUser()->getIde(),
                 $site->getDb()
             );
-            // Codiad deleting project
-            $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), array('unlinkcodiad',$this->getUser()->getUsername(),$site->getDomain()));
+            // Env Delete with codiad
+            $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), $args);
             // Deleting the ACL
             $aclProvider = $this->get('security.acl.provider');
             $objectIdentity = ObjectIdentity::fromDomainObject($site);
@@ -354,47 +323,30 @@ class DefaultController extends Controller
         $site = $sites->matching($criteria)->first();
         
         if ($site === false) {
-            $response = $this->get('app.whm')->updatecp(
+            $arr       = explode('/', $project->getTargetUrl());
+            $filename  = $arr[count($arr) - 1];
+            $args      = array(
+                'update_cpanel_account',
                 $this->getUser()->getUsername(),
+                $project->getTargetUrl(),
+                $filename,
+                $project->getCategory(),
                 $domain,
                 $subdomain,
                 $db,
-                $dbpass,
-                $project->getTargetUrl(),
-                $project->getCategory()
+                str_replace('stage', 'dev', $domain)
             );
-            if ($response == 200) {
-                $clone = $this->get('app.whm')->perform('cpanel',
-                    array(
-                        'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
-                        'cpanel_jsonapi_apiversion' => '2',
-                        'cpanel_jsonapi_module' => 'Fileman',
-                        'cpanel_jsonapi_func' => 'fileop',
-                        'op' => 'copy',
-                        'sourcefiles' => '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . str_replace('stage', 'dev', $domain) . '/*',
-                        'destfiles' => '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain,
-                        'doubledecode' => 1
-                    )
+            $response = $this->get('app.phplake')->command($this->get('kernel')->getRootDir(),$args);
+            if ($response == 'success') {
+                $this->addFlash(
+                    'success',
+                    'Stage environment created successfully.'
                 );
-                if ($clone->cpanelresult->event->result == 1) {
-                    // Add Stage to IDE
-                    $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), array('linkcodiad',$this->getUser()->getUsername(),$domain));
-                    $this->addFlash(
-                        'success',
-                        'Stage environment created successfully.'
-                    );
-                }
-                else {
-                    $this->addFlash(
-                        'error',
-                        'Stage Environment source code build failed.'
-                    );
-                }
             }
             else {
                 $this->addFlash(
                     'error',
-                    $this->get('app.phplake')->geterror($response)
+                    'Stage environment creation failed.'
                 );
             }
         }
@@ -459,47 +411,30 @@ class DefaultController extends Controller
         $site = $sites->matching($criteria)->first();
         
         if ($site === false) {
-            $response = $this->get('app.whm')->updatecp(
+            $arr       = explode('/', $project->getTargetUrl());
+            $filename  = $arr[count($arr) - 1];
+            $args      = array(
+                'update_cpanel_account',
                 $this->getUser()->getUsername(),
+                $project->getTargetUrl(),
+                $filename,
+                $project->getCategory(),
                 $domain,
                 $subdomain,
                 $db,
-                $dbpass,
-                $project->getTargetUrl(),
-                $project->getCategory()
+                str_replace('prod', 'stage', $domain)
             );
-            if ($response == 200) {
-                $clone = $this->get('app.whm')->perform('cpanel',
-                    array(
-                        'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
-                        'cpanel_jsonapi_apiversion' => '2',
-                        'cpanel_jsonapi_module' => 'Fileman',
-                        'cpanel_jsonapi_func' => 'fileop',
-                        'op' => 'copy',
-                        'sourcefiles' => '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . str_replace('prod', 'stage', $domain) . '/*',
-                        'destfiles' => '/home/' . $this->getUser()->getUsername() . '/public_html/workspace/' . $domain,
-                        'doubledecode' => 1
-                    )
+            $response = $this->get('app.phplake')->command($this->get('kernel')->getRootDir(),$args);
+            if ($response == 'success') {
+                $this->addFlash(
+                    'success',
+                    'Production environment created successfully.'
                 );
-                if ($clone->cpanelresult->event->result == 1) {
-                    // Add Stage to IDE
-                    $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), array('linkcodiad',$this->getUser()->getUsername(),$domain));
-                    $this->addFlash(
-                        'success',
-                        'Production environment created successfully.'
-                    );
-                }
-                else {
-                    $this->addFlash(
-                        'error',
-                        'Production Environment source code build failed.'
-                    );
-                }
             }
             else {
                 $this->addFlash(
                     'error',
-                    $this->get('app.phplake')->geterror($response)
+                    'Stage environment creation failed.'
                 );
             }
         }
