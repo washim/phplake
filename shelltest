@@ -1,15 +1,32 @@
 #!/bin/bash
-if [ $1 == "create_cpanel_account" ]
+if [ $1 == "create_cpanel_account" ];
 then
-    ACCT=$(sudo whmapi1 createacctw)
-    ACCTRES=$(echo $ACCT | grep -Po 'result: \K[0-9]+')
-    if [ $ACCTRES == "0" ]
+    CODIAD=https://github.com/washim/Codiad/archive/ide.tar.gz
+    REQ=$(sudo whmapi1 createacct username=$2 domain=ide-$2.phplake.com plan=free featurelist=default password=$3 hasshell=0 contactemail=$4 owner=tmwgroups)
+    RES=$(echo $REQ | grep -Po 'result: \K[0-9]+')
+    if [ $RES == "1" ];
     then
         {
-        whoami
-        ls
-        curl "http://google.com"
+        sudo cpapi2 --user=$2 AddonDomain addaddondomain newdomain=$5 subdomain=$6 dir=/home/$2/public_html/workspace/$5
+        sudo uapi --user=$2 Mysql create_user name=$2"_phplake" password=$7
+        sudo uapi --user=$2 Mysql create_database name=$8
+        sudo uapi --user=$2 Mysql set_privileges_on_database user=$2"_phplake" database=$8 privileges="ALTER,CREATE,DELETE,EXECUTE,INDEX,INSERT,LOCK TABLES,SELECT,UPDATE"
+        sudo chown -R phplake:phplake /home/$2
+        rm -rf /home/$2/public_html/*
+        wget $CODIAD -P /home/$2
+        tar -zxf /home/$2/ide.tar.gz -C /home/$2
+        rm /home/$2/ide.tar.gz
+        mv -if /home/$2/Codiad-ide/* /home/$2/public_html
+        rm -rf /home/$2/Codiad-ide
+        wget $9 -P /home/$2/public_html/workspace
+        tar -zxf /home/$2/public_html/workspace/${10} -C /home/$2/public_html/workspace
+        rm /home/$2/public_html/workspace/${10}
+        mv /home/$2/public_html/workspace/${11} /home/$2/public_html/workspace/$5
+        sudo chown -R $2:$2 /home/$2
+        curl "http://ide-"$2".phplake.com/components/install/setup.php?path=/home/"$2"/public_html&base_url=ide-"$2".phplake.com&username="$2"&password="${12}"&project_name="$5"&project_path="$5"&timezone=Asia/Kolkata"
         } &> /dev/null
         echo 'success'
+    else
+        echo 'fail'
     fi
 fi

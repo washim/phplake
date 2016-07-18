@@ -59,7 +59,6 @@ class Phplake
     public function command($path, $args) {
         $command = $path . '/phplakecodebase ' . implode(' ', $args);
         $response = shell_exec($command);
-        print $response; exit;
         return $response;
     }
     
