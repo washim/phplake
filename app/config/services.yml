@@ -17,9 +17,6 @@ services:
          class: AppBundle\Validator\Constraints\LettersCheckValidator
          tags:
              - { name: validator.constraint_validator, alias: LettersCheckValidator }
-     
-     app.whm:
-         class: AppBundle\Utils\Whm
 
      app.phplake:
          class: AppBundle\Utils\Phplake

@@ -21,41 +21,6 @@ class Phplake
         return $this->phplakerequest($query);
     }
     
-    public function geterror($errorno)
-    {
-        switch ($errorno) {
-            case 201:
-                $this->msg = 'Account creation failed. Please try after some time.';
-                break;
-            case 202:
-                $this->msg = 'Dev environment creation failed for project. Please try after some time.';
-                break;
-            case 203:
-                $this->msg = 'Dev environment Database creation failed for project. Please try after some time.';
-                break;
-            case 204:
-                $this->msg = 'Dev environment Database user creation failed for project. Please try after some time.';
-                break;
-            case 205:
-                $this->msg = 'Dev environment Database privileges failed for project. Please try after some time.';
-                break;
-        }
-        return $this->msg;
-    }
-    
-    public function envdelete($domain, $ide)
-    {
-        // Codiad deleting project
-        $this->perform(
-            array(
-                'anonymous' => 'yes',
-                'action' => 'delete',
-                'project_path' => $domain
-            ),
-            'http://'.$ide.'/components/project/controller.php'
-        );
-    }
-    
     public function command($path, $args) {
         $command = $path . '/phplakecodebase ' . implode(' ', $args);
         $response = shell_exec($command);
