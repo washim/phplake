@@ -1,0 +1,15 @@
+#!/bin/bash
+if [ $1 == "create_cpanel_account" ]
+then
+    ACCT=$(sudo whmapi1 createacctw)
+    ACCTRES=$(echo $ACCT | grep -Po 'result: \K[0-9]+')
+    if [ $ACCTRES == "0" ]
+    then
+        {
+        whoami
+        ls
+        curl "http://google.com"
+        } &> /dev/null
+        echo 'success'
+    fi
+fi
