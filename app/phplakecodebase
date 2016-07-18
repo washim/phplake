@@ -66,6 +66,11 @@ then
 elif [ $1 == "changemysqluserpass" ];
 then
     sudo uapi --user=$2 Mysql set_password user=$3 password=$4
+elif [ $1 == "userinfo" ];
+then
+    ACCOUNT=$(sudo whmapi1 listaccts search=$2 searchtype=user)
+    ACCOUNTRES=$(echo $ACCOUNT | grep -Po 'result: \K[0-9]+')
+    echo $ACCOUNTRES
 else
     echo 'failed'
 fi
