@@ -69,8 +69,12 @@ then
 elif [ $1 == "userinfo" ];
 then
     ACCOUNT=$(sudo whmapi1 listaccts search=$2 searchtype=user)
-    ACCOUNTRES=$(echo $ACCOUNT | grep -Po 'result: \K[0-9]+')
-    echo $ACCOUNTRES
+    if [[ $ACCOUNT == *"$2"* ]]
+    then
+    echo 'success'
+    else
+    echo 'failed'
+    fi
 else
     echo 'failed'
 fi
