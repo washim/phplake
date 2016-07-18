@@ -6,7 +6,6 @@ then
     ACCTRES=$(echo "$ACCT" | grep -Po 'result: \K[0-9]+')
     if [ $ACCTRES == "1" ]
     then
-        echo 'success'
         {
         sudo cpapi2 --user=$2 AddonDomain addaddondomain newdomain=$5 subdomain=$6 dir=/home/$2/public_html/workspace/$5
         sudo uapi --user=$2 Mysql create_user name=$2"_phplake" password=$7
@@ -26,6 +25,7 @@ then
         sudo chown -R $2:$2 /home/$2
         curl "http://ide-"$2".phplake.com/components/install/setup.php?path=/home/"$2"/public_html&base_url=ide-"$2".phplake.com&username="$2"&password="${12}"&project_name="$5"&project_path="$5"&timezone=Asia/Kolkata"
         } &> /dev/null
+        echo 'success' 2>&1
     fi
 elif [ $1 == "update_cpanel_account" ]
 then
@@ -50,16 +50,16 @@ then
         sudo cpapi2 --user=$2 Fileman fileop op=copy sourcefiles=/home/$2/public_html/workspace/$9/* destfiles=/home/$2/public_html/workspace/$6 doubledecode=1 &> /dev/null
     fi
     curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$6"&project_path="$6"&key=phplake786" &> /dev/null
-    echo 'success'
+    echo 'success' 2>&1
 elif [ $1 == "unlinkcodiad" ]
 then
+    echo 'success' 2>&1
     {
     sudo cpapi2 --user=$2 AddonDomain deladdondomain domain=$3 subdomain=$4
     sudo cpapi2 --user=$2 MysqlFE deletedb db=$5
     sudo cpapi2 --user=$2 Fileman fileop op=unlink sourcefiles=/home/$2/public_html/workspace/$3 doubledecode=1
     curl "http://ide-"$2".phplake.com/components/project/controller.php?action=delete&project_path="$3"&key=phplake786"
     } &> /dev/null
-    echo 'success'
 elif [ $1 == "changeidepass" ]
 then
     curl -d "username="$2"&password="$3 "http://ide-"$2".phplake.com/components/user/controller.php?action=password&key=phplake786"
@@ -67,5 +67,5 @@ elif [ $1 == "changemysqluserpass" ]
 then
     sudo uapi --user=$2 Mysql set_password user=$3 password=$4
 else
-    echo 'success'
+    echo 'failed' 2>&1
 fi

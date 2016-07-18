@@ -24,7 +24,6 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        dump(shell_exec("/home/phplake/public_html/app/phplakecodebase create_cpanel_account wasahmed afdd0f6d70ca washim.ahmed@gmail.com dev-nazema-wasahmed.phplake.com dev-nazema-wasahmed 5f54ddbadcbe wasahmed_nazema_dev https://ftp.drupal.org/files/projects/drupal-7.44.tar.gz drupal-7.44.tar.gz drupal-7.44 a8700dcf5abf 2>&1"));exit;
         $site = new Sites();
         $project = new Projects();
         $project->setOwner($this->getUser());
