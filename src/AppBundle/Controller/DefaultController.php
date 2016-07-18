@@ -37,7 +37,11 @@ class DefaultController extends Controller
             $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_dev';
             $dbpass    = bin2hex(random_bytes(6));
             $pass      = bin2hex(random_bytes(6));
-            if ($this->get('app.whm')->getwhmuser($this->getUser()->getUsername()) !== 206) {
+            $user      = $this->get('app.phplake')->command(
+                $this->get('kernel')->getRootDir(), 
+                array('userinfo', $this->getUser()->getUsername())
+            );
+            if ($user == "success") {
                 if ($this->getUser()->getSubscription() == 'paid' || $totproj < 1) {
                     $arr       = explode('/', $project->getTargetUrl());
                     $filename  = $arr[count($arr) - 1];
