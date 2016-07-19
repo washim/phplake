@@ -9,7 +9,7 @@ then
     then
         {
         sudo cpapi2 --user=$2 AddonDomain addaddondomain newdomain=$5 subdomain=$6 dir=/home/$2/public_html/workspace/$5 #After this command no echo will work because if it excute success then internally its doing exit 0
-        sleep 15
+        sleep 40
         sudo uapi --user=$2 Mysql create_user name=$2"_phplake" password=$7
         sleep 3
         sudo uapi --user=$2 Mysql create_database name=$8
@@ -39,7 +39,7 @@ elif [ $1 == "update_cpanel_account" ];
 then
     {
     sudo cpapi2 --user=$2 AddonDomain addaddondomain newdomain=$6 subdomain=$7 dir=/home/$2/public_html/workspace/$6
-    sleep 15
+    sleep 40
     sudo uapi --user=$2 Mysql create_database name=$8
     sleep 3
     sudo uapi --user=$2 Mysql set_privileges_on_database user=$2"_phplake" database=$8 privileges="ALTER,CREATE,DELETE,EXECUTE,INDEX,INSERT,LOCK TABLES,SELECT,UPDATE"
