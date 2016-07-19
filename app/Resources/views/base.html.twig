@@ -43,7 +43,11 @@
   });
   </script>
 </head>
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 <body class="hold-transition sidebar-mini skin-black-light">
+{% else %}
+<body class="hold-transition skin-black-light sidebar-collapse">
+{% endif %}
 <div class="wrapper">
   {{include('header.html.twig')}}
   {{include('sidebar.html.twig')}}

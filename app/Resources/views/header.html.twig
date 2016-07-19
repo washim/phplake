@@ -9,22 +9,27 @@
     
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
+      {% if is_granted('IS_AUTHENTICATED_FULLY') %}
       <!-- Sidebar toggle button-->
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>
       </a>
+      {% endif %}
       <div class="navbar-custom-menu-left">
         <ul class="nav navbar-nav">
-          <li class="hidden-xs"><a href="#">Home</a></li>
+          <li><a href="#">Home</a></li>
           <li><a href="#">Pricing</a></li>
           <li class="hidden-xs hidden-sm"><a href="#">Community</a></li>
           <li class="hidden-sm"><a href="#">Blog</a></li>
-          <li><a href="#">Dashboard</a></li>
+          {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+          <li><a href="{{path('dashboard')}}">Dashboard</a></li>
+          {% endif %}
         </ul>
       </div>
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
+          {% if is_granted('IS_AUTHENTICATED_FULLY') %}
           <li class="user-menu">
             <a href="{{path('myaccount')}}">
               <img src="{{app.user.avatar}}" class="user-image" alt="User Image">
@@ -34,6 +39,11 @@
           <li class="user-menu">
             <a href="{{path('logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
           </li>
+          {% else %}
+          <li class="user-menu">
+            <a href="{{path('login')}}"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
+          </li>
+          {% endif %}
         </ul>
       </div>
     </nav>

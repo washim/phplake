@@ -27,12 +27,8 @@ security:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
         
     access_control:
-    - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/forgotpass, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/resetpassword, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/, roles: ROLE_USER }
+    - { path: ^/dashboard, roles: ROLE_USER }
+    - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     
     acl:
         connection: default

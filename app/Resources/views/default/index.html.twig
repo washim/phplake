@@ -1,117 +1,25 @@
 {% extends 'base.html.twig' %}
-{% form_theme form 'fields.html.twig' %}
 {% block body %}
 <div class="col-md-12">
-  <section class="page-content-header">
-    <h1><i class="fa fa-list"></i> CMS(Most Popular)</h1>
-  </section>
-</div>
-<div class="col-md-4">
-    <div class="box box-widget widget-user-2">
-        <div class="widget-user-header bg-aqua">
-          <div class="widget-user-image">
-            <img class="img-circle" src="https://cdn2.iconfinder.com/data/icons/social-flat-buttons-3/512/drupal-64.png" alt="User Avatar">
-          </div>
-          <h3 class="widget-user-username">Drupal</h3>
-          <h5 class="widget-user-desc">Drupal is content management software. It's used to make many of the websites and applications you use every day.</h5>
-        </div>
-        <div class="box-footer no-padding">
-          <ul class="nav nav-stacked">
-            <li><a href="#" class="project" data-value="Drupal8" data-url="https://ftp.drupal.org/files/projects/drupal-8.1.2.tar.gz" data-toggle="modal" data-target="#siteinstall">Drupal 8 <span class="pull-right badge bg-blue">Install</span></a></li>
-            <li><a href="#" class="project" data-value="drupal-7.44" data-url="https://ftp.drupal.org/files/projects/drupal-7.44.tar.gz" data-toggle="modal" data-target="#siteinstall">Drupal 7 <span class="pull-right badge bg-aqua">Install</span></a></li>
-            <li><a href="#" class="project" data-value="Drupal6" data-toggle="modal" data-target="#siteinstall">Drupal 6(Unsupported) <span class="pull-right badge bg-green">Install</span></a></li>
-          </ul>
-        </div>
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+    <div class="item active">
+      <h1>Your development environment, in the cloud</h1>
+      <h3>Phplakes combines a powerful online code editor with a full managed workspace in our managed cloud.</h2>
+      <img src="{{asset('asset/img/phplakeide.png')}}"/>
     </div>
-</div>
-<div class="col-md-4">
-    <div class="box box-widget widget-user-2">
-        <div class="widget-user-header bg-yellow">
-          <div class="widget-user-image">
-            <img class="img-circle" src="http://plainicon.com/dboard/userprod/2800_a1826/prod_thumb/plainicon.com-50324-64px-84d.png" alt="User Avatar">
-          </div>
-          <h3 class="widget-user-username">Symfony</h3>
-          <h5 class="widget-user-desc">Symfony is a set of PHP Components,a Web Application framework,Philosophy,and a Community all working together.</h5>
-        </div>
-        <div class="box-footer no-padding">
-          <ul class="nav nav-stacked">
-            <li><a href="#">Drupal 8 <span class="pull-right badge bg-blue">Install</span></a></li>
-            <li><a href="#">Drupal 7 <span class="pull-right badge bg-aqua">Install</span></a></li>
-            <li><a href="#">Drupal 6(Unsupported) <span class="pull-right badge bg-green">Install</span></a></li>
-          </ul>
-        </div>
-    </div>
-</div>
-<div class="col-md-4">
-    <div class="box box-widget widget-user-2">
-        <div class="widget-user-header bg-navy">
-          <div class="widget-user-image">
-            <img class="img-circle" src="https://www.letsbuildawebsite.com.au/wp-content/uploads/2011/09/1-to-1-wordpress-training.png" alt="User Avatar">
-          </div>
-          <h3 class="widget-user-username">WordPress</h3>
-          <h5 class="widget-user-desc">WordPress is currently the fastest growing CMS software. Main functionality was to allow easy blog experience.</h5>
-        </div>
-        <div class="box-footer no-padding">
-          <ul class="nav nav-stacked">
-            <li><a href="#">Drupal 8 <span class="pull-right badge bg-blue">Install</span></a></li>
-            <li><a href="#">Drupal 7 <span class="pull-right badge bg-aqua">Install</span></a></li>
-            <li><a href="#">Drupal 6(Unsupported) <span class="pull-right badge bg-green">Install</span></a></li>
-          </ul>
-        </div>
-    </div>
-</div>
-<div class="modal modal-primary fade" id="siteinstall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Create Site</h4>
-      </div>
-      {{ form_start(form) }}
-      <div class="modal-body">
-        {{ form_row(form.category) }}
-        {{ form_row(form.targetUrl) }}
-        {{ form_row(form.name, {'attr': {'placeholder': 'My Awesome Site'} }) }}
-        <label for="domain">Default Project URL</label>
-        <div class="input-group">
-          <span class="input-group-addon">dev-</span>
-          <input type="text" class="form-control" id="fulldomain" name="projects[fulldomain]" disabled="disabled">
-          <span class="input-group-addon">-{{app.user.username}}.phplake.com</span>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-warning" id="siteinstall_build">Create Site</button>
-      </div>
-      {{ form_end(form) }}
+    <div class="item">
+      <h1>Language tools that make you smarter</h1>
+      <h3>Cloud9 combines a powerful online code editor with a full Ubuntu workspace in the cloud</h3>
     </div>
   </div>
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+  </ol>
 </div>
-{% endblock %}
-
-{% block javascript %}
-<script>
-$(function() {
-  $('#fulldomain').val($('#projects_name').val());
-  $('.project').click(function(){
-    $('#projects_category').val($(this).attr('data-value'));
-    $('#projects_targetUrl').val($(this).attr('data-url'));
-  });
-  $('#projects_name').keyup(function(){
-    $('#fulldomain').val($(this).val());
-  });
-  $('#siteinstall_build').click(function(){
-    if ($('#projects_name').val()) {
-      $('#siteinstall').modal('toggle');
-      $.blockUI({
-        message: '<h4><i class="fa fa-refresh fa-spin"></i> Please wait. This might take few minutes to complete.</h4>', 
-        css: {'width': '500px'}
-      });
-    }
-  });
-  {% if form.vars.valid == false %}
-  $('#siteinstall').modal('toggle');
-  {% endif %}
-});
-</script>
+</div>
 {% endblock %}
