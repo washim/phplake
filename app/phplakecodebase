@@ -1,11 +1,11 @@
 #!/bin/bash
-if [ $1 == "create_cpanel_account" ];
+if [[ $1 == "create_cpanel_account" ]]
 then
     CODIAD=https://github.com/washim/Codiad/archive/ide.tar.gz
     REQ=$(sudo whmapi1 createacct username=$2 domain=ide-$2.phplake.com plan=free featurelist=default password=$3 hasshell=0 contactemail=$4 owner=tmwgroups)
     sleep 10
     RES=$(echo $REQ | grep -Po 'result: \K[0-9]+')
-    if [ $RES == "1" ];
+    if [[ $RES == "1" ]]
     then
         {
         sudo cpapi2 --user=$2 AddonDomain addaddondomain newdomain=$5 subdomain=$6 dir=/home/$2/public_html/workspace/$5 #After this command no echo will work because if it excute success then internally its doing exit 0
@@ -35,24 +35,21 @@ then
         } &> /dev/null
         echo 'success'
     fi
-elif [ $1 == "update_cpanel_account" ];
+elif [[ $1 == "update_cpanel_account" ]]
 then
     {
     sudo cpapi2 --user=$2 AddonDomain addaddondomain newdomain=$6 subdomain=$7 dir=/home/$2/public_html/workspace/$6
     sleep 40
     sudo uapi --user=$2 Mysql create_database name=$8
-    sleep 3
     sudo uapi --user=$2 Mysql set_privileges_on_database user=$2"_phplake" database=$8 privileges="ALTER,CREATE,DELETE,EXECUTE,INDEX,INSERT,LOCK TABLES,SELECT,UPDATE"
-    sleep 3
     } &> /dev/null
     
-    if [ $9 == "build_from_url" ];
+    if [[ $9 == "build_from_url" ]]
     then
         {
         sudo chown -R phplake:phplake /home/$2
         rm -rf /home/$2/public_html/workspace/$6
         wget $3 -P /home/$2/public_html/workspace
-        sleep 10
         tar -zxf /home/$2/public_html/workspace/$4 -C /home/$2/public_html/workspace
         rm /home/$2/public_html/workspace/$4
         mv /home/$2/public_html/workspace/$5 /home/$2/public_html/workspace/$6
@@ -60,12 +57,11 @@ then
         } &> /dev/null
     else
         sudo cpapi2 --user=$2 Fileman fileop op=copy sourcefiles=/home/$2/public_html/workspace/$9/* destfiles=/home/$2/public_html/workspace/$6 doubledecode=1 &> /dev/null
-        sleep 15
+        sleep 30
     fi
     curl "http://ide-"$2".phplake.com/components/project/controller.php?action=create&project_name="$6"&project_path="$6"&key=phplake786" &> /dev/null
-    sleep 3
     echo 'success'
-elif [ $1 == "unlinkcodiad" ];
+elif [[ $1 == "unlinkcodiad" ]]
 then
     {
     sudo cpapi2 --user=$2 AddonDomain deladdondomain domain=$3 subdomain=$4
@@ -78,15 +74,15 @@ then
     sleep 3
     } &> /dev/null
     echo 'success'
-elif [ $1 == "changeidepass" ];
+elif [[ $1 == "changeidepass" ]]
 then
     curl -d "username="$2"&password="$3 "http://ide-"$2".phplake.com/components/user/controller.php?action=password&key=phplake786"
     sleep 5
-elif [ $1 == "changemysqluserpass" ];
+elif [[ $1 == "changemysqluserpass" ]]
 then
     sudo uapi --user=$2 Mysql set_password user=$3 password=$4
     sleep 5
-elif [ $1 == "userinfo" ];
+elif [[ $1 == "userinfo" ]]
 then
     ACCOUNT=$(sudo whmapi1 listaccts search=$2 searchtype=user)
     sleep 3
@@ -97,5 +93,7 @@ then
     echo 'failed'
     fi
 else
+    sudo cpapi2 --user=wasahmed AddonDomain addaddondomain newdomain=babus.phplake.com subdomain=babus dir=/home/wasahmed/public_html/workspace/babus.phplake.com
+    sleep 40
     echo 'failed'
 fi
