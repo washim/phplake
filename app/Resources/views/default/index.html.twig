@@ -1,17 +1,22 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<div class="col-md-12">
 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
   <!-- Wrapper for slides -->
   <div class="carousel-inner" role="listbox">
     <div class="item active">
       <h1>Your development environment, in the cloud</h1>
-      <h3>Phplakes combines a powerful online code editor with a full managed workspace in our managed cloud.</h2>
+      <h3>Phplakes combines a powerful online code editor with a full managed workspace in our managed cloud server.</h2>
       <img src="{{asset('asset/img/phplakeide.png')}}"/>
     </div>
     <div class="item">
-      <h1>Language tools that make you smarter</h1>
-      <h3>Cloud9 combines a powerful online code editor with a full Ubuntu workspace in the cloud</h3>
+      <h1>Smarter Development plugins in one place</h1>
+      <h3>Phplake supports almost all development tools like Github, Compass for SASS, Less and many more.</h3>
+      <img src="{{asset('asset/img/phplakeideplugins.png')}}"/>
+    </div>
+    <div class="item">
+      <h1>Work together, web development was never so easy</h1>
+      <h3>Awesome collaboration support with multiple users. Chat with developers or do direct audio call with your headphone.</h3>
+      <img src="{{asset('asset/img/phplaketogether.png')}}"/>
     </div>
   </div>
   <!-- Indicators -->
@@ -20,6 +25,17 @@
     <li data-target="#carousel-example-generic" data-slide-to="1"></li>
     <li data-target="#carousel-example-generic" data-slide-to="2"></li>
   </ol>
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
 </div>
+<div class="col-md-12">
+  
 </div>
 {% endblock %}
