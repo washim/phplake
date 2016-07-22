@@ -43,7 +43,7 @@
   });
   </script>
 </head>
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+{% if app.request.get('_route') == 'dashboard' %}
 <body class="hold-transition sidebar-mini skin-black-light">
 {% else %}
 <body class="hold-transition skin-black-light sidebar-collapse">

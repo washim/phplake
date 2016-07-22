@@ -16,7 +16,7 @@ security:
                 check_path: login
             logout:
                 path: logout
-                target: /
+                target: /dashboard
     
     encoders:
         AppBundle\Entity\Users:
