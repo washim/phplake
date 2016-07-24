@@ -43,7 +43,7 @@
   });
   </script>
 </head>
-{% if app.request.get('_route') == 'dashboard' %}
+{% if 'dashboard' in  app.request.pathInfo %}
 <body class="hold-transition sidebar-mini skin-black-light">
 {% else %}
 <body class="hold-transition skin-black-light sidebar-collapse">
