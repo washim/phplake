@@ -45,7 +45,7 @@
   font-weight: bold;
 }
 .pricing .pricem::after {
-  content: " / month";
+  content: " for one time + $10 / month per project";
   font-weight: normal;
 }
 .pricing hr {

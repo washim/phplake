@@ -49,11 +49,11 @@
 <body class="hold-transition skin-black-light sidebar-collapse">
 {% endif %}
 <div class="wrapper">
-  {{include('header.html.twig')}}
-  {{include('sidebar.html.twig')}}
+  {{include('elements/header.html.twig')}}
+  {{include('elements/sidebar.html.twig')}}
   <div class="content-wrapper">
     <section class="content">
-      {{include('flashmessage.html.twig')}}
+      {{include('elements/flashmessage.html.twig')}}
       <div class="row">
         {% block body %}{% endblock %}
       </div>

@@ -15,6 +15,8 @@ h4{font-weight:bold; font-size: 16px;}
 .pl-14px{padding-left: 14px;}
 .mb-none{margin-bottom: 0px !important;}
 .hide {display:none;}
+.bordernone{border:none !important;}
+.apps{height:200px;}
 #siteinstall .modal-dialog{ margin: 80px auto;}
 #siteinstall .modal-body .form-group:first-child, 
 #siteinstall .modal-body .form-group:nth-child(2) {display: none;}
@@ -27,7 +29,8 @@ h4{font-weight:bold; font-size: 16px;}
 .table-responsive {padding:15px;}
 hr.stylish{padding:0;border:none;border-top:medium double #001f3f;color:red;text-align:center; width:50%;}
 hr.stylish:after {content:"§";display:inline-block;position:relative;top:-0.7em;font-size:1.5em;padding:0 0.25em;background:#ecf0f5;}
-.bg-common {background: url('../img/featuresbg.jpg');color:#fff;padding-bottom:50px;}
+.bg-slide {background: url('../img/featuresbg.jpg');color:#fff;padding-bottom:50px;}
+.description-block>.description-text{text-transform:inherit;}
 .main-header .navbar-custom-menu-left{float:left;}
 .navbar-custom-menu-left > .navbar-nav > li {position: relative;}
 .navbar-custom-menu-left > .navbar-nav > li > .dropdown-menu {position: absolute;right: 0;left: auto;}
