@@ -23,8 +23,10 @@ class Phplake
     
     public function command($path, $args) {
         $command = $path . '/phplakecodebase ' . implode(' ', $args);
-        $response = shell_exec($command);
-        return trim($response);
+        exec($command, $output, $status);
+        if ($status == 0) {
+            return 'success';
+        }
     }
     
     private function phplakerequest($query)
