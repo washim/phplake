@@ -27,7 +27,7 @@ class DashboardController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $site = new Sites();
+		$site = new Sites();
         $project = new Projects();
         $project->setOwner($this->getUser());
         
@@ -40,26 +40,10 @@ class DashboardController extends Controller
             $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_dev';
             $dbpass    = bin2hex(random_bytes(6));
             $pass      = bin2hex(random_bytes(6));
-            $user      = $this->get('app.phplake')->command(
-                $this->get('kernel')->getRootDir(), 
-                array('userinfo', $this->getUser()->getUsername())
-            );
+            $user      = $this->get('app.whm')->getwhmuser($this->getUser()->getUsername());
             if ($user == "success") {
                 if ($this->getUser()->getSubscription() == 'paid' || $totproj < 1) {
-                    $arr       = explode('/', $project->getTargetUrl());
-                    $filename  = $arr[count($arr) - 1];
-                    $args      = array(
-                        'update_cpanel_account',
-                        $this->getUser()->getUsername(),
-                        $project->getTargetUrl(),
-                        $filename,
-                        $project->getCategory(),
-                        $domain,
-                        $subdomain,
-                        $db,
-                        'build_from_url'
-                    );
-                    $response = $this->get('app.phplake')->command($this->get('kernel')->getRootDir(),$args);
+					$response = $this->get('app.whm')->update_cpanel_account($this->getUser()->getUsername(), $domain, $subdomain, $db, $project->getTargetUrl(), $project->getCategory());
                     if ($response == 'success') {
                         $this->addFlash(
                             'success',
@@ -69,7 +53,7 @@ class DashboardController extends Controller
                     else {
                         $this->addFlash(
                             'error',
-                            'Project creation failed.'
+                            $response
                         );
                     }
                 }
@@ -79,28 +63,12 @@ class DashboardController extends Controller
                         'You have reached your limit of project. To create a new project, delete an unused project or upgrade your account.'
                     );
                     
-                    return $this->redirectToRoute('homepage');
+                    return $this->redirectToRoute('dashboard');
                 }
             }
             else {
-                $arr       = explode('/', $project->getTargetUrl());
-                $filename  = $arr[count($arr) - 1];
                 $idepass   = bin2hex(random_bytes(6));
-                $args      = array(
-                    'create_cpanel_account',
-                    $this->getUser()->getUsername(),
-                    $pass,
-                    $this->getUser()->getEmail(),
-                    $domain,
-                    $subdomain,
-                    $dbpass,
-                    $db,
-                    $project->getTargetUrl(),
-                    $filename,
-                    $project->getCategory(),
-                    $idepass
-                );
-                $response = $this->get('app.phplake')->command($this->get('kernel')->getRootDir(),$args);
+				$response = $this->get('app.whm')->create_cpanel_account($this->getUser()->getUsername(), $pass, $this->getUser()->getEmail(), $domain, $subdomain, $db, $dbpass, $project->getTargetUrl(), $project->getCategory(), $idepass);
                 if ($response == 'success') {
                     $idemail = \Swift_Message::newInstance()
                         ->setSubject('Online IDE Phplake')
@@ -224,15 +192,7 @@ class DashboardController extends Controller
         
         if ($project->getId()) {
             foreach ($project->getSites() as $site) {
-                $args = array(
-                    'unlinkcodiad',
-                    $this->getUser()->getUsername(),
-                    $site->getDomain(),
-                    $site->getSubdomain() . '.' . $this->getUser()->getIde(),
-                    $site->getDb()
-                );
-                // Env Delete with codiad
-                $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), $args);
+				$this->get('app.whm')->deletesite($site->getDomain(), $site->getSubdomain() . '.' . $this->getUser()->getIde(), $site->getDb());
                 // Deleting the ACL
                 $aclProvider = $this->get('security.acl.provider');
                 $objectIdentity = ObjectIdentity::fromDomainObject($site);
@@ -274,15 +234,7 @@ class DashboardController extends Controller
         }
         
         if ($site->getId()) {
-            $args = array(
-                'unlinkcodiad',
-                $this->getUser()->getUsername(),
-                $site->getDomain(),
-                $site->getSubdomain() . '.' . $this->getUser()->getIde(),
-                $site->getDb()
-            );
-            // Env Delete with codiad
-            $this->get('app.phplake')->command($this->get('kernel')->getRootDir(), $args);
+			$this->get('app.whm')->deletesite($site->getDomain(), $site->getSubdomain() . '.' . $this->getUser()->getIde(), $site->getDb());
             // Deleting the ACL
             $aclProvider = $this->get('security.acl.provider');
             $objectIdentity = ObjectIdentity::fromDomainObject($site);
@@ -320,7 +272,6 @@ class DashboardController extends Controller
         $domain    = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_stage';
-        $dbpass    = bin2hex(random_bytes(6));
         
         $sites = $project->getSites();
         $criteria = Criteria::create()
@@ -408,7 +359,6 @@ class DashboardController extends Controller
         $domain    = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $subdomain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_prod';
-        $dbpass    = bin2hex(random_bytes(6));
         
         $sites = $project->getSites();
         $criteria = Criteria::create()
