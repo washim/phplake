@@ -280,20 +280,7 @@ class DashboardController extends Controller
         $site = $sites->matching($criteria)->first();
         
         if ($site === false) {
-            $arr       = explode('/', $project->getTargetUrl());
-            $filename  = $arr[count($arr) - 1];
-            $args      = array(
-                'update_cpanel_account',
-                $this->getUser()->getUsername(),
-                $project->getTargetUrl(),
-                $filename,
-                $project->getCategory(),
-                $domain,
-                $subdomain,
-                $db,
-                str_replace('stage', 'dev', $domain)
-            );
-            $response = $this->get('app.phplake')->command($this->get('kernel')->getRootDir(),$args);
+			$response = $this->get('app.whm')->siteclone($this->getUser()->getUsername(), $domain, $subdomain, str_replace('stage', 'dev', $domain) , $db, $project->getTargetUrl(), $project->getCategory());
             if ($response == 'success') {
                 $this->addFlash(
                     'success',
@@ -367,20 +354,7 @@ class DashboardController extends Controller
         $site = $sites->matching($criteria)->first();
         
         if ($site === false) {
-            $arr       = explode('/', $project->getTargetUrl());
-            $filename  = $arr[count($arr) - 1];
-            $args      = array(
-                'update_cpanel_account',
-                $this->getUser()->getUsername(),
-                $project->getTargetUrl(),
-                $filename,
-                $project->getCategory(),
-                $domain,
-                $subdomain,
-                $db,
-                str_replace('prod', 'stage', $domain)
-            );
-            $response = $this->get('app.phplake')->command($this->get('kernel')->getRootDir(),$args);
+            $response = $this->get('app.whm')->siteclone($this->getUser()->getUsername(), $domain, $subdomain, str_replace('prod', 'stage', $domain) , $db, $project->getTargetUrl(), $project->getCategory());
             if ($response == 'success') {
                 $this->addFlash(
                     'success',
