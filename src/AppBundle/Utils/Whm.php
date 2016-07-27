@@ -69,10 +69,8 @@ class Whm
         return $status;
     }
     
-    public function create_cpanel_account($user, $pass, $email, $domain, $subdomain , $db, $dbpass, $source, $dir, $idepass)
+    public function create_cpanel_account($user, $pass, $email, $domain, $subdomain , $db, $dbpass, $filename, $dir, $idepass)
     {
-        $arr       = explode('/', $source);
-        $filename  = $arr[count($arr) - 1];
         $createacct = $this->perform('createacct', 
             array(
                 'api.version'  => 1,
@@ -248,11 +246,9 @@ class Whm
         }
     }
     
-    public function update_cpanel_account($user, $domain, $subdomain , $db, $source, $dir)
+    public function update_cpanel_account($user, $domain, $subdomain , $db, $filename, $dir)
     {
         $pass = bin2hex(random_bytes(6));
-        $arr = explode('/', $source);
-        $filename  = $arr[count($arr) - 1];
         $addaddondomain = $this->perform('cpanel',
             array(
                 'cpanel_jsonapi_user' => $user,
@@ -438,10 +434,8 @@ class Whm
         }
     }
     
-    public function siteclone($user, $domain, $subdomain, $sourcedomain , $db, $source, $dir)
+    public function siteclone($user, $domain, $subdomain, $sourcedomain , $db, $filename, $dir)
     {
-        $arr = explode('/', $source);
-        $filename  = $arr[count($arr) - 1];
         $addaddondomain = $this->perform('cpanel',
             array(
                 'cpanel_jsonapi_user' => $user,

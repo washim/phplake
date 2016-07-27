@@ -38,7 +38,7 @@ class Projects
     private $category;
     
     /**
-	 * @ORM\Column(type="text")
+	 * @ORM\Column(type="string", length=64)
 	 */
     private $targetUrl;
     
