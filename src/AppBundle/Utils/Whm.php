@@ -69,7 +69,7 @@ class Whm
         return $status;
     }
     
-    public function create_cpanel_account($user, $pass, $email, $domain, $subdomain , $db, $dbpass, $filename, $dir, $idepass)
+    public function create_cpanel_account($user, $pass, $email, $domain, $subdomain , $db, $dbpass, $filename, $dir, $idepass, $debug)
     {
         $createacct = $this->perform('createacct', 
             array(
@@ -82,6 +82,7 @@ class Whm
                 'owner'        => 'tmwgroups'
             )
         );
+        $debug == 'on' ? dump($createacct) : null;
         if ($createacct->metadata->result == 1) {
             $addaddondomain = $this->perform('cpanel',
                 array(
@@ -94,17 +95,19 @@ class Whm
                     'subdomain' => $subdomain
                 )
             );
+            $debug == 'on' ? dump($addaddondomain) : null;
             if (!isset($addaddondomain->cpanelresult->error)) {
                 $createdbuser = $this->perform('cpanel',
                     array(
                         'cpanel_jsonapi_user' => $user,
                         'cpanel_jsonapi_apiversion' => '2',
-                        'cpanel_jsonapi_module' => 'Mysql',
+                        'cpanel_jsonapi_module' => 'MysqlFE',
                         'cpanel_jsonapi_func' => 'createdbuser',
                         'dbuser' => $user . '_phplake',
                         'password' => $dbpass
                     )
                 );
+                $debug == 'on' ? dump($createdbuser) : null;
                 if (!isset($createdbuser->cpanelresult->error)) {
                     $createdb = $this->perform('cpanel',
                         array(
@@ -115,6 +118,7 @@ class Whm
                             'db' => $db
                         )
                     );
+                    $debug == 'on' ? dump($createdb) : null;
                     if (!isset($createdb->cpanelresult->error)) {
                         $setdbuserprivileges = $this->perform('cpanel',
                             array(
@@ -127,11 +131,13 @@ class Whm
                                 'privileges' => 'ALTER,CREATE,DELETE,EXECUTE,INDEX,INSERT,LOCK TABLES,SELECT,UPDATE'
                             )
                         );
+                        $debug == 'on' ? dump($setdbuserprivileges) : null;
                         if (!isset($setdbuserprivileges->cpanelresult->error)) {
                             $ftp = $this->putfiles("ftp.ide-$user.phplake.com", $user, $pass, array(
                                 "ide.tar.gz" => "/home/phplake/public_html/files/ide.tar.gz",
                                 $filename => "/home/phplake/public_html/files/$filename"
                             ));
+                            $debug == 'on' ? dump($ftp) : null;
                             if ($ftp == 'success') {
                                 $extract = $this->perform('cpanel',
                                     array(
@@ -144,6 +150,7 @@ class Whm
                                         'doubledecode' => 1
                                     )
                                 );
+                                $debug == 'on' ? dump($extract) : null;
                                 if (!isset($extract->cpanelresult->error)) {
                                     $removedocroot = $this->perform('cpanel',
                                         array(
@@ -156,6 +163,7 @@ class Whm
                                             'doubledecode' => 1
                                         )
                                     );
+                                    $debug == 'on' ? dump($removedocroot) : null;
                                     if (!isset($removedocroot->cpanelresult->error)) {
                                         $installide = $this->perform('cpanel',
                                             array(
@@ -169,6 +177,7 @@ class Whm
                                                 'doubledecode' => 1
                                             )
                                         );
+                                        $debug == 'on' ? dump($installide) : null;
                                         if (!isset($installide->cpanelresult->error)) {
                                             $installapps = $this->perform('cpanel',
                                                 array(
@@ -182,6 +191,7 @@ class Whm
                                                     'doubledecode' => 1
                                                 )
                                             );
+                                            $debug == 'on' ? dump($installapps) : null;
                                             if (!isset($installapps->cpanelresult->error)) {
                                                 $this->perform('cpanel',
                                                     array(
@@ -246,7 +256,7 @@ class Whm
         }
     }
     
-    public function update_cpanel_account($user, $domain, $subdomain , $db, $filename, $dir)
+    public function update_cpanel_account($user, $domain, $subdomain , $db, $filename, $dir, $debug)
     {
         $pass = bin2hex(random_bytes(6));
         $addaddondomain = $this->perform('cpanel',
@@ -260,6 +270,7 @@ class Whm
                 'subdomain' => $subdomain
             )
         );
+        $debug == 'on' ? dump($addaddondomain) : null;
         if (!isset($addaddondomain->cpanelresult->error)) {
             $createdb = $this->perform('cpanel',
                 array(
@@ -270,6 +281,7 @@ class Whm
                     'db' => $db
                 )
             );
+            $debug == 'on' ? dump($createdb) : null;
             if (!isset($createdb->cpanelresult->error)) {
                 $setdbuserprivileges = $this->perform('cpanel',
                     array(
@@ -282,6 +294,7 @@ class Whm
                         'privileges' => 'ALTER,CREATE,DELETE,EXECUTE,INDEX,INSERT,LOCK TABLES,SELECT,UPDATE'
                     )
                 );
+                $debug == 'on' ? dump($setdbuserprivileges) : null;
                 if (!isset($setdbuserprivileges->cpanelresult->error)) {
                     $cpchangepass = $this->perform('passwd',
                         array(
@@ -290,10 +303,12 @@ class Whm
                             'password' => $pass
                         )
                     );
+                    $debug == 'on' ? dump($cpchangepass) : null;
                     if ($cpchangepass->metadata->result == 1) {
                         $ftp = $this->putfiles("ftp.ide-$user.phplake.com", $user, $pass, array(
                             $filename => "/home/phplake/public_html/files/$filename"
                         ));
+                        $debug == 'on' ? dump($ftp) : null;
                         if ($ftp == 'success') {
                             $extract = $this->perform('cpanel',
                                 array(
@@ -306,6 +321,7 @@ class Whm
                                     'doubledecode' => 1
                                 )
                             );
+                            $debug == 'on' ? dump($extract) : null;
                             if (!isset($extract->cpanelresult->error)) {
                                 $removedocroot = $this->perform('cpanel',
                                     array(
@@ -318,6 +334,7 @@ class Whm
                                         'doubledecode' => 1
                                     )
                                 );
+                                $debug == 'on' ? dump($removedocroot) : null;
                                 if (!isset($removedocroot->cpanelresult->error)) {
                                     $installapps = $this->perform('cpanel',
                                         array(
@@ -331,6 +348,7 @@ class Whm
                                             'doubledecode' => 1
                                         )
                                     );
+                                    $debug == 'on' ? dump($installapps) : null;
                                     if (!isset($installapps->cpanelresult->error)) {
                                         $this->perform('cpanel',
                                             array(

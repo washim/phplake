@@ -27,6 +27,7 @@ class DashboardController extends Controller
      */
     public function indexAction(Request $request)
     {
+		$debug = 'off';
 		$site = new Sites();
         $project = new Projects();
         $project->setOwner($this->getUser());
@@ -43,7 +44,7 @@ class DashboardController extends Controller
             $user      = $this->get('app.whm')->getwhmuser($this->getUser()->getUsername());
             if ($user == "success") {
                 if ($this->getUser()->getSubscription() == 'paid' || $totproj < 1) {
-					$response = $this->get('app.whm')->update_cpanel_account($this->getUser()->getUsername(), $domain, $subdomain, $db, $project->getTargetUrl(), $project->getCategory());
+					$response = $this->get('app.whm')->update_cpanel_account($this->getUser()->getUsername(), $domain, $subdomain, $db, $project->getTargetUrl(), $project->getCategory(), $debug);
                     if ($response == 'success') {
                         $this->addFlash(
                             'success',
@@ -68,7 +69,7 @@ class DashboardController extends Controller
             }
             else {
                 $idepass   = bin2hex(random_bytes(6));
-				$response = $this->get('app.whm')->create_cpanel_account($this->getUser()->getUsername(), $pass, $this->getUser()->getEmail(), $domain, $subdomain, $db, $dbpass, $project->getTargetUrl(), $project->getCategory(), $idepass);
+				$response = $this->get('app.whm')->create_cpanel_account($this->getUser()->getUsername(), $pass, $this->getUser()->getEmail(), $domain, $subdomain, $db, $dbpass, $project->getTargetUrl(), $project->getCategory(), $idepass, $debug);
                 if ($response == 'success') {
                     $idemail = \Swift_Message::newInstance()
                         ->setSubject('Online IDE Phplake')
@@ -132,6 +133,7 @@ class DashboardController extends Controller
             $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
             $aclProvider->updateAcl($acl);
             
+			if ($debug == 'off')
             return $this->redirectToRoute('dashboard');
         }
         return $this->render('default/dashboard.html.twig', [
