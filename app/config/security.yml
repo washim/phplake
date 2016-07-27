@@ -14,9 +14,10 @@ security:
             form_login:
                 login_path: login
                 check_path: login
+                default_target_path: /dashboard
             logout:
                 path: logout
-                target: /dashboard
+                target: /
     
     encoders:
         AppBundle\Entity\Users:

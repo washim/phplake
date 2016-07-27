@@ -192,7 +192,7 @@ class DashboardController extends Controller
         
         if ($project->getId()) {
             foreach ($project->getSites() as $site) {
-				$this->get('app.whm')->deletesite($site->getDomain(), $site->getSubdomain() . '.' . $this->getUser()->getIde(), $site->getDb());
+				$this->get('app.whm')->deletesite($this->getUser()->getUsername(), $site->getDomain(), $site->getSubdomain() . '.' . $this->getUser()->getIde(), $site->getDb());
                 // Deleting the ACL
                 $aclProvider = $this->get('security.acl.provider');
                 $objectIdentity = ObjectIdentity::fromDomainObject($site);
@@ -234,7 +234,7 @@ class DashboardController extends Controller
         }
         
         if ($site->getId()) {
-			$this->get('app.whm')->deletesite($site->getDomain(), $site->getSubdomain() . '.' . $this->getUser()->getIde(), $site->getDb());
+			$this->get('app.whm')->deletesite($this->getUser()->getUsername(), $site->getDomain(), $site->getSubdomain() . '.' . $this->getUser()->getIde(), $site->getDb());
             // Deleting the ACL
             $aclProvider = $this->get('security.acl.provider');
             $objectIdentity = ObjectIdentity::fromDomainObject($site);

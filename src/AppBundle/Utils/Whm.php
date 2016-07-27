@@ -23,13 +23,16 @@ class Whm
         return $this->whmrequest($query);
     }
     
-    public function configureide($url, $postdata)
+    public function configureide($url, $postdata, $rawpostdata = '')
     {
         foreach ($postdata as $key => $value) {
             $params[] = $key . '=' . $value;
         }
         $query = $url . '?' . implode('&', $params);
-        return $this->whmrequest($query);
+        if (empty($rawpostdata))
+            return $this->whmrequest($query);
+        else
+            return $this->whmrequest($query, $rawpostdata);
     }
     
     public function getwhmuser($user)
@@ -98,7 +101,7 @@ class Whm
                     array(
                         'cpanel_jsonapi_user' => $user,
                         'cpanel_jsonapi_apiversion' => '2',
-                        'cpanel_jsonapi_module' => 'MysqlFE',
+                        'cpanel_jsonapi_module' => 'Mysql',
                         'cpanel_jsonapi_func' => 'createdbuser',
                         'dbuser' => $user . '_phplake',
                         'password' => $dbpass
@@ -385,7 +388,7 @@ class Whm
         }
     }
     
-    public function deletesite($domain, $subdomain, $db)
+    public function deletesite($user, $domain, $subdomain, $db)
     {
         $deladdondomain = $this->perform('cpanel',
             array(
@@ -530,14 +533,20 @@ class Whm
     /**
      * WHM Common universal Curl request
      */
-    private function whmrequest($query)
+    private function whmrequest($query, $post = '')
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        $header[0] = "Authorization: WHM $this->whmusername:" . preg_replace("'(\r|\n)'", "", $this->hash);
-        curl_setopt($curl,CURLOPT_HTTPHEADER, $header);
+        if (!empty($post)) { // This if logic is the adjustment of IDE username password change or any curl post request and not related with WHM api call
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+        }
+        else {
+            $header[0] = "Authorization: WHM $this->whmusername:" . preg_replace("'(\r|\n)'", "", $this->hash);
+            curl_setopt($curl,CURLOPT_HTTPHEADER, $header);
+        }
         curl_setopt($curl, CURLOPT_URL, $query);
         $result = curl_exec($curl);
         curl_close($curl);

@@ -109,7 +109,7 @@ class SecurityController extends Controller
     }
     
     /**
-     * @Route("/myaccount", name="myaccount")
+     * @Route("/dashboard/myaccount", name="myaccount")
      */
     public function myaccountAction(Request $request)
     {
@@ -146,15 +146,14 @@ class SecurityController extends Controller
                 $flash = 'Account password changed successfully.';
             }
             elseif ($fuser->getChangetarget() == 2) {
-                $changeidepass = $this->get('app.phplake')->command(
-                    $this->get('kernel')->getRootDir(),
+                $changeidepass = $this->get('app.whm')->configureide("http://ide-".$this->getUser()->getUsername().".phplake.com/components/user/controller.php",
                     array(
-                        'changeidepass',
-                        $this->getUser()->getUsername(),
-                        $fuser->getPlainPassword()
-                    )
+                        'action' => 'password',
+                        'key' => 'phplake786'
+                    ),
+                    'username=' . $this->getUser()->getUsername() . '&password=' . $fuser->getPlainPassword()
                 );
-                if ($changeidepass == 0) {
+                if ($changeidepass->status == 'success') {
                     $flash = 'Online IDE password changed successfully.';
                 }
                 else {
@@ -167,22 +166,21 @@ class SecurityController extends Controller
                 }
             }
             elseif ($fuser->getChangetarget() == 3) {
-                $changemysqluserpass = $this->get('app.phplake')->command(
-                    $this->get('kernel')->getRootDir(),
-                    array(
-                        'changemysqluserpass',
-                        $this->getUser()->getUsername(),
-                        $this->getUser()->getUsername() . '_phplake',
-                        $fuser->getPlainPassword()
-                    )
-                );
-                if ($changemysqluserpass == 0) {
+                $changemysqluserpass = $this->get('app.whm')->perform('cpanel', array(
+                    'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+                    'cpanel_jsonapi_apiversion' => '2',
+                    'cpanel_jsonapi_module' => 'MysqlFE',
+                    'cpanel_jsonapi_func' => 'changedbuserpassword',
+                    'dbuser' => $this->getUser()->getUsername() . '_phplake',
+                    'password' => $fuser->getPlainPassword()
+                ));
+                if (!isset($addaddondomain->cpanelresult->error)) {
                     $flash = 'Dev/Stage DB Username password changed successfully.';
                 }
                 else {
                     $this->addFlash(
                         'error',
-                        $changemysqluserpass
+                        $addaddondomain->cpanelresult->error
                     );
                     
                     return $this->redirectToRoute('myaccount');
