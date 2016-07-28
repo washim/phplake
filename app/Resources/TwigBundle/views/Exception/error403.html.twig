@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Access Denied{% endblock %}
+{% block page_title %}Exception<small>Access Denied</small>{% endblock %}
+{% block body %}
+<div class="error-page">
+    <div class="error-content">
+        <h3><i class="fa fa-warning text-yellow"></i> Oops! You are not authorized to Access this page.</h3>
+        <p>We could not handle this request which you are looking for. Meanwhile, you may 
+        <a href="{{ path('homepage') }}">return to Home Page</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

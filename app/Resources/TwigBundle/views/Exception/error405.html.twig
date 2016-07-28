@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Oops! Request not accepted{% endblock %}
+{% block page_title %}Exception<small>Oops! Request not accepted</small>{% endblock %}
+{% block body %}
+<div class="error-page">
+    <div class="error-content">
+        <h3><i class="fa fa-warning text-yellow"></i> Oops! Request not accepted</h3>
+        <p>We could not handle this request. Meanwhile, you may 
+        <a href="{{ path('homepage') }}">return to Home Page</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
