@@ -184,15 +184,16 @@ class DashboardController extends Controller
     
     /**
      * @Route("/myproject/{id}/delete", name="myproject_delete")
+	 * @Method("POST")
      */
     public function myprojectdeleteAction(Request $request, Projects $project)
     {
-        $authorizationChecker = $this->get('security.authorization_checker');
+		$authorizationChecker = $this->get('security.authorization_checker');
         if (false === $authorizationChecker->isGranted('VIEW', $project)) {
             throw new AccessDeniedException();
         }
         
-        if ($project->getId()) {
+        if ($project->getId() && $request->request->get('agree_perform_action')) {
             foreach ($project->getSites() as $site) {
 				$this->get('app.whm')->deletesite($this->getUser()->getUsername(), $site->getDomain(), $site->getSubdomain() . '.' . $this->getUser()->getIde(), $site->getDb());
                 // Deleting the ACL
