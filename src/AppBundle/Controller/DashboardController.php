@@ -36,15 +36,23 @@ class DashboardController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $domain    = 'dev-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
-            $totproj   = count($this->getUser()->getProjects());
+            $totproj   = count($this->getUser()->getProjects()->matching(Criteria::create()->where(Criteria::expr()->eq("subscription", 'free')))->first());
             $subdomain = 'dev-' . $project->getName() . '-' . $this->getUser()->getUsername();
             $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_dev';
             $dbpass    = bin2hex(random_bytes(6));
             $pass      = bin2hex(random_bytes(6));
             $user      = $this->get('app.whm')->getwhmuser($this->getUser()->getUsername());
             if ($user == "success") {
-                if ($this->getUser()->getSubscription() == 'paid' || $totproj < 1) {
-					$response = $this->get('app.whm')->update_cpanel_account($this->getUser()->getUsername(), $domain, $subdomain, $db, $project->getTargetUrl(), $project->getCategory(), $debug);
+                if ($totproj > 0) {
+					$this->addFlash(
+                        'error',
+                        'You have reached your limit of free project. To create a new project, delete an unused free project or choose project subscription.'
+                    );
+                    
+                    return $this->redirectToRoute('dashboard');
+                }
+                else {
+                    $response = $this->get('app.whm')->update_cpanel_account($this->getUser()->getUsername(), $domain, $subdomain, $db, $project->getTargetUrl(), $project->getCategory(), $debug);
                     if ($response == 'success') {
                         $this->addFlash(
                             'success',
@@ -57,14 +65,6 @@ class DashboardController extends Controller
                             $response
                         );
                     }
-                }
-                else {
-                    $this->addFlash(
-                        'error',
-                        'You have reached your limit of project. To create a new project, delete an unused project or upgrade your account.'
-                    );
-                    
-                    return $this->redirectToRoute('dashboard');
                 }
             }
             else {
@@ -228,6 +228,7 @@ class DashboardController extends Controller
     
     /**
      * @Route("/env/{id}/delete", name="env_delete")
+	 * @Method("POST")
      */
     public function envdeleteAction(Request $request, Sites $site)
     {
@@ -236,7 +237,7 @@ class DashboardController extends Controller
             throw new AccessDeniedException();
         }
         
-        if ($site->getId()) {
+        if ($site->getId() && $request->request->get('agree_perform_action')) {
 			$this->get('app.whm')->deletesite($this->getUser()->getUsername(), $site->getDomain(), $site->getSubdomain() . '.' . $this->getUser()->getIde(), $site->getDb());
             // Deleting the ACL
             $aclProvider = $this->get('security.acl.provider');

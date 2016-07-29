@@ -41,6 +41,11 @@ class Projects
 	 * @ORM\Column(type="string", length=64)
 	 */
     private $targetUrl;
+	
+	/**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $subscription;
     
     /**
 	 * @ORM\Column(type="datetime")
@@ -61,26 +66,15 @@ class Projects
 	public function __construct()
 	{
 	    $this->sites = new ArrayCollection();
+		$this->subscription = 'free';
 	    $this->createdAt = new \DateTime('now');
 	}
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Set uid
-     *
-     * @param integer $uid
-     *
-     * @return Projects
-     */
     public function setUid($uid)
     {
         $this->uid = $uid;
@@ -88,23 +82,11 @@ class Projects
         return $this;
     }
 
-    /**
-     * Get uid
-     *
-     * @return integer
-     */
     public function getUid()
     {
         return $this->uid;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Projects
-     */
     public function setName($name)
     {
         $this->name = $name;
@@ -112,23 +94,11 @@ class Projects
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return Projects
-     */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
@@ -136,23 +106,11 @@ class Projects
         return $this;
     }
 
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    /**
-     * Set owner
-     *
-     * @param \AppBundle\Entity\Users $owner
-     *
-     * @return Projects
-     */
     public function setOwner(\AppBundle\Entity\Users $owner = null)
     {
         $this->owner = $owner;
@@ -160,23 +118,11 @@ class Projects
         return $this;
     }
 
-    /**
-     * Get owner
-     *
-     * @return \AppBundle\Entity\Users
-     */
     public function getOwner()
     {
         return $this->owner;
     }
 
-    /**
-     * Set category
-     *
-     * @param string $category
-     *
-     * @return Projects
-     */
     public function setCategory($category)
     {
         $this->category = $category;
@@ -184,23 +130,11 @@ class Projects
         return $this;
     }
 
-    /**
-     * Get category
-     *
-     * @return string
-     */
     public function getCategory()
     {
         return $this->category;
     }
 
-    /**
-     * Add site
-     *
-     * @param \AppBundle\Entity\Sites $site
-     *
-     * @return Projects
-     */
     public function addSite(\AppBundle\Entity\Sites $site)
     {
         $this->sites[] = $site;
@@ -208,47 +142,36 @@ class Projects
         return $this;
     }
 
-    /**
-     * Remove site
-     *
-     * @param \AppBundle\Entity\Sites $site
-     */
     public function removeSite(\AppBundle\Entity\Sites $site)
     {
         $this->sites->removeElement($site);
     }
 
-    /**
-     * Get sites
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
     public function getSites()
     {
         return $this->sites;
     }
     
-    /**
-     * Set targetUrl
-     *
-     * @param string $targetUrl
-     *
-     * @return Sites
-     */
     public function setTargetUrl($targetUrl)
     {
         $this->targetUrl = $targetUrl;
 
         return $this;
     }
-
-    /**
-     * Get targetUrl
-     *
-     * @return string
-     */
+	
     public function getTargetUrl()
     {
         return $this->targetUrl;
+    }
+	
+	public function setSubscription($subscription)
+    {
+        $this->subscription = $subscription;
+        return $this;
+    }
+    
+    public function getSubscription()
+    {
+        return $this->subscription;
     }
 }
