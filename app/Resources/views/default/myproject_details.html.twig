@@ -58,16 +58,23 @@
       </div>
       <div class="tab-pane table-responsive no-padding" id="stage">
         {% if stage|length > 0 %}
+        <h4 class="pl-8px">Stage Environemnt DB Connection Details</h4>
         <table class="table table-hover">
           <tbody><tr>
             <th>Environemnt URL</th>
             <th>Database</th>
             <th>Database User</th>
+            <th>Actions</th>
           </tr>
           <tr>
             <td><a href="http://{{stage.domain}}" target="_blank">http://{{stage.domain}}</a></td>
             <td><span class="badge bg-light-blue">{{stage.db}}</span></td>
             <td><span class="badge bg-green">{{stage.dbuser}}</span></td>
+            {% if stage|length > 0 and prod|length > 0 %}
+            <td><span class="badge bg-red">Not Applicable</span></td>
+            {% else %}
+            <td><a href="#" action="{{path('env_delete', {'id':stage.id})}}" class="badge bg-red confirm" data-toggle="modal" data-target="#confirm">Delete</a></td>
+            {% endif %}
           </tr>
         </tbody></table>
         {% else %}
@@ -82,16 +89,19 @@
       </div>
       <div class="tab-pane table-responsive no-padding" id="prod">
         {% if prod|length > 0 %}
+        <h4 class="pl-8px">Production Environemnt DB Connection Details</h4>
         <table class="table table-hover">
           <tbody><tr>
             <th>Environemnt URL</th>
             <th>Database</th>
             <th>Database User</th>
+            <th>Actions</th>
           </tr>
           <tr>
             <td><a href="http://{{prod.domain}}" target="_blank">http://{{prod.domain}}</a></td>
             <td><span class="badge bg-light-blue">{{prod.db}}</span></td>
             <td><span class="badge bg-green">{{prod.dbuser}}</span></td>
+            <td><a href="#" action="{{path('env_delete', {'id':prod.id})}}" class="badge bg-red confirm" data-toggle="modal" data-target="#confirm">Delete</a></td>
           </tr>
         </tbody></table>
         {% elseif stage|length > 0 %}
