@@ -17,10 +17,12 @@
       {% endif %}
       <div class="navbar-custom-menu-left">
         <ul class="nav navbar-nav">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Pricing</a></li>
-          <li class="hidden-xs hidden-sm"><a href="#">Community</a></li>
-          <li class="hidden-sm"><a href="#">Blog</a></li>
+          <li><a href="{{path('homepage')}}">Home</a></li>
+          <li><a href="{{path('homepage')}}#pricing" scrollto="#pricing" class="lakescroll">Pricing</a></li>
+          <li class="hidden-xs hidden-sm"><a href="{{path('homepage')}}#features" scrollto="#features" class="lakescroll">Features</a></li>
+          <li class="hidden-xs hidden-sm"><a href="{{path('homepage')}}#applications" scrollto="#applications" class="lakescroll">Applications</a></li>
+          <li class="hidden-xs hidden-sm"><a href="{{path('homepage')}}">Community</a></li>
+          <li class="hidden-sm"><a href="{{path('homepage')}}">Blog</a></li>
           {% if is_granted('IS_AUTHENTICATED_FULLY') %}
           <li><a href="{{path('dashboard')}}">Dashboard</a></li>
           {% endif %}

@@ -32,23 +32,6 @@
   <script src="{{asset('asset/js/demo.js')}}"></script>
   <script src="{{asset('asset/js/custom.js')}}"></script>
   {% block javascript %}{% endblock %}
-  <script>
-  $(function() {
-    $('.wait').click(function(){
-      $.blockUI({
-        message: '<h4><i class="fa fa-refresh fa-spin"></i> Please wait. This might take few minutes to complete.</h4>', 
-        css: {'width': '500px'}
-      });
-    });
-    $('.confirm').click(function(){
-      $('#agree_perform_action').val($(this).attr('action'));
-    });
-    $('.agree').click(function(){
-      $('#confirmform').attr('action', $('#agree_perform_action').val());
-      $('#confirmform').submit();
-    });
-  });
-  </script>
 </head>
 {% if 'dashboard' in  app.request.pathInfo %}
 <body class="hold-transition sidebar-mini skin-black-light">
