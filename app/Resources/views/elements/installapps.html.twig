@@ -1,0 +1,21 @@
+<div class="{{class}}">
+  <div class="box box-widget widget-user">
+    <div class="widget-user-header {{bg}}">
+      <h3 class="widget-user-username">{{title}}</h3>
+      <h5 class="widget-user-desc">{{name}}</h5>
+    </div>
+    <div class="widget-user-image">
+      <img class="img-circle bordernone" src="{{img}}">
+    </div>
+    <div class="box-footer">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="description-block">
+            <h5 class="description-header">{{desc}}</h5>
+            <div class="description-text margin-top-10"><button type="button" class="btn {{project_btn_color_1}} project" data-value="{{project_folder_1}}" data-url="{{project_source_1}}" data-toggle="modal" data-target="#siteinstall">{{project_title_1}}</button> {% if project_title_2 is defined %}<button type="button" class="btn {{project_btn_color_2}} project" data-value="{{project_folder_2}}" data-url="{{project_source_2}}" data-toggle="modal" data-target="#siteinstall">{{project_title_2}}</button>{% endif %}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,72 +3,137 @@
 {% block body %}
 <div class="col-md-12">
   <section class="page-content-header">
-    <h1><i class="fa fa-list"></i> CMS(Most Popular)</h1>
+    <h1><i class="fa fa-list"></i> Available Open Source for Installation</h1>
   </section>
 </div>
-<div class="col-md-4">
-  <div class="box box-widget widget-user">
-    <div class="widget-user-header bg-light-blue">
-      <h3 class="widget-user-username">Develop CMS Projects</h3>
-      <h5 class="widget-user-desc">Drupal</h5>
-    </div>
-    <div class="widget-user-image">
-      <img class="img-circle bordernone" src="{{asset('asset/img/icons/drupal-110.png')}}">
-    </div>
-    <div class="box-footer">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="description-block">
-            <h5 class="description-header">Available Drupal Installer</h5>
-            <div class="description-text margin-top-10"><button type="button" class="btn btn-primary project" data-value="drupal-8.1.7" data-url="drupal-8.1.7.tar.gz" data-toggle="modal" data-target="#siteinstall">Install Drupal 8</button> <button type="button" class="btn btn-info project" data-value="drupal-7.50" data-url="drupal-7.50.tar.gz" data-toggle="modal" data-target="#siteinstall">Install Drupal 7</button></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+{{include('elements/installapps.html.twig',{
+'class':'col-md-4',
+'bg':'bg-light-blue',
+'title':'Develop CMS Projects',
+'name':'Drupal',
+'img':asset('asset/img/icons/drupal-110.png'),
+'desc':'Available Drupal Installer',
+'project_btn_color_1':'btn-primary',
+'project_folder_1':'drupal-8.1.7',
+'project_source_1':'drupal-8.1.7.tar.gz',
+'project_title_1':'Install Drupal 8.1.7',
+'project_btn_color_2':'btn-info',
+'project_folder_2':'drupal-7.50',
+'project_source_2':'drupal-7.50.tar.gz',
+'project_title_2':'Install Drupal 7.50'
+})}}
+
+{{include('elements/installapps.html.twig',{
+'class':'col-md-4',
+'bg':'bg-olive',
+'title':'Develop CMS Projects',
+'name':'Joomla',
+'img':asset('asset/img/icons/joomla-110.png'),
+'desc':'Available Joomla Installer',
+'project_btn_color_1':'btn-success',
+'project_folder_1':'joomla',
+'project_source_1':'joomla-3.6.0.tar.gz',
+'project_title_1':'Install Joomla 3.6.0'
+})}}
+
+{{include('elements/installapps.html.twig',{
+'class':'col-md-4',
+'bg':'bg-teal',
+'title':'Develop Blogging Projects',
+'name':'Wordpress',
+'img':asset('asset/img/icons/wp-110.png'),
+'desc':'Available Wordpress Installer',
+'project_btn_color_1':'btn-info',
+'project_folder_1':'wordpress',
+'project_source_1':'wordpress-4.5.3.tar.gz',
+'project_title_1':'Install Wordpress 4.5.3'
+})}}
+
+{{include('elements/installapps.html.twig',{
+'class':'col-md-4',
+'bg':'bg-orange',
+'title':'Shopping Cart Projects',
+'name':'Magento',
+'img':asset('asset/img/icons/magento-110.png'),
+'desc':'Magento may take 10+ minutes to install',
+'project_btn_color_1':'btn-primary',
+'project_folder_1':'magento-2.1',
+'project_source_1':'magento-2.1.tar.gz',
+'project_title_1':'Install Magento 2.1',
+'project_btn_color_2':'btn-info',
+'project_folder_2':'magento-data-2.1',
+'project_source_2':'magento-data-2.1.tar.gz',
+'project_title_2':'Install Magento 2.1 with demo data'
+})}}
+
+{{include('elements/installapps.html.twig',{
+'class':'col-md-4',
+'bg':'bg-fuchsia',
+'title':'Bulletin Board Projects',
+'name':'phpBB',
+'img':asset('asset/img/icons/phpbb-110.png'),
+'desc':'Available phpBB Installer',
+'project_btn_color_1':'btn-primary',
+'project_folder_1':'phpbb',
+'project_source_1':'phpbb-3.1.9.tar.gz',
+'project_title_1':'Install phpBB 3.1.9'
+})}}
+<div class="col-md-12">
+  <section class="page-content-header">
+    <h1><i class="fa fa-list"></i> Available Framework for Installation</h1>
+  </section>
 </div>
-<div class="col-md-4">
-  <div class="box box-widget widget-user">
-    <div class="widget-user-header bg-olive">
-      <h3 class="widget-user-username">Develop CMS Projects</h3>
-      <h5 class="widget-user-desc">Joomla</h5>
-    </div>
-    <div class="widget-user-image">
-      <img class="img-circle bordernone" src="{{asset('asset/img/icons/joomla-110.png')}}">
-    </div>
-    <div class="box-footer">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="description-block">
-            <h5 class="description-header">Available Joomla Installer</h5>
-            <div class="description-text margin-top-10"><button type="button" class="btn btn-success project" data-value="joomla" data-url="joomla-3.6.0.tar.gz" data-toggle="modal" data-target="#siteinstall">Install Joomla 3.6.0</button></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="col-md-4">
-  <div class="box box-widget widget-user">
-    <div class="widget-user-header bg-teal">
-      <h3 class="widget-user-username">Develop Blogging Projects</h3>
-      <h5 class="widget-user-desc">Wordpress</h5>
-    </div>
-    <div class="widget-user-image">
-      <img class="img-circle bordernone" src="{{asset('asset/img/icons/wp-110.png')}}">
-    </div>
-    <div class="box-footer">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="description-block">
-            <h5 class="description-header">Available Wordpress Installer</h5>
-            <div class="description-text margin-top-10"><button type="button" class="btn btn-warning project" data-value="wordpress" data-url="wordpress-4.5.3.tar.gz" data-toggle="modal" data-target="#siteinstall">Install Wordpress 4.5.3</button></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{{include('elements/installapps.html.twig',{
+'class':'col-md-4',
+'bg':'bg-purple',
+'title':'Develop Framework Projects',
+'name':'Symfony',
+'img':asset('asset/img/icons/sf.png'),
+'desc':'Available Symfony Installer',
+'project_btn_color_1':'btn-primary',
+'project_folder_1':'symfony-3.1.2',
+'project_source_1':'symfony-3.1.2.tar.gz',
+'project_title_1':'Install Symfony 3.1.2'
+})}}
+
+{{include('elements/installapps.html.twig',{
+'class':'col-md-4',
+'bg':'bg-red',
+'title':'Develop Framework Projects',
+'name':'CakePHP',
+'img':asset('asset/img/icons/cakephp.jpg'),
+'desc':'Available CakePHP Installer',
+'project_btn_color_1':'btn-danger',
+'project_folder_1':'cakephp-3.2.12',
+'project_source_1':'cakephp-3.2.12.tar.gz',
+'project_title_1':'Install CakePHP 3.2.12'
+})}}
+
+{{include('elements/installapps.html.twig',{
+'class':'col-md-4',
+'bg':'bg-orange',
+'title':'Develop Framework Projects',
+'name':'CodeIgniter',
+'img':asset('asset/img/icons/codeigniter.png'),
+'desc':'Available CodeIgniter Installer',
+'project_btn_color_1':'btn-warning',
+'project_folder_1':'CodeIgniter-3.1.0',
+'project_source_1':'CodeIgniter-3.1.0.tar.gz',
+'project_title_1':'Install CodeIgniter 3.1.0'
+})}}
+
+{{include('elements/installapps.html.twig',{
+'class':'col-md-4',
+'bg':'bg-olive',
+'title':'Develop Framework Projects',
+'name':'Zend Framework',
+'img':asset('asset/img/icons/zf-logo-mark.png'),
+'desc':'Available Zend Installer',
+'project_btn_color_1':'btn-success',
+'project_folder_1':'ZendFramework-2.4.9',
+'project_source_1':'ZendFramework-2.4.9.tgz',
+'project_title_1':'Install Zend Framework 2.4.9'
+})}}
 <div class="modal modal-primary fade" id="siteinstall">
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
