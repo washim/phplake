@@ -71,6 +71,11 @@ class Users implements UserInterface, \Serializable
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
+	
+	/**
+     * @ORM\Column(type="text", nullable=true)
+     */
+	private $sshkey;
     
     /**
 	 * @ORM\Column(type="datetime")
@@ -269,4 +274,16 @@ class Users implements UserInterface, \Serializable
     {
         return $this->name;
     }
+	
+	public function setSshkey($sshkey)
+	{
+		$this->sshkey = $sshkey;
+		
+		return $this;
+	}
+	
+	public function getSshkey()
+	{
+		return $this->sshkey;
+	}
 }

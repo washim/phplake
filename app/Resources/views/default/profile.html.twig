@@ -13,7 +13,7 @@
           <b>Subscription Type</b> <a class="pull-right"><span class="label label-primary">Free</span></a>
         </li>
         <li class="list-group-item">
-          <b>Project Limit</b> <a class="pull-right"><span class="label label-warning">1</span></a>
+          <b>Free Project</b> <a class="pull-right"><span class="label label-warning">1</span></a>
         </li>
       </ul>
       {% if app.user.projects|length > 0 %}
@@ -21,10 +21,10 @@
       <p class="text-muted"><a href="http://{{app.user.ide}}" target="_blank">http://{{app.user.ide}}</a></p>
       <hr>
       <b><i class="fa fa-database"></i> phpMyAdmin Database</b>
-      <p class="text-muted"><a href="http://dbphpmyadmin.phplake.com" target="_blank">http://dbphpmyadmin.phplake.com</a></p>
+      <p class="text-muted"><a href="http://dbphpmyadmin.phplake.com/index.php" target="_blank">http://dbphpmyadmin.phplake.com</a></p>
       <hr>
       {% endif %}
-      <a href="#" class="btn btn-primary btn-block"><b>Upgrade</b></a>
+      <a href="#" class="btn btn-primary btn-block">Upgrade</a>
     </div>
   </div>
 </div>
@@ -54,7 +54,8 @@
       </div>
       <div class="tab-pane" id="sshkey">
         <div class="col-md-12">
-        Yor ssh key here
+        <div>{{app.user.sshkey | raw }}</div>
+        <button action="{{path('keygen')}}" class="btn btn-primary confirm" data-toggle="modal" data-target="#confirm">Genarate New Key</button>
         </div>
       </div>
     </div>

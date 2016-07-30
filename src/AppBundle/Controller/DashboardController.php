@@ -410,4 +410,47 @@ class DashboardController extends Controller
         
         return $this->redirectToRoute('myproject_details', ['id' => $project->getId()]);
     }
+	
+	/**
+     * @Route("/keygen", name="keygen")
+	 * @Method("POST")
+     */
+	public function keygen(Request $request)
+	{
+		if ($request->request->get('agree_perform_action')) {
+			$keygen = $this->get('app.whm')->perform('cpanel', array(
+				'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+				'cpanel_jsonapi_apiversion' => '2',
+				'cpanel_jsonapi_module' => 'SSH',
+				'cpanel_jsonapi_func' => 'genkey',
+				'bits' => 1024,
+				'name' => 'id_rsa',
+				'type' => 'rsa'
+			));
+			if (!isset($keygen->cpanelresult->error)) {
+				$keyfetch = $this->get('app.whm')->perform('cpanel', array(
+					'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+					'cpanel_jsonapi_apiversion' => '2',
+					'cpanel_jsonapi_module' => 'SSH',
+					'cpanel_jsonapi_func' => 'fetchkey',
+					'name' => 'id_rsa',
+					'pub' => 1
+				));
+				if (!isset($keyfetch->cpanelresult->error)) {
+					$user = $this->getUser();
+					$user->setSshkey($keyfetch->cpanelresult->data[0]->key);
+					$em = $this->getDoctrine()->getManager();
+					$em->persist($user);
+					$em->flush();
+					
+					$this->addFlash(
+						'success',
+						'SSH Key succesfully generated.'
+					);
+					
+					return $this->redirectToRoute('myaccount');
+				}
+			}
+		}
+	}
 }
