@@ -417,7 +417,7 @@ class DashboardController extends Controller
      */
 	public function keygen(Request $request)
 	{
-		if ($request->request->get('agree_perform_action')) {
+		if ($request->request->get('agree_perform_action') && count($this->getUser()->getProjects()) > 0) {
 			$keygen = $this->get('app.whm')->perform('cpanel', array(
 				'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
 				'cpanel_jsonapi_apiversion' => '2',
@@ -451,6 +451,14 @@ class DashboardController extends Controller
 					return $this->redirectToRoute('myaccount');
 				}
 			}
+		}
+		else {
+			$this->addFlash(
+				'error',
+				'Atleast one project is mandatory to create SSH key.'
+			);
+
+			return $this->redirectToRoute('myaccount');
 		}
 	}
 }
