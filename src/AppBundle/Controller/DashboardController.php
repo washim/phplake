@@ -1,17 +1,19 @@
 <?php
-
 namespace AppBundle\Controller;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Doctrine\Common\Collections\Criteria;
+
+use Symfony\Component\HttpFoundation\Session\Session;
 
 use AppBundle\Entity\Projects;
 use AppBundle\Entity\Sites;
@@ -63,8 +65,9 @@ class DashboardController extends Controller
                         'error',
                         'You have reached your limit of free project. To create a new project, delete an unused free project or choose project subscription.'
                     );
-                    
-                    return $this->redirectToRoute('dashboard');
+                    $session = new Session();
+					$session->set('domaininfo', $domain . '|' . $subdomain . '|' . $db . '|' . $project->getTargetUrl() . '|' . $project->getCategory());
+                    return $this->redirectToRoute('upgrade');
                 }
             }
             else {

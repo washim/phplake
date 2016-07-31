@@ -21,7 +21,7 @@ $(function() {
         }, 2000);
         return false;
     });
-    $('input:radio').iCheck({
+    $('.radio').iCheck({
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
     });

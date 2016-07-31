@@ -28,6 +28,8 @@ h4{font-weight:bold; font-size: 16px;}
 .small-box .icon{top: -20px;}
 .info-box-text {text-transform: inherit;}
 .table-responsive {padding:15px;}
+.fullwidth{width:100%;float:left;}
+.normal label{font-weight:inherit;}
 .checkbox label, .radio label{padding-left:0px;}
 .margin-top-10{margin-top:10px;}
 .error-page{margin:0px; width:initial;color:firebrick;font-weight:bold;}
