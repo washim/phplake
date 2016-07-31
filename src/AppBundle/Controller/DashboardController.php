@@ -66,7 +66,7 @@ class DashboardController extends Controller
                         'You have reached your limit of free project. To create a new project, delete an unused free project or choose project subscription.'
                     );
                     $session = new Session();
-					$session->set('domaininfo', $domain . '|' . $subdomain . '|' . $db . '|' . $project->getTargetUrl() . '|' . $project->getCategory());
+					$session->set('domaininfo', $project->getName() . '|' . $domain . '|' . $subdomain . '|' . $db . '|' . $project->getTargetUrl() . '|' . $project->getCategory());
                     return $this->redirectToRoute('upgrade');
                 }
             }
