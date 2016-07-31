@@ -15,6 +15,9 @@ use Doctrine\Common\Collections\Criteria;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 
+use AppBundle\Entity\Projects;
+use AppBundle\Entity\Sites;
+
 class PaymentController extends Controller
 {
     /**
