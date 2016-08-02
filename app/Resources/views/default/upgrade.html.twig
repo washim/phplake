@@ -1,48 +1,14 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<div class="col-md-5">
+<div class="col-md-6">
     <div class="box box-primary normal">
         <div class="box-header with-border">
-            <h3 class="box-title">Project Subscription</h3>
+            <h3 class="box-title">You have reached your limit of free project</h3>
         </div>
         <div class="box-body">
-            <h4>Plan Duration</h4>
-            <div class="form-group col-sm-3 no-padding">
-                <label for="subscription"><input class="upgrade_amount" type="radio" name="amount" value="675"> $10.00/month</label>
-            </div>
-            <div class="form-group col-sm-3 pl-none">
-                <label for="subscription"><input class="upgrade_amount" type="radio" name="amount" value="6710"> $100.00/year</label>
-            </div>
-            <h4 class="fullwidth">Pay with</h4>
-            <div class="form-group col-md-3 no-padding">
-                <label for="paywith"><input class="upgrade_paywith" type="radio" name="paywith" value="PayUMoney" disabled="disabled"> PayUMoney</label>
-            </div>
-            <div class="form-group col-md-12 no-padding">
-                <a id="paynow"></a>
-            </div>
+            <h4>Choose Merchant for payment</h4>
+            <a href="{{path('PayUMoney')}}"><img src="{{asset('asset/img/payumoney.png')}}"/></a> <a href="#"><img src="{{asset('asset/img/pay-with-paypal.png')}}" width="137" height="47"/></a>
         </div>
     </div>
 </div>
-<script>
-$('.upgrade_amount').click(function(){
-    $('.upgrade_paywith').removeAttr('disabled');
-});
-$('.upgrade_paywith').click(function(){
-    if ($('.upgrade_amount:checked').val() == 675 && $(this).val() == 'PayUMoney') {
-        $('#paynow').html('<a id="paynow" href="https://www.payumoney.com/paybypayumoney/#/3938CE4F93AD0EBD9722E37F8705A7B1" class="btn btn-primary">Pay Now</a>');
-    }
-    else if($('.upgrade_amount:checked').val() == 6710 && $(this).val() == 'PayUMoney'){
-        $('#paynow').html('<a id="paynow" href="https://www.payumoney.com/paybypayumoney/#/5FE9CC5856BCA4F506E6F7BB3289E7C1" class="btn btn-primary">Pay Now</a>');
-    }
-});
-if ($('.upgrade_amount:checked').val() == 675 || $('.upgrade_amount:checked').val() == 6710) {
-    $('.upgrade_paywith').removeAttr('disabled');
-}
-if ($('.upgrade_amount:checked').val() == 675 && $('.upgrade_paywith:checked').val() == 'PayUMoney') {
-    $('#paynow').html('<a id="paynow" href="https://www.payumoney.com/paybypayumoney/#/3938CE4F93AD0EBD9722E37F8705A7B1" class="btn btn-primary">Pay Now</a>');
-}
-else if($('.upgrade_amount:checked').val() == 6710 && $('.upgrade_paywith:checked').val() == 'PayUMoney'){
-    $('#paynow').html('<a id="paynow" href="https://www.payumoney.com/paybypayumoney/#/5FE9CC5856BCA4F506E6F7BB3289E7C1" class="btn btn-primary">Pay Now</a>');
-}
-</script>
 {% endblock %}

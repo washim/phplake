@@ -7,6 +7,9 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    payumoney_key: dXXyop
+    payumoney_salt: cE5ttb8B
+    payumoney_endurl: https://secure.payu.in/_payment
 
 framework:
     #esi:             ~

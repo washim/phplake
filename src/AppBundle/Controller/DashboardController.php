@@ -66,7 +66,7 @@ class DashboardController extends Controller
                         'You have reached your limit of free project. To create a new project, delete an unused free project or choose project subscription.'
                     );
                     $session = new Session();
-					$session->set('domaininfo', $project->getName() . '|' . $domain . '|' . $subdomain . '|' . $db . '|' . $project->getTargetUrl() . '|' . $project->getCategory());
+					$session->set('domaininfo', 'new|' . $project->getName() . '|' . $domain . '|' . $subdomain . '|' . $db . '|' . $project->getTargetUrl() . '|' . $project->getCategory());
                     return $this->redirectToRoute('upgrade');
                 }
             }
@@ -275,10 +275,16 @@ class DashboardController extends Controller
         if (false === $authorizationChecker->isGranted('VIEW', $project)) {
             throw new AccessDeniedException();
         }
-        
+		
         $domain    = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_stage';
+		
+		if ($project->getSubscription() == 'free') {
+			$session = new Session();
+			$session->set('domaininfo', 'clone|myproject_create_stage|' . $project->getId());
+			return $this->redirectToRoute('upgrade');
+		}
         
         $sites = $project->getSites();
         $criteria = Criteria::create()
@@ -464,4 +470,12 @@ class DashboardController extends Controller
 			return $this->redirectToRoute('myaccount');
 		}
 	}
+	
+	/**
+     * @Route("/upgrade", name="upgrade")
+     */
+    public function upgradeAction(Request $request)
+    {     
+        return $this->render('default/upgrade.html.twig');
+    }
 }

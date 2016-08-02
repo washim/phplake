@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="col-md-6">
+    <div class="box box-primary normal">
+        <div class="box-header with-border">
+            <h3 class="box-title">Project Subscription</h3>
+        </div>
+        {% if hash is empty %}
+        <form method="post">
+        {% else %}
+        <form action="{{action}}" method="post" name="payuForm">
+        {% endif %}
+        <input type="hidden" id="key" name="key" value="{{key}}"/>
+        <input type="hidden" id="hash" name="hash" value="{{hash}}"/>
+        <input type="hidden" id="txnid" name="txnid" value="{{txnid}}"/>
+        <input type="hidden" id="firstname" name="firstname" value="{{app.user.username}}"/>
+        <input type="hidden" id="email" name="email" value="{{app.user.email}}"/>
+        <input type="hidden" id="phone" name="phone" value="9738726005"/>
+        <input type="hidden" id="productinfo" name="productinfo" value="{{productinfo}}"/>
+        <input type="hidden" id="surl" name="surl" value="{{surl}}"/>
+        <input type="hidden" id="furl" name="furl" value="{{furl}}"/>
+        <input type="hidden" id="curl" name="curl" value="{{curl}}"/>
+        <div class="box-body">
+            <h4>Plan Duration</h4>
+            {% if productinfo == 'subscribed_yearly' %}
+            <div class="form-group no-margin">
+                <label for="subscription"><input id="amount" type="radio" name="amount" value="675" required="required"/> $10.00/month</label>
+            </div>
+            <div class="form-group no-margin">
+                <label for="subscription"><input id="amount" type="radio" name="amount" value="6710" required="required" checked="checked"/> $100.00/year</label>
+            </div>
+            {% else %}
+            <div class="form-group no-margin">
+                <label for="subscription"><input id="amount" type="radio" name="amount" value="675" required="required" checked="checked"/> $10.00/month</label>
+            </div>
+            <div class="form-group no-margin">
+                <label for="subscription"><input id="amount" type="radio" name="amount" value="6710" required="required"/> $100.00/year</label>
+            </div>
+            {% endif %}
+            <h4 class="fullwidth">Pay with</h4>
+            <div class="form-group no-padding">
+                <label for="paywith"><input class="upgrade_paywith" type="radio" value="PayUMoney" checked="checked"/> PayUMoney</label>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Pay Now"/>
+            </div>
+        </div>
+        <input type="hidden" id="service_provider" name="service_provider" value=""/>
+        </form>
+    </div>
+</div>
+{% if hash %}
+    <script>payuForm.submit();</script>
+{% endif %}
+{% endblock %}
