@@ -128,7 +128,7 @@ class Whm
                                 'cpanel_jsonapi_func' => 'setdbuserprivileges',
                                 'db' => $db,
                                 'dbuser' => $user . '_phplake',
-                                'privileges' => 'ALTER,CREATE,DELETE,EXECUTE,INDEX,INSERT,LOCK TABLES,SELECT,UPDATE'
+                                'privileges' => 'ALL PRIVILEGES'
                             )
                         );
                         $debug == 'on' ? dump($setdbuserprivileges) : null;
@@ -291,7 +291,7 @@ class Whm
                         'cpanel_jsonapi_func' => 'setdbuserprivileges',
                         'db' => $db,
                         'dbuser' => $user . '_phplake',
-                        'privileges' => 'ALTER,CREATE,DELETE,EXECUTE,INDEX,INSERT,LOCK TABLES,SELECT,UPDATE'
+                        'privileges' => 'ALL PRIVILEGES'
                     )
                 );
                 $debug == 'on' ? dump($setdbuserprivileges) : null;
@@ -484,7 +484,7 @@ class Whm
                         'cpanel_jsonapi_func' => 'setdbuserprivileges',
                         'db' => $db,
                         'dbuser' => $user . '_phplake',
-                        'privileges' => 'ALTER,CREATE,DELETE,EXECUTE,INDEX,INSERT,LOCK TABLES,SELECT,UPDATE'
+                        'privileges' => 'ALL PRIVILEGES'
                     )
                 );
                 if (!isset($setdbuserprivileges->cpanelresult->error)) {
