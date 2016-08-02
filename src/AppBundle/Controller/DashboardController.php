@@ -93,6 +93,7 @@ class DashboardController extends Controller
                         ->setBody(
                             $this->renderView('Emails/db.html.twig', [
                                 'user' => $this->getUser(),
+								'db' => $db,
                                 'dbpass' => $dbpass
                             ])
                         );
