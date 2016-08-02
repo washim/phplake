@@ -276,15 +276,15 @@ class DashboardController extends Controller
             throw new AccessDeniedException();
         }
 		
-        $domain    = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
-        $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
-        $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_stage';
-		
 		if ($project->getSubscription() == 'free') {
 			$session = new Session();
 			$session->set('domaininfo', 'clone|myproject_create_stage|' . $project->getId());
 			return $this->redirectToRoute('upgrade');
 		}
+		
+        $domain    = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
+        $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
+        $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_stage';
         
         $sites = $project->getSites();
         $criteria = Criteria::create()
@@ -355,6 +355,12 @@ class DashboardController extends Controller
         if (false === $authorizationChecker->isGranted('VIEW', $project)) {
             throw new AccessDeniedException();
         }
+		
+		if ($project->getSubscription() == 'free') {
+			$session = new Session();
+			$session->set('domaininfo', 'clone|myproject_create_prod|' . $project->getId());
+			return $this->redirectToRoute('upgrade');
+		}
         
         $domain    = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $subdomain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();
