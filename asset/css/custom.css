@@ -7,6 +7,7 @@ h4{font-weight:bold; font-size: 16px;}
 .skin-black-light .main-header>.logo:hover {background-color: #ffffff;}
 .main-header .logo{text-align: left;}
 .main-header .logo-mini{text-align: center;}
+.main-footer{font-size:13px;}
 .mr-none{margin-right: 0px !important;}
 .pr-none{padding-right: 0px !important;}
 .ml-none{margin-left: 0px !important;}
