@@ -46,6 +46,16 @@ class Projects
      * @ORM\Column(type="string", length=64)
      */
     private $subscription;
+	
+	/**
+     * @ORM\Column(type="decimal", scale=2)
+     */
+	private $price;
+	
+	/**
+     * @ORM\Column(type="string", length=64)
+     */
+	private $duedate;
     
     /**
 	 * @ORM\Column(type="datetime")
@@ -67,6 +77,8 @@ class Projects
 	{
 	    $this->sites = new ArrayCollection();
 		$this->subscription = 'free';
+		$this->price = 0.00;
+		$this->duedate = 'NA';
 	    $this->createdAt = new \DateTime('now');
 	}
 
@@ -173,5 +185,29 @@ class Projects
     public function getSubscription()
     {
         return $this->subscription;
+    }
+
+    public function setDuedate($duedate)
+    {
+        $this->duedate = $duedate;
+
+        return $this;
+    }
+
+    public function getDuedate()
+    {
+        return $this->duedate;
+    }
+
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+	
+    public function getPrice()
+    {
+        return $this->price;
     }
 }
