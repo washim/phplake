@@ -12,6 +12,4 @@
 /var/sessions/*
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
-/AdminLTE
-/dbphpmyadmin.phplake.com
 /files
