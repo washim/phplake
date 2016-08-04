@@ -452,7 +452,7 @@ class Whm
         }
     }
     
-    public function siteclone($user, $domain, $subdomain, $sourcedomain , $db, $filename, $dir)
+    public function siteclone($user, $domain, $subdomain, $sourcedomain , $db, $dbuser, $filename, $dir)
     {
         $addaddondomain = $this->perform('cpanel',
             array(
@@ -483,7 +483,7 @@ class Whm
                         'cpanel_jsonapi_module' => 'MysqlFE',
                         'cpanel_jsonapi_func' => 'setdbuserprivileges',
                         'db' => $db,
-                        'dbuser' => $user . '_phplake',
+                        'dbuser' => $dbuser,
                         'privileges' => 'ALL PRIVILEGES'
                     )
                 );

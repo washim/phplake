@@ -75,28 +75,29 @@ class DashboardController extends Controller
 				$response = $this->get('app.whm')->create_cpanel_account($this->getUser()->getUsername(), $pass, $this->getUser()->getEmail(), $domain, $subdomain, $db, $dbpass, $project->getTargetUrl(), $project->getCategory(), $idepass, $debug);
                 if ($response == 'success') {
                     $idemail = \Swift_Message::newInstance()
-                        ->setSubject('Online IDE Phplake')
-                        ->setFrom(['support@phplake.com' => 'Phplake Support'])
-                        ->setTo($this->getUser()->getEmail())
-                        ->setBody(
-                            $this->renderView('Emails/ide.html.twig', [
-                                'user' => $this->getUser(),
-                                'idepass' => $idepass
-                            ])
-                        );
+					->setSubject('Online IDE Phplake')
+					->setFrom(['support@phplake.com' => 'Phplake Support'])
+					->setTo($this->getUser()->getEmail())
+					->setBody(
+						$this->renderView('Emails/ide.html.twig', [
+							'user' => $this->getUser(),
+							'idepass' => $idepass
+						])
+					);
                     $this->get('mailer')->send($idemail);
                     
                     $dbmail = \Swift_Message::newInstance()
-                        ->setSubject('Dev/Stage DB Credential Phplake')
-                        ->setFrom(['support@phplake.com' => 'Phplake Support'])
-                        ->setTo($this->getUser()->getEmail())
-                        ->setBody(
-                            $this->renderView('Emails/db.html.twig', [
-                                'user' => $this->getUser(),
-								'db' => $db,
-                                'dbpass' => $dbpass
-                            ])
-                        );
+					->setSubject('Dev/Stage DB Credential')
+					->setFrom(['support@phplake.com' => 'Phplake Support'])
+					->setTo($this->getUser()->getEmail())
+					->setBody(
+						$this->renderView('Emails/db.html.twig', [
+							'user' => $this->getUser(),
+							'db' => $db,
+							'dbuser' => $this->getUser()->getUsername() . '_phplake',
+							'dbpass' => $dbpass
+						])
+					);
                     $this->get('mailer')->send($dbmail);
                     
                     $this->addFlash(
@@ -286,7 +287,8 @@ class DashboardController extends Controller
         $domain    = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $subdomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_stage';
-        
+        $dbuser    = $this->getUser()->getUsername() . '_phplake';
+		
         $sites = $project->getSites();
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("domain", $domain))
@@ -294,7 +296,7 @@ class DashboardController extends Controller
         $site = $sites->matching($criteria)->first();
         
         if ($site === false) {
-			$response = $this->get('app.whm')->siteclone($this->getUser()->getUsername(), $domain, $subdomain, str_replace('stage', 'dev', $domain) , $db, $project->getTargetUrl(), $project->getCategory());
+			$response = $this->get('app.whm')->siteclone($this->getUser()->getUsername(), $domain, $subdomain, str_replace('stage', 'dev', $domain) , $db, $dbuser, $project->getTargetUrl(), $project->getCategory());
             if ($response == 'success') {
                 $this->addFlash(
                     'success',
@@ -321,7 +323,7 @@ class DashboardController extends Controller
         $site->setDomain($domain);
         $site->setSubdomain($subdomain);
         $site->setDb($db);
-        $site->setDbuser($this->getUser()->getUsername() . '_phplake');
+        $site->setDbuser($dbuser);
         $site->setEnvironment('stage');
         $site->setProject($project);
         $project->addSite($site);
@@ -366,6 +368,8 @@ class DashboardController extends Controller
         $domain    = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
         $subdomain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();
         $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_prod';
+		$dbuser    = $this->getUser()->getUsername() . '_prod';
+		$dbpass    = bin2hex(random_bytes(6));
         
         $sites = $project->getSites();
         $criteria = Criteria::create()
@@ -374,19 +378,53 @@ class DashboardController extends Controller
         $site = $sites->matching($criteria)->first();
         
         if ($site === false) {
-            $response = $this->get('app.whm')->siteclone($this->getUser()->getUsername(), $domain, $subdomain, str_replace('prod', 'stage', $domain) , $db, $project->getTargetUrl(), $project->getCategory());
-            if ($response == 'success') {
-                $this->addFlash(
-                    'success',
-                    'Production environment created successfully.'
-                );
-            }
-            else {
-                $this->addFlash(
-                    'error',
-                    'Stage environment creation failed.'
-                );
-            }
+			$checkdbuser = $this->get('app.whm')->perform('cpanel',
+				array(
+					'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+					'cpanel_jsonapi_apiversion' => '2',
+					'cpanel_jsonapi_module' => 'MysqlFE',
+					'cpanel_jsonapi_func' => 'dbuserexists',
+					'dbuser' => $dbuser
+				)
+			);
+			if ($checkdbuser->cpanelresult->data[0] == 0) {
+				$createdbuser = $this->get('app.whm')->perform('cpanel',
+					array(
+						'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+						'cpanel_jsonapi_apiversion' => '2',
+						'cpanel_jsonapi_module' => 'MysqlFE',
+						'cpanel_jsonapi_func' => 'createdbuser',
+						'dbuser' => $dbuser,
+						'password' => $dbpass
+					)
+				);
+			}
+			$response = $this->get('app.whm')->siteclone($this->getUser()->getUsername(), $domain, $subdomain, str_replace('prod', 'stage', $domain) , $db, $dbuser, $project->getTargetUrl(), $project->getCategory());
+			if ($response == 'success') {
+				$dbmail = \Swift_Message::newInstance()
+				->setSubject('Production DB Credential')
+				->setFrom(['support@phplake.com' => 'Phplake Support'])
+				->setTo($this->getUser()->getEmail())
+				->setBody(
+					$this->renderView('Emails/db.html.twig', [
+						'user' => $this->getUser(),
+						'db' => $db,
+						'dbuser' => $dbuser,
+						'dbpass' => $dbpass
+					])
+				);
+				$this->get('mailer')->send($dbmail);
+				$this->addFlash(
+					'success',
+					'Production environment created successfully.'
+				);
+			}
+			else {
+				$this->addFlash(
+					'error',
+					'Stage environment creation failed.'
+				);
+			}
         }
         else {
             $this->addFlash(
@@ -401,7 +439,7 @@ class DashboardController extends Controller
         $site->setDomain($domain);
         $site->setSubdomain($subdomain);
         $site->setDb($db);
-        $site->setDbuser($this->getUser()->getUsername() . '_phplake');
+        $site->setDbuser($dbuser);
         $site->setEnvironment('prod');
         $site->setProject($project);
         $project->addSite($site);
