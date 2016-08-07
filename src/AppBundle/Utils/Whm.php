@@ -476,6 +476,27 @@ class Whm
                 )
             );
             if (!isset($createdb->cpanelresult->error)) {
+                $checkdbuser = $this->perform('cpanel',
+                    array(
+                        'cpanel_jsonapi_user' => $user,
+                        'cpanel_jsonapi_apiversion' => '2',
+                        'cpanel_jsonapi_module' => 'MysqlFE',
+                        'cpanel_jsonapi_func' => 'dbuserexists',
+                        'dbuser' => $dbuser
+                    )
+                );
+                if ($checkdbuser->cpanelresult->data[0] == 0) {
+                    $this->perform('cpanel',
+                        array(
+                            'cpanel_jsonapi_user' => $user,
+                            'cpanel_jsonapi_apiversion' => '2',
+                            'cpanel_jsonapi_module' => 'MysqlFE',
+                            'cpanel_jsonapi_func' => 'createdbuser',
+                            'dbuser' => $dbuser,
+                            'password' => $dbpass
+                        )
+                    );
+                }
                 $setdbuserprivileges = $this->perform('cpanel',
                     array(
                         'cpanel_jsonapi_user' => $user,
@@ -522,7 +543,7 @@ class Whm
                             return 'success';
                         }
                         else {
-                            return $installapps->cpanelresult->error;
+                            return $clone->cpanelresult->error;
                         }
                     }
                     else {

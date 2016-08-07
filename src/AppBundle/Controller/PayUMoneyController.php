@@ -79,14 +79,14 @@ class PayUMoneyController extends Controller
                 $response = $this->get('app.whm')->update_cpanel_account($this->getUser()->getUsername(), $domain, $subdomain, $db, $file, $dir, 'off');
                 if ($response == 'success') {
                     $date = new \DateTime('now');
-                    $date->add(new DateInterval('P30D'));
+                    $request->request->get('productinfo') == 'subscribed_monthly' ? $date->modify('+30 days') : $date->modify('+1 year');
                     $em = $this->getDoctrine()->getManager();
                     $project = new Projects();
                     $project->setName($name);
                     $project->setCategory($dir);
                     $project->setTargetUrl($file);
                     $project->setSubscription($request->request->get('productinfo'));
-                    $project->setDuedate($date->format('Y-m-d'));
+                    $project->setDuedate($date->format('d-m-Y'));
                     $project->setPrice($request->request->get('amount'));
                     $project->setOwner($this->getUser());
 
@@ -130,10 +130,10 @@ class PayUMoneyController extends Controller
             elseif($arr[0] == 'clone'){
                 list($type, $name, $id) = explode('|', $session->get('domaininfo'), 3);
                 $date = new \DateTime('now');
-                $date->add(new DateInterval('P30D'));
+                $request->request->get('productinfo') == 'subscribed_monthly' ? $date->modify('+30 days') : $date->modify('+1 year');
                 $project = $this->getDoctrine()->getRepository('AppBundle:Projects')->find($id);
                 $project->setSubscription($request->request->get('productinfo'));
-                $project->setDuedate($date->format('Y-m-d'));
+                $project->setDuedate($date->format('d-m-Y'));
                 $project->setPrice($request->request->get('amount'));
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($project);

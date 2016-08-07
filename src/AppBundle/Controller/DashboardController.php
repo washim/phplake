@@ -139,7 +139,7 @@ class DashboardController extends Controller
             $aclProvider->updateAcl($acl);
             
 			if ($debug == 'off')
-            return $this->redirectToRoute('dashboard');
+            return $this->redirectToRoute('myprojects');
         }
         return $this->render('default/dashboard.html.twig', [
             'form' => $form->createView(),
@@ -178,7 +178,7 @@ class DashboardController extends Controller
             Criteria::create()
             ->where(Criteria::expr()->eq("environment", 'prod')))
             ->first();
-            
+				
         return $this->render('default/myproject_details.html.twig', [
             'project' => $project,
             'dev' => $dev,
@@ -351,6 +351,7 @@ class DashboardController extends Controller
     
     /**
      * @Route("/myproject/{id}/createprod", name="myproject_create_prod")
+	 * @Method("POST")
      */
     public function myprojectcreateprodAction(Request $request, Projects $project)
     {
@@ -358,51 +359,32 @@ class DashboardController extends Controller
         if (false === $authorizationChecker->isGranted('VIEW', $project)) {
             throw new AccessDeniedException();
         }
+        
+        $domain       = $request->request->get('customdomain');
+		$sourcedomain = 'stage-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
+        $subdomain    = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();
+        $db           = $this->getUser()->getUsername() . '_' . $project->getName() . '_prod';
+		$dbuser       = $this->getUser()->getUsername() . '_prod';
+		$dbpass       = bin2hex(random_bytes(6));
 		
-		if ($project->getSubscription() == 'free') {
-			$session = new Session();
-			$session->set('domaininfo', 'clone|myproject_create_prod|' . $project->getId());
-			return $this->redirectToRoute('upgrade');
+		if (null == $domain) {
+			$this->addFlash(
+				'error',
+				'Domain which you have submitted is invalid.'
+			);
+			
+			return $this->redirectToRoute('myproject_details', ['id' => $project->getId()]);
 		}
         
-        $domain    = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername() . '.phplake.com';
-        $subdomain = 'prod-' . $project->getName() . '-' . $this->getUser()->getUsername();
-        $db        = $this->getUser()->getUsername() . '_' . $project->getName() . '_prod';
-		$dbuser    = $this->getUser()->getUsername() . '_prod';
-		$dbpass    = bin2hex(random_bytes(6));
-        
         $sites = $project->getSites();
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("domain", $domain))
-        ;
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("domain", $domain));
         $site = $sites->matching($criteria)->first();
         
         if ($site === false) {
-			$checkdbuser = $this->get('app.whm')->perform('cpanel',
-				array(
-					'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
-					'cpanel_jsonapi_apiversion' => '2',
-					'cpanel_jsonapi_module' => 'MysqlFE',
-					'cpanel_jsonapi_func' => 'dbuserexists',
-					'dbuser' => $dbuser
-				)
-			);
-			if ($checkdbuser->cpanelresult->data[0] == 0) {
-				$createdbuser = $this->get('app.whm')->perform('cpanel',
-					array(
-						'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
-						'cpanel_jsonapi_apiversion' => '2',
-						'cpanel_jsonapi_module' => 'MysqlFE',
-						'cpanel_jsonapi_func' => 'createdbuser',
-						'dbuser' => $dbuser,
-						'password' => $dbpass
-					)
-				);
-			}
-			$response = $this->get('app.whm')->siteclone($this->getUser()->getUsername(), $domain, $subdomain, str_replace('prod', 'stage', $domain) , $db, $dbuser, $project->getTargetUrl(), $project->getCategory());
+			$response = $this->get('app.whm')->siteclone($this->getUser()->getUsername(), $domain, $subdomain, $sourcedomain , $db, $dbuser, $project->getTargetUrl(), $project->getCategory());
 			if ($response == 'success') {
 				$dbmail = \Swift_Message::newInstance()
-				->setSubject('Production DB Credential')
+				->setSubject('Production Environment DB Credential')
 				->setFrom(['support@phplake.com' => 'Phplake Support'])
 				->setTo($this->getUser()->getEmail())
 				->setBody(
@@ -422,8 +404,10 @@ class DashboardController extends Controller
 			else {
 				$this->addFlash(
 					'error',
-					'Stage environment creation failed.'
+					$response
 				);
+				
+				return $this->redirectToRoute('myproject_details', ['id' => $project->getId()]);
 			}
         }
         else {

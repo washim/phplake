@@ -105,13 +105,20 @@
           </tr>
         </tbody></table>
         {% elseif stage|length > 0 %}
-        <div class="center" align="center">
-          <img src="{{asset('asset/img/prod.png')}}"/>
-          <h3>Create your Live environment and deploy to your site.</h3>
-          <p>Creating the Live environment will clone the entire Test environment and deploy it to your live site. When you're ready to take your site live, choose a paid plan then use the Domains tool in the Live environment to add your domain (www.example.com).</p>
-          <a href="{{path('myproject_create_prod',{'id':dev.pid})}}" class="btn btn-success wait">Create Live Environment</a>
-          <p></p>
+        {% if live.id is not defined %}
+        <h4 class="pl-8px">Create Production Environemnt with Custom domain</h4>
+        <div class="col-md-4 pl-project-9px">
+        <form action="{{path('myproject_create_prod',{'id':dev.pid})}}" method="post">
+            <div class="form-group has-feedback">
+                <input type="text" id="customdomain" name="customdomain" class="form-control" placeholder="Add custom domain" required="required"/>
+                <span class="glyphicon glyphicon-retweet form-control-feedback"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Create Now"/>
+            </div>
+        </form>
         </div>
+        {% endif %}
         {% else %}
         <div class="center" align="center">
           <h3>The Stage environment must be created first before you can create the Prod environment.</h3>

@@ -15,7 +15,9 @@
           <th>Category</th>
           <th>Environment</th>
           <th>Subscription</th>
+          <th>Amount</th>
           <th>Created</th>
+          <th>Next Due Date</th>
         </tr>
         </thead>
         <tbody>
@@ -29,7 +31,9 @@
             {% endfor %}
           </td>
           <td>{{project.subscription}}</td>
+          <td>{{project.price}} INR</td>
           <td>{{project.createdAt|date('d-m-Y')}}</td>
+          <td>{{project.duedate}}</td>
         </tr>
         {% endfor %}
         </tbody>
@@ -39,7 +43,9 @@
           <th>Category</th>
           <th>Environment</th>
           <th>Subscription</th>
+          <th>Amount</th>
           <th>Created</th>
+          <th>Next Due Date</th>
         </tr>
         </tfoot>
       </table>
