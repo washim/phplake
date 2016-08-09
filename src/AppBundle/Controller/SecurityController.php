@@ -115,11 +115,21 @@ class SecurityController extends Controller
         $user = $this->getUser();
         $profile = new Profile();
         $profile->setName($user->getName());
+        $profile->setMobile($user->getMobile());
+        $profile->setStreet($user->getStreet());
+        $profile->setCity($user->getCity());
+        $profile->setState($user->getState());
+        $profile->setCountry($user->getCountry());
+        $em = $this->getDoctrine()->getManager();
         $passform = $this->createForm(ProfileType::class, $profile);
         $passform->handleRequest($request);
         if ($passform->isSubmitted() && $passform->isValid()) {
             $user->setName($profile->getName());
-            $em = $this->getDoctrine()->getManager();
+            $user->setMobile($profile->getMobile());
+            $user->setStreet($profile->getStreet());
+            $user->setCity($profile->getCity());
+            $user->setState($profile->getState());
+            $user->setCountry($profile->getCountry());
             $em->persist($user);
             $em->flush();
             
@@ -138,8 +148,6 @@ class SecurityController extends Controller
             if ($fuser->getChangetarget() == 1) {
                 $password = $this->get('security.password_encoder')->encodePassword($user, $fuser->getPlainPassword());
                 $user->setPassword($password);
-                
-                $em = $this->getDoctrine()->getManager();
                 $em->persist($user);
                 $em->flush();
                 $flash = 'Account password changed successfully.';
@@ -173,13 +181,53 @@ class SecurityController extends Controller
                     'dbuser' => $this->getUser()->getUsername() . '_phplake',
                     'password' => $fuser->getPlainPassword()
                 ));
-                if (!isset($addaddondomain->cpanelresult->error)) {
+                if (!isset($changemysqluserpass->cpanelresult->error)) {
                     $flash = 'Dev/Stage DB Username password changed successfully.';
                 }
                 else {
                     $this->addFlash(
                         'error',
-                        $addaddondomain->cpanelresult->error
+                        $changemysqluserpass->cpanelresult->error
+                    );
+                    
+                    return $this->redirectToRoute('myaccount');
+                }
+            }
+            elseif($fuser->getChangetarget() == 4) {
+                $checkdbuser = $this->get('app.whm')->perform('cpanel',
+                    array(
+                        'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+                        'cpanel_jsonapi_apiversion' => '2',
+                        'cpanel_jsonapi_module' => 'MysqlFE',
+                        'cpanel_jsonapi_func' => 'dbuserexists',
+                        'dbuser' => $this->getUser()->getUsername() . '_prod',
+                    )
+                );
+                if ($checkdbuser->cpanelresult->data[0] == 0) {
+                    $changemysqluserpass = $this->get('app.whm')->perform('cpanel', array(
+                        'cpanel_jsonapi_user' => $this->getUser()->getUsername(),
+                        'cpanel_jsonapi_apiversion' => '2',
+                        'cpanel_jsonapi_module' => 'MysqlFE',
+                        'cpanel_jsonapi_func' => 'changedbuserpassword',
+                        'dbuser' => $this->getUser()->getUsername() . '_prod',
+                        'password' => $fuser->getPlainPassword()
+                    ));
+                    if (!isset($changemysqluserpass->cpanelresult->error)) {
+                        $flash = 'Production DB Username password changed successfully.';
+                    }
+                    else {
+                        $this->addFlash(
+                            'error',
+                            $changemysqluserpass->cpanelresult->error
+                        );
+
+                        return $this->redirectToRoute('myaccount');
+                    }
+                }
+                else {
+                    $this->addFlash(
+                        'error',
+                        'Your production environmnet does not exist.'
                     );
                     
                     return $this->redirectToRoute('myaccount');
