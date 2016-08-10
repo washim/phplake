@@ -30,7 +30,9 @@ $(function() {
         welcometour('restart');
     });
     $(window).load(function() {
-        welcometour('start');
+        if (window.location.pathname.indexOf('dashboard') > -1) {
+            welcometour('start');
+        }
     });
 });
 function welcometour(type) {
