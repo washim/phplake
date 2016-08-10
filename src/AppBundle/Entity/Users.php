@@ -63,7 +63,7 @@ class Users implements UserInterface, \Serializable
 	private $mobile;
 	
 	/**
-     * @ORM\Column(type="string", length=64, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
 	private $street;
 	

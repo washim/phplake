@@ -19,10 +19,13 @@ h4{font-weight:bold; font-size: 16px;}
 .hide {display:none;}
 .bordernone{border:none !important;}
 .apps{height:200px;}
+.tour-step-background{border-radius:0;}
 #confirm .modal-dialog{ margin: 170px auto;}
 #siteinstall .modal-dialog{ margin: 80px auto;}
 #siteinstall .modal-body .form-group:first-child, 
 #siteinstall .modal-body .form-group:nth-child(2) {display: none;}
+.popover-title{font-weight:bold;}
+.popover{max-width:390px;}
 .modal-sm{width: 400px;}
 .modal .form-group.has-error label,.modal .form-group.has-error .help-block{color: yellow !important;}
 .skin-black-light .main-header>.logo {background-color: #ffffff;}

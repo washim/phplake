@@ -1,14 +1,15 @@
 <aside class="main-sidebar">
-    <section class="sidebar">
+    <section class="sidebar" id="tour-sidebar">
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
         <li class="active treeview">
           <a href="#">
-            <i class="fa fa-th"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
+            <i class="fa fa-th"></i> <span>Navigation</span> <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{path('dashboard')}}"><i class="fa fa-folder"></i> Applications</a></li>
-            <li class="active"><a href="{{path('myprojects')}}"><i class="fa fa-pie-chart"></i> My Projects</a></li>
+            <li class="{% if(app.request.get('_route')) == 'dashboard' %}active{% endif %}"><a href="{{path('dashboard')}}"><i class="fa fa-folder"></i> Apps Dashboard</a></li>
+            <li class="{% if(app.request.get('_route')) == 'myprojects' %}active{% endif %}"><a href="{{path('myprojects')}}"><i class="fa fa-pie-chart"></i> My Projects</a></li>
+            <li><a href="#" class="ctour"><i class="fa fa-eye"></i></i> Start Tour</a></li>
           </ul>
         </li>
       </ul>
