@@ -15,7 +15,6 @@ use Doctrine\Common\Collections\Criteria;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 
-use DrewM\MailChimp\MailChimp;
 use AppBundle\Entity\Projects;
 use AppBundle\Entity\Sites;
 use AppBundle\Form\ProjectsType;
@@ -74,11 +73,7 @@ class DashboardController extends Controller
             else {
                 $idepass   = bin2hex(random_bytes(6));
 				$response = $this->get('app.whm')->create_cpanel_account($this->getUser()->getUsername(), $pass, $this->getUser()->getEmail(), $domain, $subdomain, $db, $dbpass, $project->getTargetUrl(), $project->getCategory(), $idepass, $debug);
-                if ($response == 'success') {
-                    $MailChimp = new MailChimp('7d61b80cf650981aa736f714c27a520b-us5');
-					$subscriber_hash = $MailChimp->subscriberHash($this->getUser()->getEmail());
-					$MailChimp->put("lists/8373f38e35/members/$subscriber_hash", ['email_address' => $this->getUser()->getEmail(), 'status' => 'subscribed']);
-					
+                if ($response == 'success') {				
 					$idemail = \Swift_Message::newInstance()
 					->setSubject('Online IDE Phplake')
 					->setFrom(['support@phplake.com' => 'Phplake Support'])

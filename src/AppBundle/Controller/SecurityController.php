@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use DrewM\MailChimp\MailChimp;
 
 use AppBundle\Form\UsersType;
 use AppBundle\Entity\Users;
@@ -86,6 +87,10 @@ class SecurityController extends Controller
                     ])
                 );
             $this->get('mailer')->send($message);
+            
+            $MailChimp = new MailChimp('7d61b80cf650981aa736f714c27a520b-us5');
+            $subscriber_hash = $MailChimp->subscriberHash($user->getEmail());
+            $MailChimp->put("lists/8373f38e35/members/$subscriber_hash", ['email_address' => $user->getEmail(), 'status' => 'subscribed']);
             
             $this->addFlash(
                 'success',
