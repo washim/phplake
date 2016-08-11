@@ -66,6 +66,7 @@ class ComposerStaticInit5b9d1cffa82704c6a96e56bbdc329bbd
         ),
         'D' => 
         array (
+            'DrewM\\MailChimp\\' => 16,
             'Doctrine\\Instantiator\\' => 22,
             'Doctrine\\Common\\Cache\\' => 22,
             'Doctrine\\Common\\' => 16,
@@ -174,6 +175,10 @@ class ComposerStaticInit5b9d1cffa82704c6a96e56bbdc329bbd
         'Gregwar\\CaptchaBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/gregwar/captcha-bundle',
+        ),
+        'DrewM\\MailChimp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/drewm/mailchimp-api/src',
         ),
         'Doctrine\\Instantiator\\' => 
         array (

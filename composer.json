@@ -31,7 +31,9 @@
         "knplabs/knp-paginator-bundle": "^2.5",
         "symfony/security-acl": "^3.0",
         "gregwar/captcha-bundle": "^2.0",
-        "symfony/asset": "^3.1"
+        "symfony/asset": "^3.1",
+        "drewm/mailchimp-api": "^2.2",
+        "symfony/class-loader": "^3.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
