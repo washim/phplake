@@ -7,9 +7,9 @@
             <i class="fa fa-th"></i> <span>Navigation</span> <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
-            <li class="{% if(app.request.get('_route')) == 'dashboard' %}active{% endif %}"><a href="{{path('dashboard')}}"><i class="fa fa-folder"></i> Apps Dashboard</a></li>
-            <li class="{% if(app.request.get('_route')) == 'myprojects' %}active{% endif %}"><a href="{{path('myprojects')}}"><i class="fa fa-pie-chart"></i> My Projects</a></li>
-            <li><a href="#" class="ctour"><i class="fa fa-eye"></i></i> Start Tour</a></li>
+            <li class="{% if(app.request.get('_route')) == 'dashboard' %}active{% endif %}"><a href="{{path('dashboard')}}" onclick="_gaq.push(['_trackEvent', 'dashboard_sidebar_menu', 'clicked'])"><i class="fa fa-folder"></i> Dashboard</a></li>
+            <li class="{% if(app.request.get('_route')) == 'myprojects' %}active{% endif %}"><a href="{{path('myprojects')}}" onclick="_gaq.push(['_trackEvent', 'myprojects_sidebar_menu', 'clicked'])"><i class="fa fa-pie-chart"></i> My Projects</a></li>
+            <li><a href="#" class="ctour" onclick="_gaq.push(['_trackEvent', 'start_tour_sidebar_menu', 'clicked'])"><i class="fa fa-eye"></i></i> Start Tour</a></li>
           </ul>
         </li>
       </ul>

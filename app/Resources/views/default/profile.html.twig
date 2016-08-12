@@ -18,10 +18,10 @@
       </ul>
       {% if app.user.projects|length > 0 %}
       <b><i class="fa fa-indent"></i> Online IDE</b><small class="label pull-right bg-green">Most Popular</small>
-      <p class="text-muted"><a href="http://{{app.user.ide}}" target="_blank">http://{{app.user.ide}}</a></p>
+      <p class="text-muted"><a href="http://{{app.user.ide}}" target="_blank" onclick="_gaq.push(['_trackEvent', 'myaccount_page_ide_link', 'clicked'])">http://{{app.user.ide}}</a></p>
       <hr>
       <b><i class="fa fa-database"></i> phpMyAdmin Database</b>
-      <p class="text-muted"><a href="http://dbphpmyadmin.phplake.com" target="_blank">http://dbphpmyadmin.phplake.com</a></p>
+      <p class="text-muted"><a href="http://dbphpmyadmin.phplake.com" target="_blank" onclick="_gaq.push(['_trackEvent', 'myaccount_page_phpmyadmin_link', 'clicked'])">http://dbphpmyadmin.phplake.com</a></p>
       <hr>
       {% endif %}
     </div>
@@ -30,16 +30,16 @@
 <div class="col-md-9">
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
-      <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true"><i class="fa fa-cog"></i> Account</a></li>
-      <li id="tour-changepass"><a href="#changepass" data-toggle="tab" aria-expanded="false"><i class="fa fa-lock"></i> Change Password</a></li>
-      <li><a href="#sshkey" data-toggle="tab" aria-expanded="false" id="tour-sshkey"><i class="fa fa-key"></i> SSH Key</a></li>
+      <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true" onclick="_gaq.push(['_trackEvent', 'myaccount_page_account_tab', 'clicked'])"><i class="fa fa-cog"></i> Account</a></li>
+      <li id="tour-changepass"><a href="#changepass" data-toggle="tab" aria-expanded="false" onclick="_gaq.push(['_trackEvent', 'myaccount_page_changepass_tab', 'clicked'])"><i class="fa fa-lock"></i> Change Password</a></li>
+      <li><a href="#sshkey" data-toggle="tab" aria-expanded="false" id="tour-sshkey" onclick="_gaq.push(['_trackEvent', 'myaccount_page_sshkey_tab', 'clicked'])"><i class="fa fa-key"></i> SSH Key</a></li>
     </ul>
     <div class="tab-content col-md-12 pl-none pr-none">
       <div class="tab-pane active" id="account">
         <div class="col-md-6">
         {{form_start(passform)}}
         {{form_widget(passform)}}
-        <input type="submit" class="btn btn-primary" value="Save"/>
+        <input type="submit" class="btn btn-primary" value="Save" onclick="_gaq.push(['_trackEvent', 'myaccount_page_accountsave_button', 'clicked'])"/>
         {{form_end(passform)}}
         </div>
       </div>
@@ -47,7 +47,7 @@
         <div class="col-md-6">
         {{form_start(form)}}
         {{form_widget(form)}}
-        <input type="submit" class="btn btn-primary" value="Change Password"/>
+        <input type="submit" class="btn btn-primary" value="Change Password" onclick="_gaq.push(['_trackEvent', 'myaccount_page_changepass_button', 'clicked'])"/>
         {{form_end(form)}}
         </div>
       </div>
@@ -55,7 +55,7 @@
         <h4 class="pl-14px">Your SSH Public Key</h4>
         <div class="col-md-12">
         <textarea class="form-control" rows="5" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">{{app.user.sshkey}}</textarea><br />
-        <button action="{{path('keygen')}}" class="btn btn-success confirm" data-toggle="modal" data-target="#confirm">Genarate New Key</button>
+        <button action="{{path('keygen')}}" class="btn btn-success confirm" data-toggle="modal" data-target="#confirm" onclick="_gaq.push(['_trackEvent', 'myaccount_page_generatekey_button', 'clicked'])">Genarate New Key</button>
         </div>
       </div>
     </div>

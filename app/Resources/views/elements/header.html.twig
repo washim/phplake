@@ -1,6 +1,6 @@
 <header class="main-header">
     <!-- Logo -->
-    <a href="{{path('homepage')}}" class="logo">
+    <a href="{{path('homepage')}}" class="logo" onclick="_gaq.push(['_trackEvent', 'logo', 'clicked'])">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><img src="{{asset('asset/img/logo32.png')}}"/></span>
       <!-- logo for regular state and mobile devices -->
@@ -11,19 +11,19 @@
     <nav class="navbar navbar-static-top">
       {% if 'dashboard' in  app.request.pathInfo %}
       <!-- Sidebar toggle button-->
-      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" onclick="_gaq.push(['_trackEvent', 'toggle', 'clicked'])">
         <span class="sr-only">Toggle navigation</span>
       </a>
       {% endif %}
       <div class="navbar-custom-menu-left">
         <ul class="nav navbar-nav">
-          <li><a href="{{path('homepage')}}">Home</a></li>
-          <li><a href="{{path('homepage')}}#pricing" scrollto="#pricing" class="lakescroll">Pricing</a></li>
-          <li class="hidden-xs hidden-sm"><a href="{{path('homepage')}}#features" scrollto="#features" class="lakescroll">Features</a></li>
-          <li class="hidden-xs hidden-sm"><a href="{{path('homepage')}}#applications" scrollto="#applications" class="lakescroll">Applications</a></li>
-          <li class="hidden-xs hidden-sm"><a id="tour-community" href="http://community.phplake.com" target="_blank">Community</a></li>
+          <li><a href="{{path('homepage')}}" onclick="_gaq.push(['_trackEvent', 'home_menu', 'clicked'])">Home</a></li>
+          <li><a href="{{path('homepage')}}#pricing" scrollto="#pricing" class="lakescroll" onclick="_gaq.push(['_trackEvent', 'pricing_menu', 'clicked'])">Pricing</a></li>
+          <li class="hidden-xs hidden-sm"><a href="{{path('homepage')}}#features" scrollto="#features" class="lakescroll" onclick="_gaq.push(['_trackEvent', 'features_menu', 'clicked'])">Features</a></li>
+          <li class="hidden-xs hidden-sm"><a href="{{path('homepage')}}#applications" scrollto="#applications" class="lakescroll" onclick="_gaq.push(['_trackEvent', 'applications_menu', 'clicked'])">Applications</a></li>
+          <li class="hidden-xs hidden-sm"><a id="tour-community" href="http://community.phplake.com" target="_blank" onclick="_gaq.push(['_trackEvent', 'community_menu', 'clicked'])">Community</a></li>
           {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-          <li><a href="{{path('dashboard')}}">Dashboard</a></li>
+          <li><a href="{{path('dashboard')}}" onclick="_gaq.push(['_trackEvent', 'dashboard_menu', 'clicked'])">Dashboard</a></li>
           {% endif %}
         </ul>
       </div>
@@ -32,17 +32,17 @@
         <ul class="nav navbar-nav">
           {% if is_granted('IS_AUTHENTICATED_FULLY') %}
           <li class="user-menu">
-            <a href="{{path('myaccount')}}">
+            <a href="{{path('myaccount')}}" onclick="_gaq.push(['_trackEvent', 'myaccount_menu', 'clicked'])">
               <img src="{{app.user.avatar}}" class="user-image" alt="User Image">
               <span class="hidden-xs">{% if app.user.name is empty %}{{app.user.username}}{% else %}{{app.user.name}}{% endif %}</span>
             </a>
           </li>
           <li class="user-menu">
-            <a href="{{path('logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+            <a href="{{path('logout')}}" onclick="_gaq.push(['_trackEvent', 'logout_menu', 'clicked'])"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
           </li>
           {% else %}
           <li class="user-menu">
-            <a href="{{path('login')}}"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
+            <a href="{{path('login')}}" onclick="_gaq.push(['_trackEvent', 'login_menu', 'clicked'])"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
           </li>
           {% endif %}
         </ul>

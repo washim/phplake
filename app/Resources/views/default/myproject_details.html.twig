@@ -15,10 +15,10 @@
         </li>
       </ul>
       <strong><i class="fa fa-indent"></i> Online IDE</strong><small class="label pull-right bg-green">Most Popular</small>
-      <p class="text-muted"><a href="http://{{project.owner.ide}}" target="_blank">http://{{project.owner.ide}}</a></p>
+      <p class="text-muted"><a href="http://{{project.owner.ide}}" target="_blank" onclick="_gaq.push(['_trackEvent', 'project_cloudide_link', 'clicked'])">http://{{project.owner.ide}}</a></p>
       <hr>
       <strong><i class="fa fa-database"></i> phpMyAdmin Database</strong>
-      <p class="text-muted"><a href="http://dbphpmyadmin.phplake.com" target="_blank">http://dbphpmyadmin.phplake.com</a></p>
+      <p class="text-muted"><a href="http://dbphpmyadmin.phplake.com" target="_blank" onclick="_gaq.push(['_trackEvent', 'project_phpmyadmin_link', 'clicked'])">http://dbphpmyadmin.phplake.com</a></p>
       <hr>
       <strong><i class="fa fa-crop"></i> Environemnt</strong>
       {% if project.sites|length > 0 %}
@@ -29,7 +29,7 @@
       <hr>
       <strong><i class="fa fa-bell"></i> Danger Zone</strong>
       <p class="text-muted">Be carefull. It will erase all of your environment including this project.</p>
-      <button action="{{path('myproject_delete', {'id':project.id})}}" class="btn btn-block btn-danger confirm" data-toggle="modal" data-target="#confirm">Delete</button>
+      <button action="{{path('myproject_delete', {'id':project.id})}}" class="btn btn-block btn-danger confirm" data-toggle="modal" data-target="#confirm" onclick="_gaq.push(['_trackEvent', 'project_delete_button', 'clicked'])">Delete</button>
     </div>
   </div>
 </div>
@@ -73,7 +73,7 @@
             {% if stage|length > 0 and prod|length > 0 %}
             <td><span class="badge bg-red">Not Applicable</span></td>
             {% else %}
-            <td><a href="#" action="{{path('env_delete', {'id':stage.id})}}" class="badge bg-red confirm" data-toggle="modal" data-target="#confirm">Delete</a></td>
+            <td><a href="#" action="{{path('env_delete', {'id':stage.id})}}" class="badge bg-red confirm" data-toggle="modal" data-target="#confirm" onclick="_gaq.push(['_trackEvent', 'stage_env_delete_button', 'clicked'])">Delete</a></td>
             {% endif %}
           </tr>
         </tbody></table>
@@ -82,7 +82,7 @@
           <img src="{{asset('asset/img/stage.png')}}"/>
           <h3>Validate your changes by creating your Stage environment.</h3>
           <p>Creating the Stage Environment will clone the Dev environment’s code. Use the Stage environment to review your changes. When you’re done, create your Production environment and deploy your changes to start the process of taking your site live.</p>
-          <a href="{{path('myproject_create_stage',{'id':dev.pid})}}" class="btn btn-warning wait">Create Stage Environment</a>
+          <a href="{{path('myproject_create_stage',{'id':dev.pid})}}" class="btn btn-warning wait" onclick="_gaq.push(['_trackEvent', 'create_stage_env_button', 'clicked'])">Create Stage Environment</a>
           <p></p>
         </div>
         {% endif %}
@@ -101,7 +101,7 @@
             <td><a href="http://{{prod.domain}}" target="_blank">http://{{prod.domain}}</a></td>
             <td><span class="badge bg-light-blue">{{prod.db}}</span></td>
             <td><span class="badge bg-green">{{prod.dbuser}}</span></td>
-            <td><a href="#" action="{{path('env_delete', {'id':prod.id})}}" class="badge bg-red confirm" data-toggle="modal" data-target="#confirm">Delete</a></td>
+            <td><a href="#" action="{{path('env_delete', {'id':prod.id})}}" class="badge bg-red confirm" data-toggle="modal" data-target="#confirm" onclick="_gaq.push(['_trackEvent', 'delete_prod_button', 'clicked'])">Delete</a></td>
           </tr>
         </tbody></table>
         {% elseif stage|length > 0 %}
@@ -114,7 +114,7 @@
                 <span class="glyphicon glyphicon-retweet form-control-feedback"></span>
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Create Now"/>
+                <input type="submit" class="btn btn-primary" value="Create Now" onclick="_gaq.push(['_trackEvent', 'create_prod_button', 'clicked'])"/>
             </div>
         </form>
         </div>
@@ -122,7 +122,7 @@
         {% else %}
         <div class="center" align="center">
           <h3>The Stage environment must be created first before you can create the Prod environment.</h3>
-          <a href="{{path('myproject_create_stage',{'id':dev.pid})}}" class="btn btn-warning wait">Create Stage Environment</a>
+          <a href="{{path('myproject_create_stage',{'id':dev.pid})}}" class="btn btn-warning wait" onclick="_gaq.push(['_trackEvent', 'create_stage_env_button2', 'clicked'])">Create Stage Environment</a>
           <p></p>
         </div>
         {% endif %}

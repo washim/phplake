@@ -42,7 +42,7 @@
                 <label for="paywith"><input class="upgrade_paywith" type="radio" value="PayUMoney" checked="checked"/> PayUMoney</label>
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Pay Now"/>
+                <input type="submit" class="btn btn-primary" value="Pay Now" onclick="_gaq.push(['_trackEvent', 'pay_now_button', 'clicked'])"/>
             </div>
         </div>
         <input type="hidden" id="service_provider" name="service_provider" value="payu_paisa"/>

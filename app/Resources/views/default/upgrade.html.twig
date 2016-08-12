@@ -7,7 +7,7 @@
         </div>
         <div class="box-body">
             <h4>Choose Merchant for payment</h4>
-            <a href="{{path('PayUMoney')}}"><img src="{{asset('asset/img/payumoney.png')}}"/></a> <a href="#"><img src="{{asset('asset/img/pay-with-paypal.png')}}" width="137" height="47"/></a>
+            <a href="{{path('PayUMoney')}}" onclick="_gaq.push(['_trackEvent', 'payumoney_button', 'clicked'])"><img src="{{asset('asset/img/payumoney.png')}}"/></a> <a href="#" onclick="_gaq.push(['_trackEvent', 'paypal_button', 'clicked'])"><img src="{{asset('asset/img/pay-with-paypal.png')}}" width="137" height="47"/></a>
         </div>
     </div>
 </div>

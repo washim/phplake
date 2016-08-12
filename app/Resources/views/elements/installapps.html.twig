@@ -12,7 +12,7 @@
         <div class="col-sm-12">
           <div class="description-block">
             <h5 class="description-header">{{desc}}</h5>
-            <div class="description-text margin-top-10"><button type="button" class="btn {{project_btn_color_1}} project" data-value="{{project_folder_1}}" data-url="{{project_source_1}}" data-toggle="modal" data-target="#siteinstall">{{project_title_1}}</button> {% if project_title_2 is defined %}<button type="button" class="btn {{project_btn_color_2}} project" data-value="{{project_folder_2}}" data-url="{{project_source_2}}" data-toggle="modal" data-target="#siteinstall">{{project_title_2}}</button>{% endif %}</div>
+            <div class="description-text margin-top-10"><button type="button" class="btn {{project_btn_color_1}} project" data-value="{{project_folder_1}}" data-url="{{project_source_1}}" data-toggle="modal" data-target="#siteinstall" onclick="_gaq.push(['_trackEvent', '{{project_source_1}} installed button', 'clicked'])">{{project_title_1}}</button> {% if project_title_2 is defined %}<button type="button" class="btn {{project_btn_color_2}} project" data-value="{{project_folder_2}}" data-url="{{project_source_2}}" data-toggle="modal" data-target="#siteinstall">{{project_title_2}}</button>{% endif %}</div>
           </div>
         </div>
       </div>
