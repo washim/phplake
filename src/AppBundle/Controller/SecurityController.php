@@ -88,9 +88,9 @@ class SecurityController extends Controller
                 );
             $this->get('mailer')->send($message);
             
-            $MailChimp = new MailChimp('7d61b80cf650981aa736f714c27a520b-us5');
+            $MailChimp = new MailChimp('8110b3c741ecdaa1e2257c7c45597775-us14');
             $subscriber_hash = $MailChimp->subscriberHash($user->getEmail());
-            $MailChimp->put("lists/8373f38e35/members/$subscriber_hash", ['email_address' => $user->getEmail(), 'status' => 'subscribed']);
+            $MailChimp->put("lists/769ce4a490/members/$subscriber_hash", ['email_address' => $user->getEmail(), 'status' => 'subscribed']);
             
             $this->addFlash(
                 'success',
