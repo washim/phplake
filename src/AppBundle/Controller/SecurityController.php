@@ -90,7 +90,7 @@ class SecurityController extends Controller
             
             $MailChimp = new MailChimp('8110b3c741ecdaa1e2257c7c45597775-us14');
             $subscriber_hash = $MailChimp->subscriberHash($user->getEmail());
-            $MailChimp->put("lists/769ce4a490/members/$subscriber_hash", ['email_address' => $user->getEmail(), 'status' => 'subscribed']);
+            $MailChimp->put("lists/769ce4a490/members/$subscriber_hash", ['email_address' => $user->getEmail(), 'status' => 'subscribed', 'interests' => ['e3fc3beeed' => true]]);
             
             $this->addFlash(
                 'success',
